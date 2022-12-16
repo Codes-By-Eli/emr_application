@@ -4,9 +4,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Run application
 
-Have two terminals in directory of the application.
-1. First terminal, use 'npm start'
-2. Second terminal, use 'npm run electron-dev'
+Within the terminal, run the following:
+
+npm run electron-dev
 
 ## Available Scripts
 
