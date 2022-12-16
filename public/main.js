@@ -10,6 +10,19 @@ function createWindow () {
     }
   })
 
+  try {
+    require('electron-reloader')(module)
+  } catch (_) {}
+
+  var python = require('child_process').spawn('py', ['./backend/app.py']);
+  python.stdout.on('data', function (data) {
+    console.log("data: ", data.toString('utf8'));
+  });
+  python.stderr.on('data', (data) => {
+    console.log(`stderr: ${data}`); // when error
+  });
+
+
   //load the index.html from a url
   win.loadURL('http://localhost:3000');
 
