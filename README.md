@@ -7,3 +7,19 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 Within the terminal, run the following:
 
 npm run electron-dev
+
+## Directory Structure
+- backend
+  - app.py
+- node_modules (contains node packages)
+- public
+  - main.js
+- src
+  - components
+    - API
+      - APIService.js
+  - App.js
+  - index.js
+- package-lock.json
+- package.json
+- README.md
