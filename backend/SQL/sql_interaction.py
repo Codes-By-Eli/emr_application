@@ -361,7 +361,52 @@ class SQL_Interaction:
 
                 values = tuple(insert_values)
                 query = f"INSERT INTO {table} ({params}) VALUES ({placeholder})"
+                print(f"Query: {query}")
+                print(f"Values: {values}")
                 cursor.execute(query,values)
                 self.conn.commit()
+        except Error as e:
+            print(e)
+
+    def perform_select(self, table, select_columns, select_conditions=None):
+        try:
+            cursor = self.conn.cursor()
+            columns = ','.join(select_columns)
+            if(select_conditions == None):
+                query = f"SELECT {columns} FROM {table}"
+            cursor.execute(query)
+            rows = cursor.fetchall()
+
+            for row in rows:
+                print(row)
+
+        
+        except Error as e:
+            print(e)
+
+    '''
+    params:
+        self -
+        table -
+        column_parameters: list of tuples
+    '''
+    def perform_update(self, table, columns, values, key_column, key_value):
+        try:
+            if(columns != values):
+                print("Error. Unequal amount of columns and values")
+            else:
+                cursor = self.conn.cursor()
+                
+                query = f"UPDATE {table} SET"
+                for i in range(len(columns)):
+                    if(i == len(columns) - 1):
+                        query += f" {columns[i]} = ?,"
+                    else:
+                        query += f" {columns[i]} = ?"
+                query += f" WHERE {key_column} = ?"
+                
+                values.append(key_value)
+                values = tuple(values)
+                cursor.execute(query, values)
         except Error as e:
             print(e)
