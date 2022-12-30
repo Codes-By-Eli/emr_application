@@ -1,31 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
-import React from 'react';
-import APIService from './components/API/APIService';
+import React, {Component} from 'react';
+import { 
+  Route, 
+  Routes, 
+  Navigate,
+ } from 'react-router-dom';
 
-function App() {
-  
+
+
+import HomePage from './pages/HomePage';
+import InitialEvaluationForm from './pages/InitialEvaluationForm';
+import LandingPage from './pages/LandingPage';
+import LoginForm from './pages/LoginForm';
+import ProgressNoteForm from './pages/ProgressNoteForm';
+import SignUpForm from './pages/SignUpForm';
+import ViewOldForm from './pages/ViewOldForm';
+
+class App extends Component {
+  render(){
   return (
-    
-    <div className="App">
-      <header className="App-header">
-        <img src={logo}  className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    
-      <APIService />
-    </div>
-  );
+      <>
+        
+          <Routes>
+            <Route exact path="/" element={<HomePage />} />
+            <Route path="initial_evaluation" element={<InitialEvaluationForm />} />
+            <Route path="landing_page" element={<LandingPage />} />
+            <Route path="login_form" element={<LoginForm />} />
+            <Route path="progress_form" element={<ProgressNoteForm />} />
+            <Route path="sign_up" element={<SignUpForm />} />
+            <Route path="old_form" element={<ViewOldForm />} />
+            
+            
+            
+          </Routes>
+        
+      </>
+    );
+  }
 }
 
 export default App;
