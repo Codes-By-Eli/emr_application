@@ -1,19 +1,23 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow } = require('electron');
+const { shell } = require('electron');
 
 function createWindow () {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
     webPreferences: {
       nodeIntegration: true
     }
   })
 
+  win.maximize();
+  
+  //this reloads the electron window everytime you make a save
   try {
     require('electron-reloader')(module)
   } catch (_) {}
 
+
+  //this is for connecting to the backend with a single script
   var python = require('child_process').spawn('py', ['./backend/app.py']);
   python.stdout.on('data', function (data) {
     console.log("data: ", data.toString('utf8'));
@@ -22,6 +26,11 @@ function createWindow () {
     console.log(`stderr: ${data}`); // when error
   });
 
+  //this is for opening links within the browser
+  win.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: 'deny' };
+  });
 
   //load the index.html from a url
   win.loadURL('http://localhost:3000');
