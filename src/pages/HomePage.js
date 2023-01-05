@@ -191,17 +191,22 @@ function HomePage() {
                             </Typography>
                         </Grid>
                         <Grid item xs={2}>
-                            <Button
-                                variant='outlined'
-                            >
-                                <Typography
-                                    style={{
-                                        fontSize: "1vw"
-                                    }}
+                            <a 
+                                href="https://www.quatrishealthco.com/what-is-an-emr/"
+                                target="_blank"
                                 >
-                                    What are Electronic Medical Records (EMR)?
-                                </Typography>  
-                            </Button>
+                                <Button
+                                    variant='outlined'
+                                >
+                                    <Typography
+                                        style={{
+                                            fontSize: "1vw"
+                                        }}
+                                    >
+                                        What are Electronic Medical Records (EMR)?
+                                    </Typography>  
+                                </Button>
+                            </a>
                         </Grid>
                         <Grid item xs={2}>
                             
