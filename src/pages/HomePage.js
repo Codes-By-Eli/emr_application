@@ -172,7 +172,7 @@ function HomePage() {
                                 >
                                     <Typography 
                                         style={{
-                                            fontSize: "1.1vw"
+                                            fontSize: "1vw"
                                         }}
                                     >                                
                                         More about Iona's Occupational Therapy Program
