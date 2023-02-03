@@ -14,4 +14,5 @@ if __name__ == "__main__":
         print("Database had to be created..")
 
     #database.perform_insert("clients",['first_name','last_name','date_of_birth','sex'],['John','Smith', '2022-12-24', 'Male'])
-    database.perform_select("clients",["*"])
+    selection = database.perform_select("users",["email_address","password"], "email_address", "\"test_email@gaels.iona.edu\"")
+    print(selection[0][0])
