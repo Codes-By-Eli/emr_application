@@ -5,6 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import logo from '../iona.png';
 import students from '../students.jpg';
 
+
 function HomePage() {
 
     const [search,setSearch] = useState('');
@@ -92,7 +93,7 @@ function HomePage() {
                                     
                                 }}
                                 component={Link}
-                                to="/sign_up"
+                                to='/initial_evaluation'
                             >
                                 <Typography 
                                 align='center'

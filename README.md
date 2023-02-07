@@ -9,7 +9,7 @@ Within the terminal, run the following:
 npm run electron-dev
 
 ## Directory Structure
-- backend
+- backend!
   - emr_database.db
   - sql_interaction.py
   - app.py
