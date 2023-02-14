@@ -92,7 +92,7 @@ function HomePage() {
                                     
                                 }}
                                 component={Link}
-                                to="/sign_up"
+                                to="/initial_evaluation"
                             >
                                 <Typography 
                                 align='center'

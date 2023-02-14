@@ -1,9 +1,13 @@
 import React, {Component} from 'react';
+import "./App.css"
+import { ProSidebarProvider } from 'react-pro-sidebar';
 import { 
   Route, 
   Routes, 
   Navigate,
  } from 'react-router-dom';
+
+
 
 
 
@@ -20,6 +24,7 @@ class App extends Component {
   return (
       <>
         
+     
           <Routes>
             <Route exact path="/" element={<HomePage />} />
             <Route path="initial_evaluation" element={<InitialEvaluationForm />} />
