@@ -26,8 +26,8 @@ class SQL_Interaction:
     def create_tables(self):
         try:
             cursor = self.conn.cursor()
-
-            #Billing Codes Table
+  
+            #Billing Codes Table    
             cursor.execute('''
             CREATE TABLE billing_codes(
                 billing_code_id INTEGER PRIMARY KEY,

@@ -17,7 +17,8 @@ function HomePage() {
 
     return (
     <>
-        <Box sx={{
+
+       <Box sx={{
             width: '100%',
             height: '100vh',
             bgcolor: "#33c8f0",
@@ -35,10 +36,10 @@ function HomePage() {
                             <Box
                                 component="img"
                                 sx={{
-                                    minHeight: "70%",
-                                    maxHeight: "70%",
+                                    minHeight: "100%",
+                                    maxHeight: "100%",
                                     minWidth: "120%",
-                                    maxWidth: "120%"
+                                    maxWidth: "170%"
                                 }}
                                 alt="Iona University Logo"
                                 src={logo} 
@@ -92,7 +93,7 @@ function HomePage() {
                                     
                                 }}
                                 component={Link}
-                                to="/sign_up"
+                                to="/progress_form"
                             >
                                 <Typography 
                                 align='center'
