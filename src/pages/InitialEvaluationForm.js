@@ -9,10 +9,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import logo from '../iona.png';
 import Divider from '@mui/material/Divider';
-import StickyNote2Icon from '@mui/icons-material/StickyNote2';
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import NoteAltIcon from '@mui/icons-material/NoteAlt';
-import DescriptionIcon from '@mui/icons-material/Description';
+import { Box, Button, Container, InputAdornment, Paper, TextField, Typography } from '@mui/material';
 
 
 
@@ -56,28 +53,25 @@ function InitialEvaluationForm() {
       <item>Welcome Student</item>
       <item>Student Email</item>
     </Grid>
-    
-    
-    
-
-  
-
-          <MenuItem icon={<HomeOutlinedIcon />}>Home</MenuItem>
+      <MenuItem component={<Link to="/" />}>Home</MenuItem>
           <Divider></Divider>
-          <MenuItem 
-            //component={<Link to="sign_up"}
-            icon={<NoteAddIcon />}>Initial Evaluation</MenuItem>
-          <MenuItem icon={<StickyNote2Icon />}>Progress Note</MenuItem>
-          <MenuItem icon={<NoteAltIcon/>}>Discharge Evaluation</MenuItem>
+          <MenuItem component={<Link to="/initial_evaluation" />}>Initial Evaluation</MenuItem>
+          <MenuItem component={<Link to="/progress_form" />}>Progress Note</MenuItem>
+          <MenuItem component={<Link to="/discharge_form"/>}>Discharge Evaluation</MenuItem>
           <Divider></Divider>
-          <MenuItem icon={< DescriptionIcon/>}>View Old Forms</MenuItem>
+          <MenuItem component={<Link to="/old_form"/>}>View Old Forms</MenuItem>
         </Menu>
       </Sidebar>
-      <main>
-        <h1 style={{ color: "red", marginLeft: "5rem" }}>
-          Stuff goes here
-        </h1>
-      </main>
+      <Box sx={{
+          width: '100%',
+          height: '100vh',
+          bgcolor: "#33c8f0",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+      }}></Box>
+
+      
     </div>
   );
 
