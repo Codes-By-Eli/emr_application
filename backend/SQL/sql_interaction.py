@@ -11,7 +11,7 @@ class SQL_Interaction:
         #Create a database connection to a SQLite database
         
         try:
-            self.conn = sqlite3.connect(self.db_file)
+            self.conn = sqlite3.connect(self.db_file, check_same_thread=False)
             print(sqlite3.version)
         except Error as e:
             print(e)
@@ -364,23 +364,30 @@ class SQL_Interaction:
                 print(f"Query: {query}")
                 print(f"Values: {values}")
                 cursor.execute(query,values)
+                
                 self.conn.commit()
+                
+                return "success"
         except Error as e:
             print(e)
+            return "error"
 
-    def perform_select(self, table, select_columns, select_conditions=None):
+    def perform_select(self, table, select_columns, condition_column = None, select_conditions=None):
         try:
             cursor = self.conn.cursor()
             columns = ','.join(select_columns)
-            if(select_conditions == None):
+            if(select_conditions == None or condition_column == None):
                 query = f"SELECT {columns} FROM {table}"
+            else:
+                query = f"SELECT {columns} FROM {table} WHERE {condition_column} = {select_conditions}"
+            print(query)
             cursor.execute(query)
             rows = cursor.fetchall()
 
             for row in rows:
                 print(row)
 
-        
+            return rows
         except Error as e:
             print(e)
 

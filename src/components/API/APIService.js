@@ -25,11 +25,10 @@ function APIService() {
     }
     
     return (
-        <div>
-            Flask API Test<br/>
-
-            <button onClick={() => apiPost('testPOST', {info: "Post Information"})}>Fetch API</button>
-        </div>
+        {
+            apiGet,
+            apiPost
+        }
     )
     
 }
