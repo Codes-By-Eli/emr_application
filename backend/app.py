@@ -15,6 +15,8 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
 jwt = JWTManager(app)
 CORS(app)
 
+user_email = ""
+
 @app.after_request
 def refresh_expiring_jwts(response):
     try:
@@ -73,16 +75,19 @@ def create_token():
         }, 401
     if len(selection) > 1:
         return{
-            "msg": "Invalid username or password"
+            "msg": "Invalid username or password."
         }, 401
     if email != selection[0][0] or password != selection[0][1]:
         return {
-            "msg": "Wrong email or password"
+            "msg": "Wrong email or password."
         }, 401
+
+    global user_email
+    user_email = email
     access_token = create_access_token(identity=email)
-    response = {
+    response = jsonify({
         "access_token": access_token
-    }
+    }), 200
     return response
 
 @app.route("/logout", methods=["POST"])
@@ -96,9 +101,19 @@ def logout():
 @app.route("/profile")
 @jwt_required()
 def my_profile():
-    response_body = {
-        "first": "las"
-    }
+    table = "users"
+    columns = ["user_id","email_address","first_name", "last_name"]
+    condition_column = "email_address"
+    select_condition = f"\"{user_email}\""
+    selection = database.perform_select(table, columns, condition_column, select_condition)
+    print(user_email)
+    print(selection)
+    response_body = jsonify({
+        "id": selection[0][0],
+        "email": selection[0][1],
+        "first": selection[0][2],
+        "last": selection[0][3]
+    }), 200
     return response_body
 
 @app.route('/testGET', methods=['GET'])

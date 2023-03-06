@@ -93,7 +93,7 @@ function HomePage() {
                                     
                                 }}
                                 component={Link}
-                                to="/sign_up" 
+                                to="/login_form" 
                                 /* This is a temporary change for development purposes, this should be login_form */
                             >
                                 <Typography 
