@@ -1,13 +1,132 @@
-import React, { Component } from 'react'
-import logo from '../iona.png';
+import React, { Component, useState } from 'react'
 import { Box, Button, Container, Grid, InputAdornment, Paper, TextField, Typography } from '@mui/material';
+//import { Link } from 'react-router-dom';//import React from 'react'
+import  'react-router-dom';
+//import Grid from '@mui/material/Grid';
+//import React, {useState} from 'react';
+
+
+
 import { Link } from 'react-router-dom';
+import { ProSidebarProvider } from "react-pro-sidebar";
+import { ProSidebar, Menu, MenuItem, SubMenu, SidebarHeader, SidebarContent, SidebarFooter, Sidebar, useProSidebar } from "react-pro-sidebar";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import logo from '../iona.png';
+import Divider from '@mui/material/Divider';
+import StickyNote2Icon from '@mui/icons-material/StickyNote2';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import NoteAltIcon from '@mui/icons-material/NoteAlt';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 
 function ProgressNoteForm() {
 
+  const  [name,setName] = useState('');
+  const  [DOB,setDOB] = useState('');
+  const  [sex,setSex] = useState('');
+  const  [diagnostics,setDiagnostics] = useState('');
+  const  [precautions, setPrecautions] = useState(''); 
+  const  [contradictions,setContradictions] = useState('');
+  const  [summaryOfServices,setSummaryOfServices] = useState('');
+  const  [planOrReccomendations,setPlanOrReccomendations] = useState('');
+
+  const changeName = (event) => {
+    setName(event.target.value);
+  };
+
+  const changeDOB = (event) => {
+    setDOB(event.target.value);
+  };
+
+  const changeSex = (event) => {
+    setSex(event.target.value);
+  };
+  
+  const changeDiagnostics = (event) => {
+    setDiagnostics(event.target.value);
+  };
+
+  const changePrecautions = (event) => {
+    setPrecautions(event.target.value);
+  };
+
+  const changeContradictions = (event) => {
+    setContradictions(event.target.value);
+  };
+
+  const changeSummaryOfServices = (event) => {
+    setSummaryOfServices(event.target.value);
+  };
+
+  const changePlanOrReccomendations = (event) => {
+    setPlanOrReccomendations(event.target.value);
+  };
+  
+
+
+  const { collapseSidebar } = useProSidebar();1
+ 
   return (
+
+    <>
     <Box
+    sx={{
+      width: "100%",
+      height: "100vh",
+      background: "linear-gradient(to right bottom, #d8deee, #324e84)"
+    }}
+    
+    >
+      
+    
+    <div id="app" style={({ height: "75vh" }, { display: "flex" })}>
+      <Sidebar style={{ height: "100vh" }}>
+        <Menu>
+          <MenuItem
+            icon={<MenuOutlinedIcon />}
+            onClick={() => {
+              collapseSidebar();
+            }}
+            style={{ textAlign: "center" }}
+          >
+          </MenuItem>
+          <div id="container" style={{ whiteSpace: "nowrap" }}>
+      <div id="image" style={{ display: "inline" }}>
+        <img
+          src={logo}
+          loading="lazy"
+          style={{ width: "50px", height: "50px" }}
+          alt=""
+        />
+      </div>
+      <div id="texts" style={{ display: "inline", whiteSpace: "nowrap", textAlign: "right" }}>
+        <strong>Iona University </strong>
+      </div>
+    </div>
+    <Grid item xs zeroMinwidth>
+      <item>Welcome Student</item>
+      <item>Student Email</item>
+    </Grid>
+    
+    
+    
+
+  
+
+          <MenuItem icon={<HomeOutlinedIcon />}>Home</MenuItem>
+          <Divider></Divider>
+          <MenuItem 
+            //component={<Link to="sign_up"}
+            icon={<NoteAddIcon />}>Initial Evaluation</MenuItem>
+          <MenuItem component = {<Link to = "/progress_form" />}icon={<StickyNote2Icon />}>Progress Note</MenuItem>
+          <MenuItem icon={<NoteAltIcon/>}>Discharge Evaluation</MenuItem>
+          <Divider></Divider>
+          <MenuItem icon={< DescriptionIcon/>}>View Old Forms</MenuItem>
+        </Menu>
+      </Sidebar>
+      <main>
+      <Box
     bgcolor= "">
       <Grid container spacing={1}>
 
@@ -286,9 +405,14 @@ function ProgressNoteForm() {
         
 
     </Box>
-    
-  )
+      </main>
+    </div>
+    </Box>
+    </>
+  );
+
 }
+  
 
 export default ProgressNoteForm;
 
