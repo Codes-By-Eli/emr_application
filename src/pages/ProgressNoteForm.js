@@ -65,7 +65,7 @@ function ProgressNoteForm() {
   
 
 
-  const { collapseSidebar } = useProSidebar();1
+  const { collapseSidebar } = useProSidebar();
  
   return (
 
