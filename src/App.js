@@ -18,7 +18,7 @@ import LoginForm from './pages/LoginForm';
 import ProgressNoteForm from './pages/ProgressNoteForm';
 import SignUpForm from './pages/SignUpForm';
 import ViewOldForm from './pages/ViewOldForm';
-
+import DischargeForm from './pages/DischargeEvaluationForm';
 class App extends Component {
   render(){
   return (
@@ -33,7 +33,7 @@ class App extends Component {
             <Route path="progress_form" element={<ProgressNoteForm />} />
             <Route path="sign_up" element={<SignUpForm />} />
             <Route path="old_form" element={<ViewOldForm />} />
-            
+            <Route path="discharge_form" element={<DischargeForm />} />
             
             
           </Routes>
