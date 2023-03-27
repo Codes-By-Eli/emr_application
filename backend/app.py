@@ -45,7 +45,7 @@ def create_account():
     values = [first, last, email, password]
     insertion = database.perform_insert(table, params, values)
     
-    if insertion != "success":
+    if insertion['msg'] != "success":
         response = {
             "msg": "Error creating new user"
         }, 400

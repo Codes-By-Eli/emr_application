@@ -27,12 +27,38 @@ class SQL_Interaction:
         try:
             cursor = self.conn.cursor()
 
+            #Vitals Table
+            cursor.execute('''
+            CREATE TABLE vitals(
+                vital_id INTEGER PRIMARY KEY,
+                blood_pressure INTEGER NOT NULL,
+                heart_rate INTEGER NOT NULL,
+                oxygen INTEGER NOT NULL,
+                respiratory_rate INTEGER NOT NULL,
+                pain_assessment TEXT NOT NULL
+            )''')
+
             #Billing Codes Table
             cursor.execute('''
             CREATE TABLE billing_codes(
                 billing_code_id INTEGER PRIMARY KEY,
-                description_of_service TEXT NOT NULL
+                description_of_service TEXT
             )''')
+
+            #Insert the billing codes into the table
+            self.perform_insert("billing_codes", ["billing_code_id"], 97165)
+            self.perform_insert("billing_codes", ["billing_code_id"], 97166)
+            self.perform_insert("billing_codes", ["billing_code_id"], 97167)
+            self.perform_insert("billing_codes", ["billing_code_id"], 97168)
+            self.perform_insert("billing_codes", ["billing_code_id"], 97110)
+            self.perform_insert("billing_codes", ["billing_code_id"], 97112)
+            self.perform_insert("billing_codes", ["billing_code_id"], 97129)
+            self.perform_insert("billing_codes", ["billing_code_id"], 97150)
+            self.perform_insert("billing_codes", ["billing_code_id"], 97530)
+            self.perform_insert("billing_codes", ["billing_code_id"], 97533)
+            self.perform_insert("billing_codes", ["billing_code_id"], 97535)
+            self.perform_insert("billing_codes", ["billing_code_id"], 97537)
+            self.perform_insert("billing_codes", ["billing_code_id"], 97542)
 
             #Users Table
             cursor.execute('''
@@ -254,6 +280,7 @@ class SQL_Interaction:
                 client_id INTEGER NOT NULL,
                 fim_id INTEGER NOT NULL,
                 ue_id INTEGER NOT NULL,
+                vital_id INTEGER NOT NULL,
                 billing_code_id INTEGER NOT NULL,
                 date_of_evaluation DATE NOT NULL,
                 diagnosis TEXT NOT NULL,
@@ -264,13 +291,13 @@ class SQL_Interaction:
                 vision TEXT NOT NULL,
                 a_o TEXT NOT NULL,
                 memory_cognition TEXT NOT NULL,
-                follows_commands TEXT NOT NULL,
                 mmse_score TEXT NOT NULL,
                 current_transfer TEXT NOT NULL,
                 other_observations TEXT NOT NULL,
                 assessment TEXT NOT NULL,
                 discharge_recommendation TEXT NOT NULL,
                 equipment_needs TEXT NOT NULL,
+                justification_of_services TEXT NOT NULL,
                 patient_goals TEXT NOT NULL,
                 length_of_stay TEXT NOT NULL,
                 long_term_goal TEXT NOT NULL,
@@ -280,6 +307,7 @@ class SQL_Interaction:
                 FOREIGN KEY (client_id) REFERENCES clients (client_id),
                 FOREIGN KEY (fim_id) REFERENCES fim_evaluation (fim_evaluation_id),
                 FOREIGN KEY (ue_id) REFERENCES upper_extremities (ue_id),
+                FOREIGN KEY (vital_id) REFERENCES vitals (vital_id),
                 FOREIGN KEY (billing_code_id) REFERENCES billing_codes (billing_code_id)
             )''')
 
@@ -300,7 +328,6 @@ class SQL_Interaction:
                 vision TEXT NOT NULL,
                 a_o TEXT NOT NULL,
                 memory_cognition TEXT NOT NULL,
-                follows_commands TEXT NOT NULL,
                 mmse_score TEXT NOT NULL,
                 discharge_transfer TEXT NOT NULL,
                 other_observations TEXT NOT NULL,
@@ -364,13 +391,21 @@ class SQL_Interaction:
                 print(f"Query: {query}")
                 print(f"Values: {values}")
                 cursor.execute(query,values)
-                
+                latest_insert = cursor.lastrowid
                 self.conn.commit()
+
+                response = {
+                    "msg": "success",
+                    "last_id": latest_insert
+                }
                 
-                return "success"
+                return response
         except Error as e:
             print(e)
-            return "error"
+            response = {
+                "msg": "error"
+            }
+            return response
 
     def perform_select(self, table, select_columns, condition_column = None, select_conditions=None):
         try:
