@@ -1,20 +1,14 @@
-//import React from 'react'
+
 import  'react-router-dom';
 import Grid from '@mui/material/Grid';
 import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
-import { ProSidebar, Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
+import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
 import logo from '../iona.png';
 import Divider from '@mui/material/Divider';
-import { Box, Item, Button, Container, InputAdornment, Paper, TextField, Typography, TableHead, TableContainer } from '@mui/material';
-import { Tabs } from '@mui/material';
-//import { Tabs, TabPanel } from  '@react-ui-org/react-ui';
-//import TabList from '@mui/lab/TabList';
-import NativeSelect from '@mui/material/NativeSelect';
+import { Box, Item, Button, Container, Paper, TextField, Typography, TableHead, TableContainer } from '@mui/material';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import styled from 'styled-components';
-import { flexbox } from '@mui/system';
-import { positions } from '@mui/system';
 import { Table, TableBody, TableCell, TableRow } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -22,7 +16,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import InputLabel from '@mui/material/InputLabel';
+import { NativeSelect } from '@mui/material';
 import './TableStyling.css';
+
 const TabContainer = styled.div`
   display: list;
   align-items: center;
@@ -45,7 +41,7 @@ const TabContent = styled.div`
 
 const data = [
   { LROM: '', LMMT: '', label: 'Shoulder Elevation', RROM: '', RMMT: ''},
-  { LROM: '', LMMT: '', label: 'Shoulder Flexon', RROM: '', RMMT: ''},
+  { LROM: 'Hello', LMMT: '', label: 'Shoulder Flexion', RROM: '', RMMT: ''},
   { LROM: '', LMMT: '', label: 'Shoulder Extension', RROM: '', RMMT: ''},
   { LROM: '', LMMT: '', label: 'Shoulder Abduction', RROM: '', RMMT: ''},
   { LROM: '', LMMT: '', label: 'Horizontal Abduction', RROM: '', RMMT: ''},
@@ -93,10 +89,92 @@ const data2 = [
 ]
 
 
+
+
+
+
+
+
+
+
 function InitialEvaluationForm() {
   const { collapseSidebar } = useProSidebar();
   const [activeTab, setActiveTab] = useState(0);
 
+
+ 
+ 
+ const [allValues, setAllValues] = useState({
+  /* Client and Medical Tab */
+  name: '',
+  dob: '',
+  date: '',
+  med_num: '',
+  med_hx: '',
+  diagnosis: '',
+  prior_lev: '',
+  prior_liv: '',
+  hearing: '',
+  visual_perception: '',
+  AO: 'X1',
+  memory: '',
+  mmse: '',
+  blood_pressure: '',
+  heart_rate: '',
+  oxygen: '',
+  respiratory_rate: '',
+  pain_assessment: '',
+  
+  /*Observation Tab */
+  ADL: '',
+  current_transfer: '',
+  init_assess: '',
+  observations: '',
+  equip_needs:'',
+  
+  /*Discharge Tab */
+  patient_goals: '',
+  short_term_goals: '',
+  overall_goals: '',
+  justification: '',
+  signature: '',
+  date_of_sig: '',
+
+
+
+
+
+
+  });
+
+  const changeHandler = e => { 
+    setAllValues (prevValues => {
+      return { ...prevValues,[e.target.id]: e.target.value}
+    })
+  }
+
+
+/*
+
+  const FimTable = () => {
+    const [data, setData] = useState([
+      {label:'Eating', FIM: '', Goal: ''},
+      {label:'Grooming', FIM: '', Goal: ''},
+      {label:'Bathing', FIM: '', Goal: ''},
+      {label:'Upper Body Dressing', FIM: '', Goal: ''},
+      {label:'Lower Body Dressing', FIM: '', Goal: ''},
+      {label:'Toileting', FIM: '', Goal: ''},
+      {label:'Toilet Transfer', FIM: '', Goal: ''},
+      {label:'Shower Transfer', FIM: '', Goal: ''},
+      {label:'Tub Transfer', FIM: '', Goal: ''},
+    ]);
+ 
+  
+    const handleFimChange = (event, index) => {
+      const newData = [...data];
+      newData[index].FIM = event.target.value
+    }
+*/
   return (
 
 
@@ -141,7 +219,7 @@ function InitialEvaluationForm() {
       </Sidebar>
       
     <Box sx={{
-          width: '200%',
+          width: '200vh',
           height: '100vh',
           background: 'linear-gradient(to right bottom, #d8deee, #324e84)',
           display: "flex",
@@ -150,7 +228,7 @@ function InitialEvaluationForm() {
           
       }}>
 
-          <Grid container spacing={30}> 
+          <Grid container spacing={0}> 
           <Grid items xs={1}></Grid>
           <Grid item xs={10}>  
             <TabContainer align='center'>
@@ -202,12 +280,12 @@ function InitialEvaluationForm() {
         
         
         <Container sx = {{
-          display: "inline",
+          display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          height: "100%",
+          height: "100vh",
           width: "100%",
-          padding: 30
+          padding: 0
           
           
           
@@ -230,15 +308,22 @@ function InitialEvaluationForm() {
       	  <TabContent active={activeTab ===0}>
             <Grid container spacing={2}>
               <Grid item xs={12}></Grid>
+              <Grid item xs={12}></Grid>
               <Grid items xs={.20}></Grid>
               <Grid item xs={4}>
                 <TextField label="Client Name" 
+                required
+                id='name'
                 fullWidth
-                style={{ padding: 1}} />
+                style={{ padding: 1}}
+                onBlur={changeHandler} />
               </Grid>
               <Grid item xs={.20}></Grid>
               <Grid item xs={2}>
-                <TextField label = "Date of Birth:" 
+                <TextField label = "Date of Birth:"
+                id='DOB'
+                required
+                onBlur={changeHandler} 
                 style={{ padding: 1}}/>
               </Grid>
               <Grid item xs={.20}></Grid>
@@ -247,12 +332,18 @@ function InitialEvaluationForm() {
             <Grid item xs={2}>
               <TextField label="Date of Eval:"
               fullWidth
+              required
+              id='date'
+              onBlur={changeHandler}
               style={{ padding: 1 }} />
             </Grid>
         	  
             <Grid item xs={.2}></Grid>
         	  <Grid item xs={3}>
-              <TextField label="Med Record #:" 
+              <TextField label="Med Record #:"
+                id='med_num'
+                required
+                onBlur={changeHandler} 
                 fullWidth
                 style={{ padding: 1 }} />
             
@@ -261,7 +352,10 @@ function InitialEvaluationForm() {
         	  <Grid item xs={5}>
               <TextField label="Medical HX:" 
                 fullWidth
+                required
                 multiline
+                id='med_hx'
+                onBlur={changeHandler}
                 inputProps={{ style: {height: 100}}}
                 style={{ padding: 1 }} />
             
@@ -272,6 +366,9 @@ function InitialEvaluationForm() {
               <TextField label="Diagnosis:" 
                 fullWidth
                 multiline
+                required
+                id='diagnosis'
+                onBlur={changeHandler}
                 inputProps={{ style: {height: 100} }}
                 style={{ padding: 1 }} />
                 </Grid>
@@ -286,6 +383,9 @@ function InitialEvaluationForm() {
               <TextField label="Prior Level of Function:" 
                 fullWidth
                 multiline
+                required
+                id='prior_lev'
+                onBlur={changeHandler}
                 inputProps={{ style: {height: 100}}}
                 style={{ padding: 1 }} />
             
@@ -295,7 +395,10 @@ function InitialEvaluationForm() {
         	  <Grid item xs={5}>
               <TextField label="Prior Living Situation:" 
                 fullWidth
+                id='prior_liv'
+                onBlur={changeHandler}
                 multiline
+                required
                 inputProps={{ style: {height: 100} }}
                 style={{ padding: 1 }} />
                 </Grid>
@@ -305,7 +408,10 @@ function InitialEvaluationForm() {
         	  <Grid item xs={5}>
               <TextField label="Hearing:" 
                 fullWidth
+                id='hearing'
+                onBlur={changeHandler}
                 multiline
+                required
                 inputProps={{ style: {height: 100}}}
                 style={{ padding: 1 }} />
             
@@ -315,7 +421,10 @@ function InitialEvaluationForm() {
         	  <Grid item xs={5}>
               <TextField label="Vision/Visual Perception" 
                 fullWidth
+                id='visual_perception'
+                onBlur={changeHandler}
                 multiline
+                required
                 inputProps={{ style: {height: 100} }}
                 style={{ padding: 1 }} />
             </Grid>
@@ -323,15 +432,16 @@ function InitialEvaluationForm() {
             <Grid items xs={.66}></Grid>
 
             <Grid item xs={.66}></Grid>
-            <Grid item xs={1}>
+            <Grid item xs={1.5}>
             <InputLabel variant="standard" >
                 A & O:
              </InputLabel>
             <NativeSelect
              defaultValue={1}
+             onBlur={changeHandler}
             inputProps={{
               name: 'A & O:',
-              id: 'uncontrolled-native',
+              id: 'AO',
               justifyContent: "center",
               alignItems: "center"
           }}
@@ -343,30 +453,74 @@ function InitialEvaluationForm() {
             </NativeSelect>
           </Grid>
           
-        	<Grid item xs={3}>
+        	<Grid item xs={4}>
               <TextField label="Memory/Mental/Cognition:" 
                 fullWidth
+                id='memory'
+                required
+                onBlur={changeHandler}
                 multiline
                 inputProps={{ style: {height: 75} }}
                 style={{ padding: 1 }} />
            </Grid>
-           <Grid item xs={.2}></Grid>
-        	<Grid item xs={3}>
-              <TextField label="Follows Commands:" 
-                fullWidth
-                multiline
-                inputProps={{ style: {height: 75} }}
-                style={{ padding: 1 }} />
-           </Grid>
-           <Grid item xs={.2}></Grid>
-        	<Grid item xs={3}>
+           <Grid item xs={.5}></Grid>
+        	<Grid item xs={4}>
               <TextField label="MMSE Score:" 
                 fullWidth
+                id='mmse'
+                required
+                onBlur={changeHandler}
                 inputProps={{ style: {height: 75} }}
                 style={{ padding: 1 }} />
            </Grid>
+           <Grid item xs={12}></Grid>
+           <Grid item xs={2/6}></Grid>
+           <Grid item xs={2}>
+            <TextField label="Blood Pressure:"
+              id='blood_pressure'
+              required
+              onBlur={changeHandler}
+            ></TextField>
+           </Grid>
+           <Grid item xs={2/6}></Grid>
+           <Grid item xs={2}>
+            <TextField label="Heart Rate:"
+              id='heart_rate'
+              required
+              onBlur={changeHandler}
+            ></TextField>
+           </Grid>
+           <Grid item xs={2/6}></Grid>
+           <Grid item xs={2}>
+            <TextField label="Oxygen(SPO2):"
+              id='oxygen'
+              required
+              onBlur={changeHandler}
+            ></TextField>
+           </Grid>
+           <Grid item xs={2/6}></Grid>
+           <Grid item xs={2}>
+            <TextField label="Respiratory Rate(RR):"
+              id='respiratory_rate'
+              required
+              onBlur={changeHandler}
+            
+            ></TextField>
+           </Grid>
+           <Grid item xs={2/6}></Grid>
+           <Grid item xs={2}>
+            <TextField label="Pain Assessment:"
+              id='pain_assessment'
+              required
+              onBlur={changeHandler}
+            
+            ></TextField>
+
+           </Grid>
+           <Grid item xs={2/6}></Grid>
+
            <Grid item xs={12}></Grid>   
-              
+           <Grid item xs={12}></Grid>      
 
           
             
@@ -387,8 +541,17 @@ function InitialEvaluationForm() {
             {data1.map((row) => (
                   <TableRow  key={row.label}>
                     <TableCell align='center'>{row.label}</TableCell>
-                    <TableCell align='center'><TextField align='center' value={row.FIM}></TextField></TableCell>
-                    <TableCell align='center'><TextField value={row.Goal}></TextField></TableCell>
+                    <TableCell align='center'><TextField
+                      inputProps={{ style: {textAlign:'center',
+                    justifyContent: 'center'}
+                      }}></TextField>
+                      
+                      
+                       </TableCell>
+                    <TableCell align='center'><TextField
+                      inputProps={{ style: {textAlign:'center',
+                    justifyContent: 'center'}
+                      }}></TextField></TableCell>
                   </TableRow>
                 ))}
 
@@ -432,11 +595,26 @@ function InitialEvaluationForm() {
               <TableBody>
                 {data.map((row) => (
                   <TableRow  key={row.LROM}>
-                    <TableCell><TextField> value={row.LROM}</TextField></TableCell>
-                    <TableCell><TextField  value={row.LMMT}></TextField></TableCell>
+                    <TableCell><TextField
+                      inputProps={{ style: {textAlign:'center',
+                    justifyContent: 'center'}
+                      }}></TextField></TableCell>
+                    <TableCell><TextField
+                      inputProps={{ style: {textAlign:'center',
+                    justifyContent: 'center'}
+                      }}></TextField></TableCell>
+                    
                     <TableCell>{row.label}</TableCell>
-                    <TableCell><TextField  value={row.RROM}></TextField></TableCell>
-                    <TableCell><TextField value={row.RMMT}></TextField></TableCell>
+                    <TableCell><TextField
+                      inputProps={{ style: {textAlign:'center',
+                    justifyContent: 'center'}
+                      }}></TextField></TableCell>
+                    
+                    <TableCell><TextField
+                      inputProps={{ style: {textAlign:'center',
+                    justifyContent: 'center'}
+                      }}></TextField></TableCell>
+                    
                   </TableRow>
                 ))}
               </TableBody>
@@ -478,7 +656,9 @@ function InitialEvaluationForm() {
                 <Grid item xs={5}>
                     <TextField label="Additonal ADL / IADL Observations"
                       fullWidth
+                      name='ADL'
                       multiline
+                      onChange={changeHandler}
                       inputProps={{ style: {height: 100} }}
                       style={{ padding: 1}}>
                     </TextField>
@@ -488,6 +668,7 @@ function InitialEvaluationForm() {
                 <Grid item xs={5}>
                     <TextField label="Current Transfer / Mobility Status:"
                       fullWidth
+                      name='current_transfer'
                       multiline
                       inputProps={{ style: {height: 100} }}
                       style={{ padding: 1}}>
@@ -502,6 +683,7 @@ function InitialEvaluationForm() {
                 <Grid item xs={10}>
                   <TextField label="Other Observations:" 
                     fullWidth
+                    name='observations'
                     multiline
                     inputProps={{ style: {height: 150} }}
                     style={{ padding: 1 }} />
@@ -514,6 +696,7 @@ function InitialEvaluationForm() {
                 <Grid item xs={10}>
                   <TextField label="Initial Assessment of Problems/Stengths:" 
                     fullWidth
+                    name='init_assess'
                     multiline
                     inputProps={{ style: {height: 150} }}
                     style={{ padding: 1 }} />
@@ -532,12 +715,13 @@ function InitialEvaluationForm() {
       	<TabContent active={activeTab === 4}>
           
           <Grid container spacing={2}>
-
+            <Grid item xs={12}></Grid>        
             <Grid item xs={12}></Grid>
             <Grid item xs={1/4}></Grid>
             <Grid item xs={11/3}>
               <TextField label="Discharge Recommendation:" 
                   fullWidth
+                  name='dis_rec'
                   multiline
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
@@ -547,6 +731,7 @@ function InitialEvaluationForm() {
               <Grid item xs={11/3}>
                 <TextField label="Equipment Needs:" 
                   fullWidth
+                  name='equip_needs'
                   multiline
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
@@ -555,6 +740,7 @@ function InitialEvaluationForm() {
               <Grid item xs={11/3}>
                 <TextField label="Patient/Family/Caregiver Goals:" 
                   fullWidth
+                  name='patient_goals'
                   multiline
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
@@ -566,6 +752,7 @@ function InitialEvaluationForm() {
               <Grid item xs={5}>
                 <TextField label="Short Term Goals / Estimated TimeFrame:"
                   fullWidth
+                  name='short_term_goals'
                   multiline
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
@@ -575,6 +762,7 @@ function InitialEvaluationForm() {
               <Grid item xs={5}>
                 <TextField label="Overall Long Term Goal:"
                   fullWidth
+                  name='overall_goals'
                   multiline
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
@@ -583,17 +771,31 @@ function InitialEvaluationForm() {
               <Grid item xs={2/3}></Grid>
 
               <Grid item xs={12}></Grid>
+              <Grid item xs={2}></Grid>
+              <Grid item xs={8}>
+                  <TextField label="Justification of Skilled OT Services:"
+                    fullWidth
+                    name='justification'
+                    multiline
+                    inputProps={{ style: {height: 100} }}
+                  style={{ padding: 1 }} />
+
+
+              </Grid>
+              <Grid item xs={2}></Grid>
 
               <Grid item xs={2}></Grid>
               <Grid item xs={3}>
                 <TextField label="Therapist Signature:"
                   fullWidth
+                  name='signature'
                   ></TextField>
               </Grid>
               <Grid item xs={1}></Grid>
               <Grid item xs={2}>
                 <TextField label="Date:"
                   fullWidth
+                  name='date_of_sig'
                   ></TextField>
 
                 </Grid>
@@ -626,7 +828,7 @@ function InitialEvaluationForm() {
   
   
   
-  
+
     
     
     
