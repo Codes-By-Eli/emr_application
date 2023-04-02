@@ -45,20 +45,6 @@ class SQL_Interaction:
                 description_of_service TEXT
             )''')
 
-            #Insert the billing codes into the table
-            self.perform_insert("billing_codes", ["billing_code_id"], 97165)
-            self.perform_insert("billing_codes", ["billing_code_id"], 97166)
-            self.perform_insert("billing_codes", ["billing_code_id"], 97167)
-            self.perform_insert("billing_codes", ["billing_code_id"], 97168)
-            self.perform_insert("billing_codes", ["billing_code_id"], 97110)
-            self.perform_insert("billing_codes", ["billing_code_id"], 97112)
-            self.perform_insert("billing_codes", ["billing_code_id"], 97129)
-            self.perform_insert("billing_codes", ["billing_code_id"], 97150)
-            self.perform_insert("billing_codes", ["billing_code_id"], 97530)
-            self.perform_insert("billing_codes", ["billing_code_id"], 97533)
-            self.perform_insert("billing_codes", ["billing_code_id"], 97535)
-            self.perform_insert("billing_codes", ["billing_code_id"], 97537)
-            self.perform_insert("billing_codes", ["billing_code_id"], 97542)
 
             #Users Table
             cursor.execute('''
@@ -303,6 +289,7 @@ class SQL_Interaction:
                 long_term_goal TEXT NOT NULL,
                 short_term_goal TEXT NOT NULL,
                 therapist_signature TEXT NOT NULL,
+                billable_time INTEGER NOT NULL, 
                 FOREIGN KEY (user_id) REFERENCES users (user_id),
                 FOREIGN KEY (client_id) REFERENCES clients (client_id),
                 FOREIGN KEY (fim_id) REFERENCES fim_evaluation (fim_evaluation_id),
@@ -318,6 +305,7 @@ class SQL_Interaction:
                 user_id INTEGER NOT NULL,
                 initial_medical_record_id INTEGER NOT NULL,
                 discharge_fim_id INTEGER NOT NULL,
+                vital_id INTEGER NOT NULL,
                 billing_code_id INTEGER NOT NULL,
                 date_of_evaluation DATE NOT NULL,
                 diagnosis TEXT NOT NULL,
@@ -339,9 +327,11 @@ class SQL_Interaction:
                 client_education TEXT NOT NULL,
                 discharge_referrals TEXT NOT NULL,
                 therapist_signature TEXT NOT NULL,
+                billable_time INTEGER NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES users (user_id),
                 FOREIGN KEY (initial_medical_record_id) REFERENCES initial_evaluation (medical_record_id),
                 FOREIGN KEY (discharge_fim_id) REFERENCES discharge_fim_scores (discharge_fim_id),
+                FOREIGN KEY (vital_id) REFERENCES vitals (vital_id),
                 FOREIGN KEY (billing_code_id) REFERENCES billing_codes (billing_code_id)
             )''')
 
@@ -357,10 +347,27 @@ class SQL_Interaction:
                 summary_of_service TEXT NOT NULL,
                 current_client_performance TEXT NOT NULL,
                 plan_recommnedations TEXT NOT NULL,
+                billable_time INTEGER NOT NULL,
                 FOREIGN KEY (client_id) REFERENCES clients (client_id),
                 FOREIGN KEY (user_id) REFERENCES users (user_id),
                 FOREIGN KEY (billing_code_id) REFERENCES billing_codes (billing_code_id)
             )''')
+
+            #Insert the billing codes into the table
+            self.perform_insert("billing_codes", ["billing_code_id"], [97165])
+            self.perform_insert("billing_codes", ["billing_code_id"], [97166])
+            self.perform_insert("billing_codes", ["billing_code_id"], [97167])
+            self.perform_insert("billing_codes", ["billing_code_id"], [97168])
+            self.perform_insert("billing_codes", ["billing_code_id"], [97110])
+            self.perform_insert("billing_codes", ["billing_code_id"], [97112])
+            self.perform_insert("billing_codes", ["billing_code_id"], [97129])
+            self.perform_insert("billing_codes", ["billing_code_id"], [97150])
+            self.perform_insert("billing_codes", ["billing_code_id"], [97530])
+            self.perform_insert("billing_codes", ["billing_code_id"], [97533])
+            self.perform_insert("billing_codes", ["billing_code_id"], [97535])
+            self.perform_insert("billing_codes", ["billing_code_id"], [97537])
+            self.perform_insert("billing_codes", ["billing_code_id"], [97542])
+
 
             print("Tables created successfully!")
             self.conn.commit()
