@@ -22,7 +22,7 @@ function LandingPage() {
   {
     var requestOptions = {
       method: "GET",
-      headers: {"Authorization": `Bearer ${localStorage.getItem('token')}`}
+      headers: {"Authorization": `Bearer ${sessionStorage.getItem('token')}`}
     };
 
     const response = await fetch("http://127.0.0.1:5000/profile", requestOptions);
