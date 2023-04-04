@@ -133,6 +133,7 @@ function InitialEvaluationForm() {
   equip_needs:'',
   
   /*Discharge Tab */
+  dis_rec: '',
   patient_goals: '',
   short_term_goals: '',
   overall_goals: '',
@@ -658,7 +659,7 @@ function InitialEvaluationForm() {
                       fullWidth
                       name='ADL'
                       multiline
-                      onChange={changeHandler}
+                      onBlur={changeHandler}
                       inputProps={{ style: {height: 100} }}
                       style={{ padding: 1}}>
                     </TextField>
@@ -670,6 +671,7 @@ function InitialEvaluationForm() {
                       fullWidth
                       name='current_transfer'
                       multiline
+                      onBlur={changeHandler}
                       inputProps={{ style: {height: 100} }}
                       style={{ padding: 1}}>
                     </TextField>
@@ -685,6 +687,7 @@ function InitialEvaluationForm() {
                     fullWidth
                     name='observations'
                     multiline
+                    onBlur={changeHandler}
                     inputProps={{ style: {height: 150} }}
                     style={{ padding: 1 }} />
                 </Grid>
@@ -698,6 +701,7 @@ function InitialEvaluationForm() {
                     fullWidth
                     name='init_assess'
                     multiline
+                    onBlur={changeHandler}
                     inputProps={{ style: {height: 150} }}
                     style={{ padding: 1 }} />
                 </Grid>
@@ -723,6 +727,7 @@ function InitialEvaluationForm() {
                   fullWidth
                   name='dis_rec'
                   multiline
+                  onBlur={changeHandler}
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
               
@@ -733,6 +738,7 @@ function InitialEvaluationForm() {
                   fullWidth
                   name='equip_needs'
                   multiline
+                  onBlur={changeHandler}
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
               </Grid> 
@@ -742,6 +748,7 @@ function InitialEvaluationForm() {
                   fullWidth
                   name='patient_goals'
                   multiline
+                  onBlur={changeHandler}
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
               </Grid> 
@@ -754,6 +761,7 @@ function InitialEvaluationForm() {
                   fullWidth
                   name='short_term_goals'
                   multiline
+                  onBlur={changeHandler}
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
                   
@@ -764,6 +772,7 @@ function InitialEvaluationForm() {
                   fullWidth
                   name='overall_goals'
                   multiline
+                  onBlur={changeHandler}
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
                   
@@ -777,6 +786,7 @@ function InitialEvaluationForm() {
                     fullWidth
                     name='justification'
                     multiline
+                    onBlur={changeHandler}
                     inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
 
@@ -789,6 +799,7 @@ function InitialEvaluationForm() {
                 <TextField label="Therapist Signature:"
                   fullWidth
                   name='signature'
+                  onBlur={changeHandler}
                   ></TextField>
               </Grid>
               <Grid item xs={1}></Grid>
@@ -796,6 +807,7 @@ function InitialEvaluationForm() {
                 <TextField label="Date:"
                   fullWidth
                   name='date_of_sig'
+                  onBlur={changeHandler}
                   ></TextField>
 
                 </Grid>
