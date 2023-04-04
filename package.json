@@ -17,8 +17,12 @@
     "electron": "^22.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+<<<<<<< HEAD
     "react-pro-sidebar": "^1.0.0",
     "react-router-dom": "^6.6.1",
+=======
+    "react-router-dom": "^6.8.2",
+>>>>>>> 67f586a8864c4f23c4bddf138527cb33c7958d28
     "react-scripts": "5.0.1",
     "wait-on": "^7.0.1",
     "web-vitals": "^2.1.4"
