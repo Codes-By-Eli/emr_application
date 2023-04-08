@@ -1,5 +1,6 @@
 import jinja2
 import pdfkit
+import pathlib
 
 class PDF_Interaction:
     def __init__(self):
@@ -37,8 +38,10 @@ class PDF_Interaction:
             output_text = template.render(info)
 
             pdf_path = "./backend/PDF/wkhtmltopdf/bin/wkhtmltopdf.exe"
+            download_path = pathlib.Path.home() / "Downloads" / f"progress_{info['record_number']}_{info['client_name'].strip()}.pdf"
+
             config = pdfkit.configuration(wkhtmltopdf=pdf_path)
-            pdfkit.from_string(output_text, "progress.pdf", configuration=config)
+            pdfkit.from_string(output_text, download_path, configuration=config)
             print(f"Successfully made made Progress Note PDF:")
         except:
             print("Error converting the Progress Note to the pdf!")
@@ -202,8 +205,10 @@ class PDF_Interaction:
             output_text = template.render(info)
 
             pdf_path = "./backend/PDF/wkhtmltopdf/bin/wkhtmltopdf.exe"
+            download_path = pathlib.Path.home() / "Downloads" / f"initial_{info['record_number']}_{info['client_name'].strip()}.pdf"
+
             config = pdfkit.configuration(wkhtmltopdf=pdf_path)
-            pdfkit.from_string(output_text, "initial.pdf", configuration=config)
+            pdfkit.from_string(output_text, download_path, configuration=config)
         except:
             print("Error converting the Initial Evaluation to the pdf!")
 
@@ -369,8 +374,10 @@ class PDF_Interaction:
             output_text = template.render(info)
 
             pdf_path = "./backend/PDF/wkhtmltopdf/bin/wkhtmltopdf.exe"
+            download_path = pathlib.Path.home() / "Downloads" / f"discharge_{info['record_number']}_{info['client_name'].strip()}.pdf"
+
             config = pdfkit.configuration(wkhtmltopdf=pdf_path)
-            pdfkit.from_string(output_text, "discharge.pdf", configuration=config)
+            pdfkit.from_string(output_text, download_path, configuration=config)
         except:
             print("Error converting the Discharge Evaluation to the pdf!")        
         

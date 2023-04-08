@@ -1,5 +1,5 @@
 from pdf_interaction import PDF_Interaction
-
+import pathlib
 if __name__ == "__main__":
     pdf_creator = PDF_Interaction()
     info = {
@@ -14,7 +14,8 @@ if __name__ == "__main__":
         "summary": "The client experienced flashes where they were beside themselves and considered a danger to themselves and others",
         "performance": "The client is has been noticing small happiness and activities that they enjoyed as a child",
         "recommendations": "We plan to keep introducing fun activities to the client that reminds them of their childhood",
-        "billing": "978145"
+        "billing": "978145",
+        "units": "2"
     }
 
     #pdf_creator.create_progress_pdf(info)
@@ -158,7 +159,8 @@ if __name__ == "__main__":
         "short_goal" : "Hold item for 15 seconds",
         "signature" : "Jane Smith",
         "date" : "03/25/2023",
-        "billing_code" : "978456"
+        "billing_code" : "978456",
+        "units": "2"
     }
 
     #pdf_creator.create_initial_pdf(info2)
@@ -302,7 +304,10 @@ if __name__ == "__main__":
         "education" : "B.S. Iona University",
         "signature" : "Jane Smith",
         "date" : "03/25/2023",
-        "billing_code" : "978456"
+        "billing_code" : "978456",
+        "units": "2"
     }
 
-    pdf_creator.create_discharge_pdf(info3)
+    #pdf_creator.create_discharge_pdf(info3)
+    
+    #print(pathlib.Path.home() / "Downloads" / "new_folder" / "eval.pdf")
