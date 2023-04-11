@@ -6,11 +6,18 @@ import {
   Routes, 
   Navigate,
  } from 'react-router-dom';
+<<<<<<< HEAD
 
 
 
 
 
+=======
+ 
+ 
+ 
+import DischargeEvaluationForm from './pages/DischargeEvaluationForm';
+>>>>>>> 3d836a072e0a017e39e1262698ffda4ff10aeeb8
 import HomePage from './pages/HomePage';
 import InitialEvaluationForm from './pages/InitialEvaluationForm';
 import LandingPage from './pages/LandingPage';
@@ -33,6 +40,7 @@ class App extends Component {
             <Route path="progress_form" element={<ProgressNoteForm />} />
             <Route path="sign_up" element={<SignUpForm />} />
             <Route path="old_form" element={<ViewOldForm />} />
+            <Route path="discharge_evaluation" element={<DischargeEvaluationForm />} />
             
             
             

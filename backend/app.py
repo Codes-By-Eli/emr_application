@@ -1,5 +1,4 @@
 import os
-import json
 
 from SQL.sql_interaction import SQL_Interaction
 from flask import Flask, request, jsonify
@@ -32,6 +31,12 @@ def refresh_expiring_jwts(response):
         return response
 
 
+#Christian code here pls
+@app.route("/submit_initial", methods=["POST"])
+def submit_initial():
+    #replace pass with the code you would like to use
+    pass
+
 #maybe try to protect this endpoint?
 @app.route("/sign_up", methods=["POST"])
 def create_account():
@@ -55,9 +60,6 @@ def create_account():
         }, 200
     
     return response
-
-
-
 
 @app.route("/token", methods=["POST"])
 def create_token():
@@ -127,12 +129,6 @@ def testPost():
     data = request.json
     print(data)
     return(data)
-
-
-
-
-
-
 
 if __name__ == '__main__':
     if(os.path.exists("./backend/SQL/emr_database.db")):
