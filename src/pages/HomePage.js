@@ -93,12 +93,8 @@ function HomePage() {
                                     
                                 }}
                                 component={Link}
-<<<<<<< HEAD
-                                to="/initial_evaluation"
-=======
                                 to="/login_form" 
                                 /* This is a temporary change for development purposes, this should be login_form */
->>>>>>> 67f586a8864c4f23c4bddf138527cb33c7958d28
                             >
                                 <Typography 
                                 align='center'
