@@ -21,18 +21,29 @@ import { useEffect } from 'react';
 import './TableStyling.css';
 
 const TabContainer = styled.div`
-  display: list;
+  display: flex;
   align-items: center;
-  padding: 30px;
-  spacing: 10px;
+  justifyContent: center;
+  margin-top: 20px;
+  
+
+  
+
   
 `;
 
 const TabButton = styled.button`
-  border: none;
-  background-color: ${(props) => (props.active ? '#eee' : '#fff')};
-  padding: 20px;
-  cursor: pointer;
+border: solid;
+border-width: 1px;
+border-color: gray;
+background-color: ${(props) => (props.active ? '#B3F2FF' : '#fff')};
+padding: 20px;
+border-radius: 10px;
+cursor: pointer;
+width: 150px;
+height: 85px;
+font-family: Lucida Sans;
+font-size: 12px;
 `;
 
 const TabContent = styled.div`
@@ -329,7 +340,7 @@ function InitialEvaluationForm() {
       
     <Box sx={{
           width: '200vh',
-          height: '100vh',
+          height: '120vh',
           background: 'linear-gradient(to right bottom, #d8deee, #324e84)',
           display: "flex",
           flexDirection: "column",
@@ -337,10 +348,10 @@ function InitialEvaluationForm() {
           
       }}>
 
-          <Grid container spacing={0}> 
+          <Grid container className='TabContainer' spacing={0}> 
           <Grid item xs={3}></Grid>
           <Grid item xs={6}>  
-            <TabContainer align='center'>
+            <TabContainer alignItems='center' display='flex' justifyContent='center'>
               <TabButton
               active={activeTab === 0}
               onClick={() => setActiveTab(0)}
@@ -392,8 +403,8 @@ function InitialEvaluationForm() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          height: "100vh",
-          width: "100%",
+          height: "95vh",
+          width: "110vh",
           padding: 0
           
           
