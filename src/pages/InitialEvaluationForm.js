@@ -17,6 +17,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import InputLabel from '@mui/material/InputLabel';
 import { NativeSelect } from '@mui/material';
+import { useEffect } from 'react';
 import './TableStyling.css';
 
 const TabContainer = styled.div`
@@ -69,7 +70,7 @@ function InitialEvaluationForm() {
   prior_liv: '',
   hearing: '',
   visual_perception: '',
-  AO: 'X1',
+  AO: '',
   memory: '',
   mmse: '',
   blood_pressure: '',
@@ -227,12 +228,61 @@ function InitialEvaluationForm() {
 
 
   });
+  useEffect(() => {
+    console.log(allValues.AO);
+  }, [allValues.AO]);
 
   const changeHandler = e => { 
+    const key = e.target.id || e.target.name;
     setAllValues (prevValues => {
-      return { ...prevValues,[e.target.id]: e.target.value}
+      return { ...prevValues,[key]: e.target.value}
     });
-    console.log(allValues[e.target.id]);
+    
+  }
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const isNotEmpty = Object.values(allValues).every(value => value !== '');
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState('');
+
+
+
+  async function submitInitEval()
+  {
+    if (isNotEmpty)
+    {
+      
+      console.log("all good");
+    }
+    else{console.log("Not good");}  
+      /*
+      const response = await fetch("http://127.0.0.1:5000/initial_evaluation", allValues);
+      const data = await response.json();
+      if(!response.ok)
+      {
+        setMessage(data.msg);
+        handleOpen();
+        return;
+      }
+      window.location.replace("http://127.0.0.1:3000/login_form");
+    }
+    else
+    {
+      handleOpen();
+      setMessage("Please enter data into ALL fields and click Submit again.");
+    }
+    */
+
+  }
+
+
+  function getEmptyEntries() {
+    return Object.entries(allValues).filter(([key, value]) => value === '');
   }
 
   return (
@@ -288,8 +338,8 @@ function InitialEvaluationForm() {
       }}>
 
           <Grid container spacing={0}> 
-          <Grid item xs={1}></Grid>
-          <Grid item xs={10}>  
+          <Grid item xs={3}></Grid>
+          <Grid item xs={6}>  
             <TabContainer align='center'>
               <TabButton
               active={activeTab === 0}
@@ -328,8 +378,8 @@ function InitialEvaluationForm() {
                 Course of Rehab, Client Ed., & Discharge Recs/Referrals
               </TabButton>
             </TabContainer>
-            <Grid item xs={1}></Grid>
             </Grid>
+            <Grid item xs={3}></Grid>
           </Grid>
         
         
@@ -380,7 +430,7 @@ function InitialEvaluationForm() {
               <Grid item xs={.20}></Grid>
               <Grid item xs={2}>
                 <TextField label = "Date of Birth:"
-                id='DOB'
+                id='dob'
                 required
                 onBlur={changeHandler} 
                 style={{ padding: 1}}/>
@@ -496,8 +546,7 @@ function InitialEvaluationForm() {
                 A & O:
              </InputLabel>
             <NativeSelect
-             defaultValue={1}
-             onBlur={changeHandler}
+             onChange={changeHandler}
             inputProps={{
               name: 'A & O:',
               id: 'AO',
@@ -505,10 +554,10 @@ function InitialEvaluationForm() {
               align: "center"
           }}
         >
-            <option value={1}>X1</option>
-            <option value={2}>X2</option>
-            <option value={3}>X3</option>
-            <option value={4}>X4</option>
+            <option value={"X1"}>X1</option>
+            <option value={"X2"}>X2</option>
+            <option value={"X3"}>X3</option>
+            <option value={"X4"}>X4</option>
             </NativeSelect>
           </Grid>
           
@@ -859,27 +908,33 @@ function InitialEvaluationForm() {
         
           
           
+          <Grid item xs={12}></Grid>
+          <Grid item xs={12}></Grid>
           <Grid container justifyContent='center'>
-            <Grid item>
+          
 
           
-              <FormControl>
-                <FormLabel id="hand_dom">Hand Dominance</FormLabel>
+              <FormControl margin='normal'>
+                <FormLabel>
+                <Typography variant="overline">Hand Dominance</Typography>
+                </FormLabel>
                 <RadioGroup
                   row
                   aria-labelledby="hand_dom"
-                  id="hand_dom"
                   
-                  onBlur={changeHandler}>
+                  name="hand_dom"
+                  
+                  
+                  onChange={changeHandler}>
           
-                  <FormControlLabel value="Right" control={<Radio />} label="R" />
                   <FormControlLabel value="Left" control={<Radio />} label="L" />
+                  <FormControlLabel value="Right" control={<Radio />} label="R" />
               </RadioGroup>
               </FormControl>
             </Grid>
-          </Grid>
           
-          <TableContainer sx={{ maxHeight: "80vh"}}>
+          
+          <TableContainer sx={{ maxHeight: "75vh"}}>
             <Table stickyHeader aria-label="sticky table" >
               <TableHead>
                 <TableRow>
@@ -1874,7 +1929,7 @@ function InitialEvaluationForm() {
                 <Grid item xs={5}>
                     <TextField label="Additonal ADL / IADL Observations"
                       fullWidth
-                      name='ADL'
+                      id='ADL'
                       multiline
                       onBlur={changeHandler}
                       inputProps={{ style: {height: 100} }}
@@ -1886,7 +1941,7 @@ function InitialEvaluationForm() {
                 <Grid item xs={5}>
                     <TextField label="Current Transfer / Mobility Status:"
                       fullWidth
-                      name='current_transfer'
+                      id='current_transfer'
                       multiline
                       onBlur={changeHandler}
                       inputProps={{ style: {height: 100} }}
@@ -1902,7 +1957,7 @@ function InitialEvaluationForm() {
                 <Grid item xs={10}>
                   <TextField label="Other Observations:" 
                     fullWidth
-                    name='observations'
+                    id='observations'
                     multiline
                     onBlur={changeHandler}
                     inputProps={{ style: {height: 150} }}
@@ -1916,7 +1971,7 @@ function InitialEvaluationForm() {
                 <Grid item xs={10}>
                   <TextField label="Initial Assessment of Problems/Stengths:" 
                     fullWidth
-                    name='init_assess'
+                    id='init_assess'
                     multiline
                     onBlur={changeHandler}
                     inputProps={{ style: {height: 150} }}
@@ -1942,7 +1997,7 @@ function InitialEvaluationForm() {
             <Grid item xs={11/3}>
               <TextField label="Discharge Recommendation:" 
                   fullWidth
-                  name='dis_rec'
+                  id='dis_rec'
                   multiline
                   onBlur={changeHandler}
                   inputProps={{ style: {height: 100} }}
@@ -1953,7 +2008,7 @@ function InitialEvaluationForm() {
               <Grid item xs={11/3}>
                 <TextField label="Equipment Needs:" 
                   fullWidth
-                  name='equip_needs'
+                  id='equip_needs'
                   multiline
                   onBlur={changeHandler}
                   inputProps={{ style: {height: 100} }}
@@ -1963,7 +2018,7 @@ function InitialEvaluationForm() {
               <Grid item xs={11/3}>
                 <TextField label="Patient/Family/Caregiver Goals:" 
                   fullWidth
-                  name='patient_goals'
+                  id='patient_goals'
                   multiline
                   onBlur={changeHandler}
                   inputProps={{ style: {height: 100} }}
@@ -1976,7 +2031,7 @@ function InitialEvaluationForm() {
               <Grid item xs={5}>
                 <TextField label="Short Term Goals / Estimated TimeFrame:"
                   fullWidth
-                  name='short_term_goals'
+                  id='short_term_goals'
                   multiline
                   onBlur={changeHandler}
                   inputProps={{ style: {height: 100} }}
@@ -1987,7 +2042,7 @@ function InitialEvaluationForm() {
               <Grid item xs={5}>
                 <TextField label="Overall Long Term Goal:"
                   fullWidth
-                  name='overall_goals'
+                  id='overall_goals'
                   multiline
                   onBlur={changeHandler}
                   inputProps={{ style: {height: 100} }}
@@ -2001,7 +2056,7 @@ function InitialEvaluationForm() {
               <Grid item xs={8}>
                   <TextField label="Justification of Skilled OT Services:"
                     fullWidth
-                    name='justification'
+                    id='justification'
                     multiline
                     onBlur={changeHandler}
                     inputProps={{ style: {height: 100} }}
@@ -2015,7 +2070,7 @@ function InitialEvaluationForm() {
               <Grid item xs={2}>
                 <TextField label="Total Units:"
                   fullWidth
-                  name='units'
+                  id='units'
                   onBlur={changeHandler}
                   ></TextField>
               </Grid>
@@ -2024,7 +2079,7 @@ function InitialEvaluationForm() {
               <Grid item xs={4}>
                 <TextField label="Therapist Signature:"
                   fullWidth
-                  name='signature'
+                  id='signature'
                   onBlur={changeHandler}
                   ></TextField>
               </Grid>
@@ -2032,14 +2087,34 @@ function InitialEvaluationForm() {
               <Grid item xs={2.5}>
                 <TextField label="Date:"
                   fullWidth
-                  name='date_of_sig'
+                  id='date_of_sig'
                   onBlur={changeHandler}
                   ></TextField>
 
                 </Grid>
 
-                <Grid item xs={12}></Grid>
-                <Grid item xs={12}></Grid> 
+              <Grid item xs={12}></Grid>
+              <Grid item xs={12}></Grid>
+              
+              <Grid item xs={5.5}></Grid>
+              <Grid item xs={1}>
+                 <Button
+                  
+                    sx={{
+                      bgcolor:"#20df7f",
+                      ':hover':{
+                        bgcolor: "#20af7f"
+                      }
+                    }}
+                    fullWidth
+                    size='medium'
+                    onClick={submitInitEval}>Submit</Button>
+
+             </Grid>
+             <Grid item xs={1}>
+             <button onClick={() => console.log(getEmptyEntries())}>Check for empty values</button>
+             </Grid>
+                 
 
           </Grid>
           
