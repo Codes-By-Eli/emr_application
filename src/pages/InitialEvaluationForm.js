@@ -262,7 +262,7 @@ function InitialEvaluationForm() {
   const [message, setMessage] = useState('');
 
 
-
+/*
   async function submitInitEval()
   {
     if (isNotEmpty)
@@ -271,7 +271,7 @@ function InitialEvaluationForm() {
       console.log("all good");
     }
     else{console.log("Not good");}  
-      /*
+      
       const response = await fetch("http://127.0.0.1:5000/initial_evaluation", allValues);
       const data = await response.json();
       if(!response.ok)
@@ -287,10 +287,10 @@ function InitialEvaluationForm() {
       handleOpen();
       setMessage("Please enter data into ALL fields and click Submit again.");
     }
-    */
+    
 
   }
-
+*/
 
   function getEmptyEntries() {
     return Object.entries(allValues).filter(([key, value]) => value === '');
@@ -432,7 +432,7 @@ function InitialEvaluationForm() {
               <Grid item xs={.20}></Grid>
               <Grid item xs={4}>
                 <TextField label="Client Name" 
-                required
+                
                 id='name'
                 fullWidth
                 style={{ padding: 1}}
@@ -442,7 +442,7 @@ function InitialEvaluationForm() {
               <Grid item xs={2}>
                 <TextField label = "Date of Birth:"
                 id='dob'
-                required
+                
                 onBlur={changeHandler} 
                 style={{ padding: 1}}/>
               </Grid>
@@ -452,7 +452,7 @@ function InitialEvaluationForm() {
             <Grid item xs={2}>
               <TextField label="Date of Eval:"
               fullWidth
-              required
+              
               id='date'
               onBlur={changeHandler}
               style={{ padding: 1 }} />
@@ -462,7 +462,7 @@ function InitialEvaluationForm() {
         	  <Grid item xs={3}>
               <TextField label="Med Record #:"
                 id='med_num'
-                required
+                
                 onBlur={changeHandler} 
                 fullWidth
                 style={{ padding: 1 }} />
@@ -472,7 +472,7 @@ function InitialEvaluationForm() {
         	  <Grid item xs={5}>
               <TextField label="Medical HX:" 
                 fullWidth
-                required
+                
                 multiline
                 id='med_hx'
                 onBlur={changeHandler}
@@ -486,7 +486,7 @@ function InitialEvaluationForm() {
               <TextField label="Diagnosis:" 
                 fullWidth
                 multiline
-                required
+                
                 id='diagnosis'
                 onBlur={changeHandler}
                 inputProps={{ style: {height: 100} }}
@@ -503,7 +503,7 @@ function InitialEvaluationForm() {
               <TextField label="Prior Level of Function:" 
                 fullWidth
                 multiline
-                required
+                
                 id='prior_lev'
                 onBlur={changeHandler}
                 inputProps={{ style: {height: 100}}}
@@ -518,7 +518,7 @@ function InitialEvaluationForm() {
                 id='prior_liv'
                 onBlur={changeHandler}
                 multiline
-                required
+                
                 inputProps={{ style: {height: 100} }}
                 style={{ padding: 1 }} />
                 </Grid>
@@ -531,7 +531,7 @@ function InitialEvaluationForm() {
                 id='hearing'
                 onBlur={changeHandler}
                 multiline
-                required
+                
                 inputProps={{ style: {height: 100}}}
                 style={{ padding: 1 }} />
             
@@ -544,7 +544,7 @@ function InitialEvaluationForm() {
                 id='visual_perception'
                 onBlur={changeHandler}
                 multiline
-                required
+                
                 inputProps={{ style: {height: 100} }}
                 style={{ padding: 1 }} />
             </Grid>
@@ -576,7 +576,7 @@ function InitialEvaluationForm() {
               <TextField label="Memory/Mental/Cognition:" 
                 fullWidth
                 id='memory'
-                required
+                
                 onBlur={changeHandler}
                 multiline
                 inputProps={{ style: {height: 75} }}
@@ -587,7 +587,7 @@ function InitialEvaluationForm() {
               <TextField label="MMSE Score:" 
                 fullWidth
                 id='mmse'
-                required
+                
                 onBlur={changeHandler}
                 inputProps={{ style: {height: 75} }}
                 style={{ padding: 1 }} />
@@ -597,7 +597,7 @@ function InitialEvaluationForm() {
            <Grid item xs={2}>
             <TextField label="Blood Pressure:"
               id='blood_pressure'
-              required
+              
               onBlur={changeHandler}
             ></TextField>
            </Grid>
@@ -605,7 +605,7 @@ function InitialEvaluationForm() {
            <Grid item xs={2}>
             <TextField label="Heart Rate:"
               id='heart_rate'
-              required
+              
               onBlur={changeHandler}
             ></TextField>
            </Grid>
@@ -613,7 +613,7 @@ function InitialEvaluationForm() {
            <Grid item xs={2}>
             <TextField label="Oxygen(SPO2):"
               id='oxygen'
-              required
+              
               onBlur={changeHandler}
             ></TextField>
            </Grid>
@@ -621,7 +621,7 @@ function InitialEvaluationForm() {
            <Grid item xs={2}>
             <TextField label="Respiratory Rate(RR):"
               id='respiratory_rate'
-              required
+              
               onBlur={changeHandler}
             
             ></TextField>
@@ -630,7 +630,7 @@ function InitialEvaluationForm() {
            <Grid item xs={2}>
             <TextField label="Pain Assessment:"
               id='pain_assessment'
-              required
+              
               onBlur={changeHandler}
             
             ></TextField>
@@ -663,7 +663,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1, min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -675,7 +675,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1, min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -691,7 +691,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -703,7 +703,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -719,7 +719,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -731,7 +731,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -747,7 +747,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -759,7 +759,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -775,7 +775,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -787,7 +787,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -803,7 +803,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -815,7 +815,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -831,7 +831,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -843,7 +843,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -859,7 +859,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -871,7 +871,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -887,7 +887,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -899,7 +899,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number',
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -967,7 +967,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -978,7 +978,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -990,7 +990,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1001,7 +1001,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1015,7 +1015,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1026,7 +1026,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1038,7 +1038,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1049,7 +1049,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1063,7 +1063,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1074,7 +1074,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1086,7 +1086,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1097,7 +1097,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1111,7 +1111,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1122,7 +1122,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1134,7 +1134,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1145,7 +1145,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1159,7 +1159,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1170,7 +1170,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1182,7 +1182,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1193,7 +1193,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1207,7 +1207,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1218,7 +1218,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1230,7 +1230,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1241,7 +1241,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1255,7 +1255,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1266,7 +1266,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1278,7 +1278,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1289,7 +1289,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1303,7 +1303,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1314,7 +1314,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1326,7 +1326,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1337,7 +1337,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1353,7 +1353,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1364,7 +1364,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1376,7 +1376,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1387,7 +1387,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1401,7 +1401,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1412,7 +1412,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1424,7 +1424,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1435,7 +1435,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1450,7 +1450,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1461,7 +1461,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1473,7 +1473,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1484,7 +1484,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1498,7 +1498,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1509,7 +1509,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1521,7 +1521,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1532,7 +1532,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1546,7 +1546,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1557,7 +1557,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1569,7 +1569,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1580,7 +1580,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1609,7 +1609,7 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1621,7 +1621,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1636,7 +1636,7 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1648,7 +1648,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1663,7 +1663,7 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1675,7 +1675,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1690,7 +1690,7 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1702,7 +1702,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1717,7 +1717,7 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1729,7 +1729,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1744,7 +1744,7 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1756,7 +1756,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1771,7 +1771,7 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1783,7 +1783,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1798,7 +1798,7 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1810,7 +1810,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1825,7 +1825,7 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1837,7 +1837,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1852,7 +1852,7 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1864,7 +1864,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1879,7 +1879,7 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1891,7 +1891,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1906,7 +1906,7 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1918,7 +1918,7 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number',
+                      type: 'number', min: 1,
                       style: { textAlign: 'center' },
                       },
                     }}
@@ -1935,6 +1935,7 @@ function InitialEvaluationForm() {
         <TabContent active={activeTab === 3}>
                     
             <Grid container spacing={2}>
+                <Grid item xs={12}></Grid>
                 <Grid item xs={12}></Grid>
                 <Grid item xs={2/3}></Grid>
                 <Grid item xs={5}>
@@ -2112,9 +2113,9 @@ function InitialEvaluationForm() {
                  <Button
                   
                     sx={{
-                      bgcolor:"#20df7f",
+                      bgcolor:"#B3F2FF",
                       ':hover':{
-                        bgcolor: "#20af7f"
+                        bgcolor: "#B3F2FF"
                       }
                     }}
                     fullWidth
