@@ -11,7 +11,7 @@ root.render(
   <React.StrictMode>
     <ProSidebarProvider>
     <BrowserRouter>
-      <App />
+        <App />
     </BrowserRouter>
     </ProSidebarProvider>
   </React.StrictMode>

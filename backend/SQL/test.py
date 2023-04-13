@@ -13,5 +13,5 @@ if __name__ == "__main__":
         database.create_tables()
         print("Database had to be created..")
 
-    #database.perform_insert("clients",['first_name','last_name','date_of_birth','sex'],['John','Smith', '2022-12-24', 'Male'])
-    database.perform_select("clients",["*"])
+    response = database.perform_insert("clients",['first_name','last_name','date_of_birth','sex'],['John','Smith', '2022-12-24', 'Male'])
+    print(f"Response: {response['last_id']}")
