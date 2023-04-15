@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react'
+import React, { useState } from 'react'
 import { Box, Button, Container, Grid, InputAdornment, Paper, TextField, Typography } from '@mui/material';
 //import { Link } from 'react-router-dom';//import React from 'react'
 import  'react-router-dom';
@@ -8,7 +8,6 @@ import  'react-router-dom';
 
 
 import { Link } from 'react-router-dom';
-import { ProSidebarProvider } from "react-pro-sidebar";
 import { ProSidebar, Menu, MenuItem, SubMenu, SidebarHeader, SidebarContent, SidebarFooter, Sidebar, useProSidebar } from "react-pro-sidebar";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
@@ -18,6 +17,14 @@ import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import DescriptionIcon from '@mui/icons-material/Description';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import InputLabel from '@mui/material/InputLabel';
+import OutlinedInput from '@mui/material/OutlinedInput';
 
 
 function ProgressNoteForm() {
@@ -25,11 +32,17 @@ function ProgressNoteForm() {
   const  [name,setName] = useState('');
   const  [DOB,setDOB] = useState('');
   const  [sex,setSex] = useState('');
-  const  [diagnostics,setDiagnostics] = useState('');
+  const  [diagnosis,setDiagnosis] = useState('');
   const  [precautions, setPrecautions] = useState(''); 
-  const  [contradictions,setContradictions] = useState('');
+  const  [contraindications,setContraindications] = useState('');
   const  [summaryOfServices,setSummaryOfServices] = useState('');
+  const  [clientPerformace, setClientPerformance] = useState('');
   const  [planOrReccomendations,setPlanOrReccomendations] = useState('');
+  const  [therapistSignature, setTherapistSignature] = useState('');
+  const  [date, setDate] = useState ('');
+  const  [billingCodes, setBillingCodes] = useState ('');
+  const  [open, setOpen] = React.useState(false);
+  const  [billingCode, setbillingCode] = React.useState('');
 
   const changeName = (event) => {
     setName(event.target.value);
@@ -43,28 +56,85 @@ function ProgressNoteForm() {
     setSex(event.target.value);
   };
   
-  const changeDiagnostics = (event) => {
-    setDiagnostics(event.target.value);
+  const changeDiagnosis = (event) => {
+    setDiagnosis(event.target.value);
   };
 
   const changePrecautions = (event) => {
     setPrecautions(event.target.value);
   };
 
-  const changeContradictions = (event) => {
-    setContradictions(event.target.value);
+  const changeContraindications = (event) => {
+    setContraindications(event.target.value);
   };
 
   const changeSummaryOfServices = (event) => {
     setSummaryOfServices(event.target.value);
   };
 
+  const changeClientPerformace = (event) => {
+    setClientPerformance(event.target.value); 
+  }
+
   const changePlanOrReccomendations = (event) => {
     setPlanOrReccomendations(event.target.value);
   };
-  
+
+  const changeTherapistSignature = (event) => {
+    setTherapistSignature(event.target.value);
+  };
+
+  const changeDate = (event) => {
+    setDate(event.target.value);
+  };
+
+ // const ChangeBillingCodes = (event) =>{
+ //   setBillingCodes(event.target.value);
+ // };
+
+  const handleChange = (event) => {
+    setbillingCode(Number(event.target.value) || '');
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason !== 'backdropClick') {
+      setOpen(false);
+    }
+  };
 
 
+  //JSON with all of the fields for the proogress note
+
+  var progressFields = {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+        "name": name,
+        "DOB": DOB,
+        "sex": sex,
+        "diagnosis": diagnosis,
+        "precautions": precautions,
+        "contraindications": contraindications,
+        "summaryOfServices": summaryOfServices,
+        "clientPerformance": clientPerformace,
+        "planOrReccomendations": planOrReccomendations,
+        "therapistSignature": therapistSignature,
+        "date": date,
+        "billingCodes": billingCodes,
+      
+    })
+  }
+
+
+
+
+
+
+  // Starts front end code for the sidebar and filds
   const { collapseSidebar } = useProSidebar();
  
   return (
@@ -108,12 +178,6 @@ function ProgressNoteForm() {
       <item>Welcome Student</item>
       <item>Student Email</item>
     </Grid>
-    
-    
-    
-
-  
-
           <MenuItem icon={<HomeOutlinedIcon />}>Home</MenuItem>
           <Divider></Divider>
           <MenuItem 
@@ -131,8 +195,6 @@ function ProgressNoteForm() {
       <Grid container spacing={1}>
 
 
-
-
         <Grid item xs = {8}>
         
         </Grid>
@@ -146,31 +208,10 @@ function ProgressNoteForm() {
             component= {Link}
             to = "/">
             Click here to go back to the home page
-
           </Button>
         </Grid>
 
-
-        <Grid item xs = {12}>
-        </Grid>
-        <Grid item xs = {12}>
-        </Grid>
-        <Grid item xs = {12}>
-        </Grid>
-        <Grid item xs = {12}>
-        </Grid>
-        <Grid item xs = {12}>
-        </Grid>
-        <Grid item xs = {12}>
-        </Grid>
-        <Grid item xs = {12}>
-        </Grid>
-        <Grid item xs = {12}>
-        </Grid>
-        <Grid item xs = {12}>
-        </Grid>
-        <Grid item xs = {12}>
-        </Grid>
+       {/**Orignal spaces from the top */}
         <Grid item xs = {12}>
         </Grid>
         <Grid item xs = {12}>
@@ -241,7 +282,7 @@ function ProgressNoteForm() {
           >
           <TextField
            fullWidth
-         label="Diagnostics"
+         label="Diagnosis"
          id="filled-basic"
          variant="filled"
         />
@@ -297,7 +338,7 @@ function ProgressNoteForm() {
           >
           <TextField
            id="filled-multiline-static"
-           label="Summary of services"
+           label="Summary of Services"
            multiline
            fullWidth
            rows={3}
@@ -348,13 +389,125 @@ function ProgressNoteForm() {
           >
           <TextField
            id="filled-multiline-static"
-           label="Plan or recommendations"
+           label="Plan or Recommendations"
            multiline
            fullWidth
            rows={3}
            placeholder="Enter Recommendations"
            variant="filled"
         />
+        </Grid>
+
+
+        <Grid item xs = {12}>
+        </Grid>
+        <Grid item xs = {12}>
+        </Grid>
+
+
+
+        <Grid item xs = {1}>
+        </Grid>
+
+        <Grid item xs = {3}>
+          
+          <TextField
+           fullWidth
+           label="Therapist Signature"
+           id="filled-basic"
+           variant="filled"
+         />
+        </Grid>
+
+        <Grid item xs = {.5}>
+        </Grid>
+
+        <Grid item xs = {3}
+          >
+          <TextField
+           fullWidth
+         label="Date"
+         id="filled-basic"
+         variant="filled"
+        />
+        </Grid>
+
+        <Grid item xs = {.5}>
+        </Grid>
+
+        <Grid item xs = {3.1}>
+          <Button
+           onClick={handleClickOpen}
+            variant="contained" 
+            color="primary"
+            align = "center"
+            style = {{
+            minHeight: "28px",
+            maxHeight: "76px",
+            minWidth: "50%",
+            maxWidth: "76px"
+            }}
+           > 
+          <Typography
+              style={{
+               color: "black",
+               align: "center",
+               minHeight: "28px",
+               maxHeight: "76px",
+               minWidth: "30px",
+               maxWidth: "100%",
+               fontSize: "12px",
+               fontWeight: "light"
+              }}
+              >
+                Billing Codes
+          </Typography>
+          </Button>
+      <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
+        <DialogTitle>Select a billing code or type one in</DialogTitle>
+        <DialogContent>
+          <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+              <InputLabel>Code</InputLabel>
+              <Select
+                native
+                value={billingCode}
+                onChange={handleChange}
+                input={<OutlinedInput label="billingCode" id="billingCode" />}
+              >
+                <option aria-label="None" value="" />
+                <option value={97165}>97165</option>
+                <option value={97166}>97166</option>
+                <option value={97167}>97167</option>
+                <option value={97168}>97168</option>
+                <option value={97533}>97533</option>
+                <option value={97535}>97535</option>
+                <option value={97537}>97537</option>
+                <option value={97542}>97542</option>
+                <option value={97110}>97110</option>
+                <option value={97112}>97112</option>
+                <option value={97129}>97129</option>
+                <option value={97150}>97150</option>
+                <option value={97530}>97530</option>
+              </Select>
+            </FormControl>
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+              <TextField
+               fullWidth
+               label="Code"
+               id="filled-basic"
+               variant="filled"
+               value = {billingCode}
+               onChange={handleChange}
+              />
+            </FormControl>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}>Ok</Button>
+        </DialogActions>
+      </Dialog>
         </Grid>
 
         <Grid item xs = {.9}>
@@ -369,13 +522,11 @@ function ProgressNoteForm() {
         <Grid item xs = {12}>
         </Grid>
 
-
-
         <Grid item xs = {9}>
         
         </Grid>
 
-        <Grid item xs = {2.15}
+        <Grid item xs = {2}
           >
           <Button 
             fullWidth 
@@ -389,21 +540,13 @@ function ProgressNoteForm() {
           </Button>
         </Grid>
 
-        <Grid item xs = {.85}>
+        <Grid item xs = {1}>
         
         </Grid>
-
-
-
-
-
-
-
 
       </Grid>
             
         
-
     </Box>
       </main>
     </div>
