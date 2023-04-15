@@ -9,10 +9,10 @@
 <body>
     <table border="1" style="border-collapse: collapse; width: 100%;">
         <tr>
-            <td><b>Client Name:</b> {{client_name}}</td>
-            <td><b>D.O.B:</b> {{d_o_b}}</td>
-            <td><b>Date of Eval:</b> {{date_of_eval}}</td>
-            <td><b>Med Record #:</b> {{record_number}}</td>
+            <td><b>Client Name:</b> {{name}}</td>
+            <td><b>D.O.B:</b> {{dob}}</td>
+            <td><b>Date of Eval:</b> {{date}}</td>
+            <td><b>Med Record #:</b> {{med_num}}</td>
         </tr>
     </table>
     <table border="1" style="border-collapse: collapse; width: 100%;">
@@ -22,44 +22,44 @@
     </table>
     <table border="1" style="border-collapse: collapse; width: 100%;">
         <tr>
-            <td><b>Medical Hx:</b> {{medical_hx}}</td>
+            <td><b>Medical Hx:</b> {{med_hx}}</td>
         </tr>
     </table>
     <table border="1" style="border-collapse: collapse; width: 100%;">
         <tr>
-            <td><b>Prior Level of Function:</b> {{prior_function}}</td>
+            <td><b>Prior Level of Function:</b> {{prior_lev}}</td>
         </tr>
     </table>
 
     <table border="1" style="border-collapse: collapse; width: 100%;">
         <tr>
-            <td><b>Prior Living Situation:</b> {{prior_living}}</td>
+            <td><b>Prior Living Situation:</b> {{prior_liv}}</td>
         </tr>
     </table>
 
     <table border="1" style="border-collapse: collapse; width: 100%;">
         <tr>
             <td style="width: 50%;"><b>Hearing:</b> {{hearing}}</td>
-            <td><b>Vision / Visual Perception:</b> {{vision}}</td>
+            <td><b>Vision / Visual Perception:</b> {{visual_perception}}</td>
         </tr>
 
         <tr>
-            <td style="width: 50%;"><b>A&O:</b> {{a_o}}</td>
+            <td style="width: 50%;"><b>A&O:</b> {{AO}}</td>
             <td><b>Memory / Attention / Cognition:</b> {{memory}}</td>
         </tr>
 
         <tr>
-            <td><b>MMSE Score:</b> {{mmse_score}}</td>
+            <td><b>MMSE Score:</b> {{mmse}}</td>
         </tr>
     </table>
     <table border="1" style="border-collapse: collapse; width: 100%;">
         <tr>
             <td><b>Vitals:</b></td>
-            <td>Blood Pressure (BP): {{b_p}}</td>
+            <td>Blood Pressure (BP): {{blood_pressure}}</td>
             <td>Heart Rate (BPM): {{heart_rate}}</td>
             <td>Oxygen (SPO2): {{oxygen}}</td>
-            <td>Respiratory Rate (RR): {{R_R}}</td>
-            <td>Pain Assessment: {{pain}}</td>
+            <td>Respiratory Rate (RR): {{respiratory_rate}}</td>
+            <td>Pain Assessment: {{pain_asessment}}</td>
         </tr>
     </table>
     <table border="1" style="border-collapse: collapse; width: 45%; float: left;">
@@ -67,72 +67,68 @@
             <th>Self-Care Area</th>
             <th>Initial FIM</th>
             <th>Goal</th>
-            <th>Discharge</th>
         </tr>
         <tr>
             <td>Eating</td>
-            <td>{{i_e}}</td>
-            <td>{{g_e}}</td>
-            <td>{{d_e}}</td>
+            <td>{{eat_init}}</td>
+            <td>{{eat_goal}}</td>
+            
         </tr>
         <tr>
             <td>Grooming</td>
-            <td>{{i_g}}</td>
-            <td>{{g_g}}</td>
-            <td>{{d_g}}</td>
+            <td>{{groom_init}}</td>
+            <td>{{groom_goal}}</td>
         </tr>
         <tr>
             <td>Bathing</td>
-            <td>{{i_b}}</td>
-            <td>{{g_b}}</td>
-            <td>{{d_b}}</td>
+            <td>{{bath_init}}</td>
+            <td>{{bath_goal}}</td>
+            
         </tr>
         <tr>
             <td>Upper Body Dressing</td>
-            <td>{{i_ubd}}</td>
-            <td>{{g_ubd}}</td>
-            <td>{{d_ubd}}</td>
+            <td>{{upper_init}}</td>
+            <td>{{upper_goal}}</td>
+            
         </tr>
         <tr>
             <td>Lower Body Dressing</td>
-            <td>{{i_lbd}}</td>
-            <td>{{g_lbd}}</td>
-            <td>{{d_lbd}}</td>
+            <td>{{lower_init}}</td>
+            <td>{{lower_goal}}</td>
+            
         </tr>
         <tr>
             <td>Toileting</td>
-            <td>{{i_t}}</td>
-            <td>{{g_t}}</td>
-            <td>{{d_t}}</td>
+            <td>{{toilet_init}}</td>
+            <td>{{toilet_goal}}</td>
+            
         </tr>
         <tr>
             <td>Toilet Transfer</td>
-            <td>{{i_tt}}</td>
-            <td>{{g_tt}}</td>
-            <td>{{d_tt}}</td>
+            <td>{{toilet_transfer_init}}</td>
+            <td>{{toilet_transfer_goal}}</td>
         </tr>
         <tr>
             <td>Shower Transfer</td>
-            <td>{{i_st}}</td>
-            <td>{{g_st}}</td>
-            <td>{{d_st}}</td>
+            <td>{{shower_transfer_init}}</td>
+            <td>{{shower_transfer_goal}}</td>
+            
         </tr>
         <tr>
             <td>Tub Transfer</td>
-            <td>{{i_tut}}</td>
-            <td>{{g_tut}}</td>
-            <td>{{d_tut}}</td>
+            <td>{{tub_transfer_init}}</td>
+            <td>{{tub_transfer_goal}}</td>
         </tr>
     </table>
     <table border="1" style="border-collapse: collapse; width: 55%; float: left;">
         <tr>
-            <td><b>Additional ADL / IADL Observations:</b> {{adl}}</td>
-            <td><b>Current Transfer / Mobility Status:</b> {{transfer}}</td>
+            <td><b>Additional ADL / IADL Observations:</b> {{ADL}}</td>
+            <td><b>Current Transfer / Mobility Status:</b> {{current_transfer}}</td>
         </tr>
     </table>
     <table border="1" style="border-collapse: collapse; width: 100%;">
         <tr>
-            <td><b>Hand Dominance:</b> {{hand_dominance}}</td>
+            <td><b>Hand Dominance:</b> {{hand_dom}}</td>
         </tr>
     </table>
     <table border="1" style="border-collapse: collapse; width: 55%; float: left;">
@@ -144,7 +140,7 @@
     </table>
     <table border="1" style="border-collapse: collapse ;width: 45%; float: right;">
         <tr>
-            <td>Other Observations: {{other_observations}}</td>
+            <td>Other Observations: {{observations}}</td>
         </tr>
     </table>
     <table border="1" style="border-collapse: collapse; width: 55%; float: left;">
@@ -156,102 +152,102 @@
             <td style="width: 9.17%"><b>MMT</b></td>
         </tr>
         <tr>
-            <td style="width: 9.17%">{{lse_r}}</td>
-            <td style="width: 9.17%">{{lse_m}}</td>
+            <td style="width: 9.17%">{{lue_shoulder_ev_rom}}</td>
+            <td style="width: 9.17%">{{lue_shoulder_ev_mmt}}</td>
             <td style="width: 18.3%">Shoulder Elevation</td>
-            <td style="width: 9.17%">{{rse_r}}</td>
-            <td style="width: 9.17%">{{rse_m}}</td>
+            <td style="width: 9.17%">{{rue_shoulder_ev_rom}}</td>
+            <td style="width: 9.17%">{{rue_shoulder_ev_mmt}}</td>
         </tr>
         <tr>
-            <td style="width: 9.17%">{{lsf_r}}</td>
-            <td style="width: 9.17%">{{lsf_m}}</td>
+            <td style="width: 9.17%">{{lue_shoulder_flex_rom}}</td>
+            <td style="width: 9.17%">{{lue_shoulder_flex_mmt}}</td>
             <td style="width: 18.3%">Shoulder Flexion</td>
-            <td style="width: 9.17%">{{rsf_r}}</td>
-            <td style="width: 9.17%">{{rsf_m}}</td>
+            <td style="width: 9.17%">{{rue_shoulder_flex_rom}}</td>
+            <td style="width: 9.17%">{{rue_shoulder_flex_mmt}}</td>
         </tr>
         <tr>
-            <td style="width: 9.17%">{{lsx_r}}</td>
-            <td style="width: 9.17%">{{lsx_m}}</td>
+            <td style="width: 9.17%">{{lue_shoulder_ext_rom}}</td>
+            <td style="width: 9.17%">{{lue_shoulder_ext_mmt}}</td>
             <td style="width: 18.3%">Shoulder Extension</td>
-            <td style="width: 9.17%">{{rsx_r}}</td>
-            <td style="width: 9.17%">{{rsx_m}}</td>
+            <td style="width: 9.17%">{{rue_shoulder_ext_rom}}</td>
+            <td style="width: 9.17%">{{rue_shoulder_ext_mmt}}</td>
         </tr>
         <tr>
-            <td style="width: 9.17%">{{lsa_r}}</td>
-            <td style="width: 9.17%">{{lsa_m}}</td>
+            <td style="width: 9.17%">{{lue_shoulder_abd_rom}}</td>
+            <td style="width: 9.17%">{{lue_shoulder_abd_mmt}}</td>
             <td style="width: 18.3%">Shoulder Abduction</td>
-            <td style="width: 9.17%">{{rsa_r}}</td>
-            <td style="width: 9.17%">{{rsa_m}}</td>
+            <td style="width: 9.17%">{{rue_shoulder_abd_rom}}</td>
+            <td style="width: 9.17%">{{rue_shoulder_abd_mmt}}</td>
         </tr>
         <tr>
-            <td style="width: 9.17%">{{lhb_r}}</td>
-            <td style="width: 9.17%">{{lhb_m}}</td>
+            <td style="width: 9.17%">{{lue_hor_abd_rom}}</td>
+            <td style="width: 9.17%">{{lue_hor_abd_mmt}}</td>
             <td style="width: 18.3%">Horizontal Abduction</td>
-            <td style="width: 9.17%">{{rhb_r}}</td>
-            <td style="width: 9.17%">{{rhb_m}}</td>
+            <td style="width: 9.17%">{{rue_hor_abd_rom}}</td>
+            <td style="width: 9.17%">{{rue_hor_abd_mmt}}</td>
         </tr>
         <tr>
-            <td style="width: 9.17%">{{lhd_r}}</td>
-            <td style="width: 9.17%">{{lhd_m}}</td>
+            <td style="width: 9.17%">{{lue_hor_add_rom}}</td>
+            <td style="width: 9.17%">{{lue_hor_add_mmt}}</td>
             <td style="width: 18.3%">Horizontal Adduction</td>
-            <td style="width: 9.17%">{{rhd_r}}</td>
-            <td style="width: 9.17%">{{rhd_m}}</td>
+            <td style="width: 9.17%">{{rue_hor_add_rom}}</td>
+            <td style="width: 9.17%">{{rue_hor_add_mmt}}</td>
         </tr>
         <tr>
-            <td style="width: 9.17%">{{lir_r}}</td>
-            <td style="width: 9.17%">{{lir_m}}</td>
+            <td style="width: 9.17%">{{lue_intern_rot_rom}}</td>
+            <td style="width: 9.17%">{{lue_intern_rot_mmt}}</td>
             <td style="width: 18.3%">Internal Rotation</td>
-            <td style="width: 9.17%">{{rir_r}}</td>
-            <td style="width: 9.17%">{{rir_m}}</td>
+            <td style="width: 9.17%">{{rue_intern_rot_rom}}</td>
+            <td style="width: 9.17%">{{rue_intern_rot_mmt}}</td>
         </tr>
         <tr>
-            <td style="width: 9.17%">{{ler_r}}</td>
-            <td style="width: 9.17%">{{ler_m}}</td>
+            <td style="width: 9.17%">{{lue_extern_rot_rom}}</td>
+            <td style="width: 9.17%">{{lue_extern_rot_mmt}}</td>
             <td style="width: 18.3%">External Rotation</td>
-            <td style="width: 9.17%">{{rer_r}}</td>
-            <td style="width: 9.17%">{{rer_m}}</td>
+            <td style="width: 9.17%">{{rue_extern_rot_rom}}</td>
+            <td style="width: 9.17%">{{rue_extern_rot_mmt}}</td>
         </tr>
         <tr>
-            <td style="width: 9.17%">{{lef_r}}</td>
-            <td style="width: 9.17%">{{lef_m}}</td>
+            <td style="width: 9.17%">{{lue_elbow_flex_rom}}</td>
+            <td style="width: 9.17%">{{lue_elbow_flex_mmt}}</td>
             <td style="width: 18.3%">Elbow Flexion</td>
-            <td style="width: 9.17%">{{ref_r}}</td>
-            <td style="width: 9.17%">{{ref_m}}</td>
+            <td style="width: 9.17%">{{rue_elbow_flex_rom}}</td>
+            <td style="width: 9.17%">{{rue_elbow_flex_mmt}}</td>
         </tr>
         <tr>
-            <td style="width: 9.17%">{{lee_r}}</td>
-            <td style="width: 9.17%">{{lee_m}}</td>
+            <td style="width: 9.17%">{{lue_elbow_ext_rom}}</td>
+            <td style="width: 9.17%">{{lue_elbow_ext_mmt}}</td>
             <td style="width: 18.3%">Elbow Extension</td>
-            <td style="width: 9.17%">{{ree_r}}</td>
-            <td style="width: 9.17%">{{ree_m}}</td>
+            <td style="width: 9.17%">{{rue_elbow_ext_rom}}</td>
+            <td style="width: 9.17%">{{rue_elbow_ext_mmt}}</td>
         </tr>
         <tr>
-            <td style="width: 9.17%">{{lfp_r}}</td>
-            <td style="width: 9.17%">{{lfp_m}}</td>
+            <td style="width: 9.17%">{{lue_fore_pro_rom}}</td>
+            <td style="width: 9.17%">{{lue_fore_pro_mmt}}</td>
             <td style="width: 18.3%">Forearm Pronation</td>
-            <td style="width: 9.17%">{{rfp_r}}</td>
-            <td style="width: 9.17%">{{rfp_m}}</td>
+            <td style="width: 9.17%">{{rue_fore_pro_rom}}</td>
+            <td style="width: 9.17%">{{rue_fore_pro_mmt}}</td>
         </tr>
         <tr>
-            <td style="width: 9.17%">{{lfs_r}}</td>
-            <td style="width: 9.17%">{{lfs_m}}</td>
+            <td style="width: 9.17%">{{lue_fore_sup_rom}}</td>
+            <td style="width: 9.17%">{{lue_fore_sup_mmt}}</td>
             <td style="width: 18.3%">Forearm Supination</td>
-            <td style="width: 9.17%">{{rfs_r}}</td>
-            <td style="width: 9.17%">{{rfs_m}}</td>
+            <td style="width: 9.17%">{{rue_fore_sup_rom}}</td>
+            <td style="width: 9.17%">{{rue_fore_sup_mmt}}</td>
         </tr>
         <tr>
-            <td style="width: 9.17%">{{lwf_r}}</td>
-            <td style="width: 9.17%">{{lwf_m}}</td>
+            <td style="width: 9.17%">{{lue_wrist_flex_rom}}</td>
+            <td style="width: 9.17%">{{lue_wrist_flex_mmt}}</td>
             <td style="width: 18.3%">Wrist Flexion</td>
-            <td style="width: 9.17%">{{rwf_r}}</td>
-            <td style="width: 9.17%">{{rwf_m}}</td>
+            <td style="width: 9.17%">{{rue_wrist_flex_rom}}</td>
+            <td style="width: 9.17%">{{rue_wrist_flex_mmt}}</td>
         </tr>
         <tr>
-            <td style="width: 9.17%">{{lwe_r}}</td>
-            <td style="width: 9.17%">{{lwe_m}}</td>
+            <td style="width: 9.17%">{{lue_wrist_ext_rom}}</td>
+            <td style="width: 9.17%">{{lue_wrist_ext_mmt}}</td>
             <td style="width: 18.3%">Wrist Extension</td>
-            <td style="width: 9.17%">{{rwe_r}}</td>
-            <td style="width: 9.17%">{{rwe_m}}</td>
+            <td style="width: 9.17%">{{rue_wrist_ext_rom}}</td>
+            <td style="width: 9.17%">{{rue_wrist_ext_mmt}}</td>
         </tr>
     </table>
 
@@ -266,81 +262,81 @@
 
     <table border="1" style="border-collapse: collapse; width: 45%; float: right;">
         <tr>
-            <td><b>Initial Assessment of Problems/Strengths: </b>{{assessment_problems}}</td>
+            <td><b>Initial Assessment of Problems/Strengths: </b>{{init_assess}}</td>
         </tr>
     </table>
 
     <table border="1" style="border-collapse: collapse; width: 55%; float: left;">
         <tr>
-            <td style="width: 18.3%">{{l_gs}}</td>
+            <td style="width: 18.3%">{{lue_grip_str}}</td>
             <td style="width: 18.3%">Grip Strength</td>
-            <td style="width: 18.3%">{{r_gs}}</td>
+            <td style="width: 18.3%">{{rue_grip_str}}</td>
         </tr>
 
         <tr>
-            <td style="width: 18.3%">{{l_lp}}</td>
+            <td style="width: 18.3%">{{lue_lat_pinch}}</td>
             <td style="width: 18.3%">Lateral Pinch</td>
-            <td style="width: 18.3%">{{r_lp}}</td>
+            <td style="width: 18.3%">{{rue_lat_pinch}}</td>
         </tr>
 
         <tr>
-            <td style="width: 18.3%">{{l_trp}}</td>
+            <td style="width: 18.3%">{{lue_tri_pinch}}</td>
             <td style="width: 18.3%">Tripod Pinch</td>
-            <td style="width: 18.3%">{{r_trp}}</td>
+            <td style="width: 18.3%">{{rue_tri_pinch}}</td>
         </tr>
 
         <tr>
-            <td style="width: 18.3%">{{l_tp}}</td>
+            <td style="width: 18.3%">{{lue_tip_pinch}}</td>
             <td style="width: 18.3%">Tip Pinch</td>
-            <td style="width: 18.3%">{{r_tp}}</td>
+            <td style="width: 18.3%">{{rue_tip_pinch}}</td>
         </tr>
 
         <tr>
-            <td style="width: 18.3%">{{l_lt}}</td>
+            <td style="width: 18.3%">{{lue_light_touch}}</td>
             <td style="width: 18.3%">Light Touch</td>
-            <td style="width: 18.3%">{{r_lt}}</td>
+            <td style="width: 18.3%">{{rue_light_touch}}</td>
         </tr>
 
         <tr>
-            <td style="width: 18.3%">{{l_sd}}</td>
+            <td style="width: 18.3%">{{lue_sh_du}}</td>
             <td style="width: 18.3%">Sharp / Dull</td>
-            <td style="width: 18.3%">{{r_sd}}</td>
+            <td style="width: 18.3%">{{rue_sh_du}}</td>
         </tr>
 
         <tr>
-            <td style="width: 18.3%">{{l_t}}</td>
+            <td style="width: 18.3%">{{lue_temp}}</td>
             <td style="width: 18.3%">Temperature</td>
-            <td style="width: 18.3%">{{r_t}}</td>
+            <td style="width: 18.3%">{{rue_temp}}</td>
         </tr>
 
         <tr>
-            <td style="width: 18.3%">{{l_pro}}</td>
+            <td style="width: 18.3%">{{lue_prop}}</td>
             <td style="width: 18.3%">Proprioception</td>
-            <td style="width: 18.3%">{{r_pro}}</td>
+            <td style="width: 18.3%">{{rue_prop}}</td>
         </tr>
 
         <tr>
-            <td style="width: 18.3%">{{l_ste}}</td>
+            <td style="width: 18.3%">{{lue_ster}}</td>
             <td style="width: 18.3%">Stereognosis</td>
-            <td style="width: 18.3%">{{r_ste}}</td>
+            <td style="width: 18.3%">{{rue_ster}}</td>
         </tr>
 
         <tr>
-            <td style="width: 18.3%">{{l_9h}}</td>
+            <td style="width: 18.3%">{{lue_peg}}</td>
             <td style="width: 18.3%">9-Hole Peg Test</td>
-            <td style="width: 18.3%">{{r_9h}}</td>
+            <td style="width: 18.3%">{{rue_peg}}</td>
         </tr>
 
         <tr>
-            <td style="width: 18.3%">{{l_ed}}</td>
+            <td style="width: 18.3%">{{lue_edema}}</td>
             <td style="width: 18.3%">Edema</td>
-            <td style="width: 18.3%">{{r_ed}}</td>
+            <td style="width: 18.3%">{{rue_edema}}</td>
         </tr>
 
         <tr>
-            <td style="width: 18.3%">{{l_pain}}</td>
+            <td style="width: 18.3%">{{lue_pain}}</td>
             <td style="width: 18.3%">Pain</td>
-            <td style="width: 18.3%">{{r_pain}}</td>
+            <td style="width: 18.3%">{{rue_pain}}</td>
         </tr>
     </table>
     <table border="1" style="border-collapse: collapse; width: 100%;">
@@ -348,10 +344,10 @@
             <td><b>Justification of Services:</b> {{justification}}</td>
         </tr>
         <tr>
-            <td><b>Discharge Recommendation:</b> {{discharge_recommendation}}</td>
+            <td><b>Discharge Recommendation:</b> {{dis_rec}}</td>
         </tr>
         <tr>
-            <td><b>Equipment Needs:</b> {{equipment_needs}}</td>
+            <td><b>Equipment Needs:</b> {{equip_needs}}</td>
         </tr>
         <tr>
             <td><b>Patient / Family / Caregiver Goals:</b> {{patient_goals}}</td>
@@ -360,15 +356,15 @@
 
     <table border="1" style="border-collapse: collapse; width: 100%;">
         <tr>
-            <td style="width: 50%"><b>Estimated Length of Stay:</b> {{length_stay}}</td>
-            <td><b>Overall Long Term Goal:</b> {{long_goal}}</td>
+            <td style="width: 50%"><b>Estimated Length of Stay:</b> {{est_len}}</td>
+            <td><b>Overall Long Term Goal:</b> {{overall_goals}}</td>
         </tr>
         <tr>
-            <td><b>Short Term Goals / Estimated Timeframe:</b> {{short_goal}}</td>
-            <td><b>Therapist Signature / Date: </b>{{signature}} / {{date}}</td>
+            <td><b>Short Term Goals / Estimated Timeframe:</b> {{short_term_goals}}</td>
+            <td><b>Therapist Signature / Date: </b>{{signature}} / {{date_of_sig}}</td>
         </tr>
         <tr>
-            <td><b>Billing Code:</b> {{billing_code}}</td>
+            <td><b>Billing Code:</b> {{billing}}</td>
             <td><b>Units:</b> {{units}} units</td>
         </tr>
     </table>
