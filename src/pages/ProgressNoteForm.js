@@ -42,7 +42,7 @@ function ProgressNoteForm() {
   const  [date, setDate] = useState ('');
   const  [billingCodes, setBillingCodes] = useState ('');
   const  [open, setOpen] = React.useState(false);
-  const  [billingCode, setbillingCode] = React.useState('');
+  //const  [billingCode, setbillingCode] = React.useState('');
 
   const changeName = (event) => {
     setName(event.target.value);
@@ -93,7 +93,8 @@ function ProgressNoteForm() {
  // };
 
   const handleChange = (event) => {
-    setbillingCode(Number(event.target.value) || '');
+    setBillingCodes(Number(event.target.value) || '');
+    console.log(billingCodes)
   };
 
   const handleClickOpen = () => {
@@ -229,6 +230,7 @@ function ProgressNoteForm() {
            label="Name"
            id="filled-basic"
            variant="filled"
+           onChange={handleChange}
         />
         </Grid>
 
@@ -242,6 +244,7 @@ function ProgressNoteForm() {
          label="DOB"
          id="filled-basic"
          variant="filled"
+         onChange={handleChange}
         />
         </Grid>
 
@@ -255,6 +258,7 @@ function ProgressNoteForm() {
          label="SEX"
          id="filled-basic"
          variant="filled"
+         onChange={handleChange}
         />
         </Grid>
 
@@ -285,6 +289,7 @@ function ProgressNoteForm() {
          label="Diagnosis"
          id="filled-basic"
          variant="filled"
+         onChange={handleChange}
         />
         </Grid>
 
@@ -298,6 +303,7 @@ function ProgressNoteForm() {
             label="Precautions"
             id="filled-basic"
             variant="filled" 
+            onChange={handleChange}
         />
         </Grid>
 
@@ -311,6 +317,7 @@ function ProgressNoteForm() {
            label="Contraindications"
            id="filled-basic"
            variant="filled"
+           onChange={handleChange}
         />
         </Grid>
 
@@ -344,6 +351,7 @@ function ProgressNoteForm() {
            rows={3}
            placeholder="Enter summary"
            variant="filled"
+           onChange={handleChange}
         />
         </Grid>
 
@@ -370,6 +378,7 @@ function ProgressNoteForm() {
            rows={3}
            placeholder="Enter Client Performace"
            variant="filled"
+           onChange={handleChange}
         />
         </Grid>
 
@@ -395,6 +404,7 @@ function ProgressNoteForm() {
            rows={3}
            placeholder="Enter Recommendations"
            variant="filled"
+           onChange={handleChange}
         />
         </Grid>
 
@@ -416,6 +426,7 @@ function ProgressNoteForm() {
            label="Therapist Signature"
            id="filled-basic"
            variant="filled"
+           onChange={handleChange}
          />
         </Grid>
 
@@ -429,6 +440,7 @@ function ProgressNoteForm() {
          label="Date"
          id="filled-basic"
          variant="filled"
+         onChange={handleChange}
         />
         </Grid>
 
@@ -471,9 +483,9 @@ function ProgressNoteForm() {
               <InputLabel>Code</InputLabel>
               <Select
                 native
-                value={billingCode}
+                value={billingCodes}
                 onChange={handleChange}
-                input={<OutlinedInput label="billingCode" id="billingCode" />}
+                input={<OutlinedInput label="billingCodes" id="billingCodes" />}
               >
                 <option aria-label="None" value="" />
                 <option value={97165}>97165</option>
@@ -495,9 +507,9 @@ function ProgressNoteForm() {
               <TextField
                fullWidth
                label="Code"
-               id="filled-basic"
+
                variant="filled"
-               value = {billingCode}
+               value = {billingCodes}
                onChange={handleChange}
               />
             </FormControl>
