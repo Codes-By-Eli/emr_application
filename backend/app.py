@@ -1,6 +1,7 @@
 import os
 
 from SQL.sql_interaction import SQL_Interaction
+from JSON.json_interaction import JSON_Interaction
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
 from flask_jwt_extended import create_access_token, set_access_cookies, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
@@ -30,12 +31,21 @@ def refresh_expiring_jwts(response):
         # Case where there is not a valid JWT. Just return the original response
         return response
 
+@app.route("/submit_discharge", methods=['POST'])
+@jwt_required()
+def submit_discharge():
+    data = request.json
+    
+    message = json_creator.create_discharge_json(data)
+
+    return jsonify({"msg": message}),200
 
 #Christian code here pls
 @app.route("/submit_initial", methods=["POST"])
 def submit_initial():
     #replace pass with the code you would like to use
     pass
+
 
 #maybe try to protect this endpoint?
 @app.route("/sign_up", methods=["POST"])
@@ -140,4 +150,6 @@ if __name__ == '__main__':
         database.create_connection()
         database.create_tables()
         print("Database had to be created..")
+
+    json_creator = JSON_Interaction()
     app.run()
