@@ -75,7 +75,8 @@ function HomePage() {
                                         <InputAdornment position="start">
                                             <a 
                                             href={`https://www.google.com/search?q=${search}`} 
-                                            target="_blank">
+                                            target="_blank"
+                                            rel="noreferrer">
                                                 <SearchIcon />
                                             </a>
                                         </InputAdornment>
@@ -93,7 +94,8 @@ function HomePage() {
                                     
                                 }}
                                 component={Link}
-                                to="/progress_form"
+                                to="/login_form" 
+                                /* This is a temporary change for development purposes, this should be login_form */
                             >
                                 <Typography 
                                 align='center'
@@ -167,6 +169,7 @@ function HomePage() {
                             <a 
                             href="https://www.iona.edu/academics/explore-majors-programs/occupational-therapy-ms-degree?utm_source=carnegie-digital&utm_medium=ppc&utm_campaign=occupational-therapy&utm_term=google&utm_content=iona%20occupational%20therapy-p&gclid=CjwKCAiA2L-dBhACEiwAu8Q9YPHG9aSUCULxTOvo3z779uziRWn9DnNr8fRXRCGKieF3RsacnouNLxoCkqQQAvD_BwE"
                             target="_blank"
+                            rel="noreferrer"
                             >
                                 <Button
                                     variant='contained'
@@ -195,6 +198,7 @@ function HomePage() {
                             <a 
                                 href="https://www.quatrishealthco.com/what-is-an-emr/"
                                 target="_blank"
+                                rel="noreferrer"
                                 >
                                 <Button
                                     variant='outlined'

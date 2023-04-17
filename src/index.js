@@ -7,13 +7,15 @@ import reportWebVitals from './reportWebVitals';
 import { ProSidebarProvider } from "react-pro-sidebar";
 
 
+import { ProSidebarProvider } from 'react-pro-sidebar';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-    <ProSidebarProvider>
-      <App/>
-    </ProSidebarProvider>
+      <ProSidebarProvider>
+        <App />
+      </ProSidebarProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
