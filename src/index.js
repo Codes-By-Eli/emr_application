@@ -6,12 +6,19 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ProSidebarProvider } from 'react-pro-sidebar';
 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ProSidebarProvider>
     <BrowserRouter>
+<<<<<<< HEAD
         <App />
+=======
+      <ProSidebarProvider>
+        <App />
+      </ProSidebarProvider>
+>>>>>>> main
     </BrowserRouter>
     </ProSidebarProvider>
   </React.StrictMode>

@@ -19,6 +19,8 @@ import InputLabel from '@mui/material/InputLabel';
 import { NativeSelect } from '@mui/material';
 import { useEffect } from 'react';
 import './TableStyling.css';
+import Select from '@mui/material/Select';
+
 
 const TabContainer = styled.div`
   display: flex;
@@ -73,6 +75,7 @@ function InitialEvaluationForm() {
   /* Client and Medical Tab */
   name: '',
   dob: '',
+  sex: '',
   date: '',
   med_num: '',
   med_hx: '',
@@ -168,6 +171,11 @@ function InitialEvaluationForm() {
   rue_fore_sup_rom:'',
   rue_fore_sup_mmt:'',
 
+  lue_fore_pro_rom:'',
+  lue_fore_pro_mmt:'',
+  rue_fore_pro_rom:'',
+  rue_fore_pro_mmt:'',
+
   lue_wrist_flex_rom:'',
   lue_wrist_flex_mmt:'',
   rue_wrist_flex_rom:'',
@@ -229,6 +237,8 @@ function InitialEvaluationForm() {
   short_term_goals: '',
   overall_goals: '',
   justification: '',
+  billing: '',
+  est_len:'',
   units:'',
   signature: '',
   date_of_sig: '',
@@ -262,35 +272,32 @@ function InitialEvaluationForm() {
   const [message, setMessage] = useState('');
 
 
-/*
+
   async function submitInitEval()
   {
-    if (isNotEmpty)
-    {
+  
       
-      console.log("all good");
-    }
-    else{console.log("Not good");}  
-      
-      const response = await fetch("http://127.0.0.1:5000/initial_evaluation", allValues);
-      const data = await response.json();
-      if(!response.ok)
-      {
-        setMessage(data.msg);
-        handleOpen();
-        return;
-      }
-      window.location.replace("http://127.0.0.1:3000/login_form");
-    }
-    else
-    {
-      handleOpen();
-      setMessage("Please enter data into ALL fields and click Submit again.");
-    }
-    
+      var requestOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+          
+        
+        },
+          body: JSON.stringify(allValues)
 
-  }
-*/
+      };
+      
+      
+      
+    
+      const response = await fetch("http://127.0.0.1:5000/submit_initial", requestOptions);
+      const data = await response.json
+      console.log(data);
+
+
+    }
+
 
   function getEmptyEntries() {
     return Object.entries(allValues).filter(([key, value]) => value === '');
@@ -430,15 +437,23 @@ function InitialEvaluationForm() {
               <Grid item xs={12}></Grid>
               <Grid item xs={12}></Grid>
               <Grid item xs={.20}></Grid>
-              <Grid item xs={4}>
+              <Grid item xs={2}>
                 <TextField label="Client Name" 
                 
-                id='name'
+                id='first_name'
                 fullWidth
                 style={{ padding: 1}}
                 onBlur={changeHandler} />
               </Grid>
               <Grid item xs={.20}></Grid>
+              <Grid item xs={1.5}>
+                <TextField label='Sex'
+                  id='sex'
+                  fullWidth
+                  style={{ padding: 1}}
+                  onBlur={changeHandler}></TextField>
+              </Grid>
+              <Grid item xs={.2}></Grid>
               <Grid item xs={2}>
                 <TextField label = "Date of Birth:"
                 id='dob'
@@ -449,7 +464,7 @@ function InitialEvaluationForm() {
               <Grid item xs={.20}></Grid>
               
               
-            <Grid item xs={2}>
+            <Grid item xs={1.5}>
               <TextField label="Date of Eval:"
               fullWidth
               
@@ -459,7 +474,7 @@ function InitialEvaluationForm() {
             </Grid>
         	  
             <Grid item xs={.2}></Grid>
-        	  <Grid item xs={3}>
+        	  <Grid item xs={1.8}>
               <TextField label="Med Record #:"
                 id='med_num'
                 
@@ -663,7 +678,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number', min: 1, min: 1,
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -675,7 +690,7 @@ function InitialEvaluationForm() {
                 <TableCell align='center'> 
                   <TextField  
                     InputProps={{ inputProps: {
-                    type: 'number', min: 1, min: 1,
+                    type: 'number', min: 1,
                     style: { textAlign: 'center' },
                     },
                    }}
@@ -1493,6 +1508,55 @@ function InitialEvaluationForm() {
                     </TextField>
                   </TableCell>
                 </TableRow>
+                {/*Forearm Pronation Row*/}
+                
+                <TableRow>  
+                  <TableCell align='center'> 
+                    <TextField  
+                      InputProps={{ inputProps: {
+                      type: 'number', min: 1,
+                      style: { textAlign: 'center' },
+                      },
+                    }}
+                      id='lue_fore_pro_rom'
+                      onBlur={changeHandler}>
+                    </TextField>
+                  </TableCell>
+                  <TableCell align='center'> 
+                    <TextField  
+                      InputProps={{ inputProps: {
+                      type: 'number', min: 1,
+                      style: { textAlign: 'center' },
+                      },
+                    }}
+                      id='lue_fore_pro_mmt'
+                      onBlur={changeHandler}>
+                    </TextField>
+                  </TableCell>
+                  <TableCell align='center'>Forearm Pronation</TableCell>
+                  <TableCell align='center'> 
+                    <TextField  
+                      InputProps={{ inputProps: {
+                      type: 'number', min: 1,
+                      style: { textAlign: 'center' },
+                      },
+                    }}
+                      id='rue_fore_pro_rom'
+                      onBlur={changeHandler}>
+                    </TextField>
+                  </TableCell>
+                  <TableCell align='center'> 
+                    <TextField  
+                      InputProps={{ inputProps: {
+                      type: 'number', min: 1,
+                      style: { textAlign: 'center' },
+                      },
+                    }}
+                      id='rue_fore_pro_mmt'
+                      onBlur={changeHandler}>
+                    </TextField>
+                  </TableCell>
+                </TableRow>
                     {/*Wrist Flexion Row*/}
                     <TableRow>  
                   <TableCell align='center'> 
@@ -2078,7 +2142,45 @@ function InitialEvaluationForm() {
               </Grid>
               <Grid item xs={2}></Grid>
               
-              <Grid item xs={3/4}></Grid>
+              <Grid item xs={5/12}></Grid>
+              <Grid item xs={2}>
+                <TextField label="Estimated Length:"
+                  fullWidth
+                  id='est_len'
+                  onBlur={changeHandler}
+                  ></TextField>
+              </Grid>
+            {/*  <Grid item xs={2}>
+                <FormControl fullWidth>
+                  <InputLabel>Billing</InputLabel>
+                  <Select
+                    id="billing"
+                  
+      
+                    label="Billing Codes"
+                    onBlur={changeHandler}
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={'97165'}>97165</MenuItem>
+                    <MenuItem value={'97166'}>97166</MenuItem>
+                    <MenuItem value={'97167'}>97167</MenuItem>
+                    <MenuItem value={'97168'}>97168</MenuItem>
+                    <MenuItem value={'97110'}>97110</MenuItem>
+                    <MenuItem value={'97112'}>97112</MenuItem>
+                    <MenuItem value={'97129'}>97129</MenuItem>
+                    <MenuItem value={'97150'}>97150</MenuItem>
+                    <MenuItem value={'97530'}>97530</MenuItem>
+                    <MenuItem value={'97533'}>97533</MenuItem>
+                    <MenuItem value={'97535'}>97535</MenuItem>
+                    <MenuItem value={'97537'}>97537</MenuItem>
+                    <MenuItem value={'97542'}>97542</MenuItem>
+                  </Select>
+                </FormControl>
+                </Grid>
+                  */}
+              <Grid item xs={5/12}></Grid>
               <Grid item xs={2}>
                 <TextField label="Total Units:"
                   fullWidth
@@ -2087,7 +2189,7 @@ function InitialEvaluationForm() {
                   ></TextField>
               </Grid>
 
-              <Grid item xs={3/4}></Grid>
+              <Grid item xs={5/12}></Grid>
               <Grid item xs={4}>
                 <TextField label="Therapist Signature:"
                   fullWidth
@@ -2095,8 +2197,8 @@ function InitialEvaluationForm() {
                   onBlur={changeHandler}
                   ></TextField>
               </Grid>
-              <Grid item xs={3/4}></Grid>
-              <Grid item xs={2.5}>
+              <Grid item xs={5/12}></Grid>
+              <Grid item xs={2}>
                 <TextField label="Date:"
                   fullWidth
                   id='date_of_sig'

@@ -1,5 +1,8 @@
 import os
 
+from JSON.json_interaction import JSON_Interaction
+
+
 from SQL.sql_interaction import SQL_Interaction
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
@@ -33,9 +36,203 @@ def refresh_expiring_jwts(response):
 
 #Christian code here pls
 @app.route("/submit_initial", methods=["POST"])
+@jwt_required
 def submit_initial():
     #replace pass with the code you would like to use
-    pass
+    data = request.json
+    
+        
+
+    
+
+    table = "Clients"
+    params = [
+        "first_name",
+        "last_name",
+        "date_of_birth",
+        "sex"
+        
+    
+    ]
+
+    values = [
+        data['name'].split()[0], ' '.join(data['name'].split()[1:]),
+        data['dob'],
+        data['sex']
+    ]
+    client_id = database.perform_insert(table, params, values)
+
+
+    
+    table = "initial_fim_scores"
+    params = [
+        "eating",
+        "grooming",
+        "bathing",
+        "upper_body_dressing",
+        "lower_body_dressing",
+        "toileting",
+        "toilet_transfer",
+        "shower_transfer",
+        "tub_transfer"
+    ]
+    values = [
+        data['eat_init'],
+        data['groom_init'],
+        data['bath_init'],
+        data['upper_init'],
+        data['lower_init'],
+        data['toilet_init'],
+        data['toilet_transfer_init'],
+        data['shower_transfer_init'],
+        data['tub_transfer_init']
+
+    ]
+    init_fim = database.perform_insert(table, params, values)
+
+    table = 'goal_fim_scores'
+    values = [
+        data['eat_goal'],
+        data['groom_goal'],
+        data['bath_goal'],
+        data['upper_goal'],
+        data['lower_goal'],
+        data['toilet_goal'],
+        data['toilet_transfer_goal'],
+        data['shower_transfer_goal'],
+        data['tub_transfer_goal']
+    ]
+    
+    goal_fim= database.perform_insert(table,params, values)
+
+    table = "fim_evaluation"
+    params [
+        init_fim['last_id'],
+        goal_fim['last_id']
+
+    ]
+    fim_eval = database.perform_insert(table, params, values)
+    
+
+    table = 'right_rom'
+    params = [
+        "shoulder_elevation",
+        "shoulder_flexion",
+        "shoulder_extension",
+        "shoulder_abduction",
+        "horizontal_abduction",
+        "horizontal_adduction",
+        "internal_rotation",
+        "external_rotation",
+        "elbow_flexion",
+        "elbow_extension",
+        "forearm_pronation",
+        "forearm_supination",
+        "wrist_flexion",
+        "wrist_extension"
+    ]
+
+    values = [
+        data['rue_shoulder_ev_rom'],
+        data['rue_shoulder_flex_rom'],
+        data['rue_shoulder_ext_rom'],
+        data['rue_shoulder_abd_rom'],
+        data['rue_hor_abd_rom'],
+        data['rue_hor_add_rom'],
+        data['rue_intern_rot_rom'],
+        data['rue_extern_rot_rom'],
+        data['rue_elbow_flex_rom'],
+        data['rue_elbow_ext_rom'],
+        data['rue_fore_pro_rom'],
+        data['rue_fore_sup_rom'],
+        data['rue_wrist_flex_rom'],
+        data['rue_wrist_ext_rom']
+    ]
+
+    right_rom = database.perform_insert(table,params,values)
+
+    table = "right_mmt"
+    
+    values = [
+
+        data['rue_shoulder_ev_mmt'],
+        data['rue_shoulder_flex_mmt'],
+        data['rue_shoulder_ext_mmt'],
+        data['rue_shoulder_abd_mmt'],
+        data['rue_hor_abd_mmt'],
+        data['rue_hor_add_mmt'],
+        data['rue_intern_rot_mmt'],
+        data['rue_extern_rot_mmt'],
+        data['rue_elbow_flex_mmt'],
+        data['rue_elbow_ext_mmt'],
+        data['rue_fore_pro_mmt'],
+        data['rue_fore_sup_mmt'],
+        data['rue_wrist_flex_mmt'],
+        data['rue_wrist_ext_mmt']
+    ]
+        
+    right_mmt = database.perform_insert(table, params,values)
+
+    table = "left_rom"
+
+    values = [
+        data['lue_shoulder_ev_rom'],
+        data['lue_shoulder_flex_rom'],
+        data['lue_shoulder_ext_rom'],
+        data['lue_shoulder_abd_rom'],
+        data['lue_hor_abd_rom'],
+        data['lue_hor_add_rom'],
+        data['lue_intern_rot_rom'],
+        data['lue_extern_rot_rom'],
+        data['lue_elbow_flex_rom'],
+        data['lue_elbow_ext_rom'],
+        data['lue_fore_pro_rom'],
+        data['lue_fore_sup_rom'],
+        data['lue_wrist_flex_rom'],
+        data['lue_wrist_ext_rom']
+    ]
+
+    left_rom = database.perform_insert(table, params, values)
+
+    table = "left_mmt"
+
+    values = [
+        data['lue_shoulder_ev_mmt'],
+        data['lue_shoulder_flex_mmt'],
+        data['lue_shoulder_ext_mmt'],
+        data['lue_shoulder_abd_mmt'],
+        data['lue_hor_abd_mmt'],
+        data['lue_hor_add_mmt'],
+        data['lue_intern_rot_mmt'],
+        data['lue_extern_rot_mmt'],
+        data['lue_elbow_flex_mmt'],
+        data['lue_elbow_ext_mmt'],
+        data['lue_fore_pro_mmt'],
+        data['lue_fore_sup_mmt'],
+        data['lue_wrist_flex_mmt'],
+        data['lue_wrist_ext_mmt']
+    ]
+
+    left_mmt = database.perform_insert(table,params,values)
+
+    table = ''
+
+
+
+    
+    
+
+    
+    
+    
+    
+    
+  
+    
+
+
+
+
 
 #maybe try to protect this endpoint?
 @app.route("/sign_up", methods=["POST"])
