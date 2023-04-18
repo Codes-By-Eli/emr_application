@@ -21,7 +21,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import InputLabel from '@mui/material/InputLabel';
-import { NativeSelect } from '@mui/material';
+import { NativeSelect, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { useEffect } from 'react';
 import './TableStyling.css';
 
@@ -238,9 +238,7 @@ function DischargeEvaluationForm() {
   signature: '',
   date_of_sig: '',
   });
-  useEffect(() => {
-    console.log(allValues.AO);
-  }, [allValues.AO]);
+
 
   const changeHandler = e => { 
     const key = e.target.id || e.target.name;
@@ -262,6 +260,12 @@ function DischargeEvaluationForm() {
 
   async function submitDiscEval()
   {
+    if(!isNotEmpty)
+    {
+      handleOpen();
+      setMessage("Please enter all the fields and click \"Submit\" again.");
+      return;
+    }
     var requestOptions = {
       method: "POST",
       headers: {
@@ -275,10 +279,6 @@ function DischargeEvaluationForm() {
     const data = await response.json();
     console.log(data);
 
-  }
-
-  function getEmptyEntries() {
-    return Object.entries(allValues).filter(([key, value]) => value === '');
   }
 
   async function getProfile()
@@ -296,7 +296,7 @@ function DischargeEvaluationForm() {
 
   useEffect(() => {
     getProfile();
-   
+    console.log(typeof allValues);
   },[])
 
   return (
@@ -347,6 +347,62 @@ function DischargeEvaluationForm() {
           <MenuItem component = {<Link to = "/old_form" />}icon={< DescriptionIcon/>}>View Old Forms</MenuItem>
         </Menu>
       </Sidebar>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{
+          style: {
+            backgroundColor:"#f55d7a",
+            
+          },
+        }}
+      >
+        <DialogTitle id="alert-dialog-title">
+        <Typography 
+            component={"span"}
+            variant='h4'
+            align='center'
+            color='#f5f6f7'
+            >
+            {"Not all of the fields were entered for the Discharge Evaluation!"}
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <Typography
+              component={"span"} 
+              align='center'
+              color='#f5f6f7'
+              style={{
+                fontSize: "1.1vw"
+            }}
+            >
+              {message}
+            </Typography>
+            
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+          sx={{
+            bgcolor: "#F8DE7E",
+            ':hover':{
+              bgcolor: "#FADA5E"
+            },
+            color: "black"
+          }}
+          fullWidth
+          variant='contained'
+          size='medium'
+          onClick={handleClose}>
+            Understood!
+          </Button>
+        </DialogActions>
+
+      </Dialog>
       
     <Box sx={{
           width: '200vh',
@@ -2246,7 +2302,7 @@ function DischargeEvaluationForm() {
                   <option value={"97167"}>97167</option>
                   <option value={"97168"}>97168</option>
                   <option value={"97110"}>97110</option>
-                  <option value={"07112"}>07112</option>
+                  <option value={"97112"}>07112</option>
                   <option value={"97129"}>97129</option>
                   <option value={"97150"}>97150</option>
                   <option value={"97530"}>97530</option>
