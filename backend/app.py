@@ -121,7 +121,7 @@ def submit_discharge():
             "tub_transfer"
         ]
         values = [
-            fim_eval,
+            fim_eval['last_id'],
             data['eat_disc'], 
             data['groom_disc'], 
             data['bath_disc'], 
