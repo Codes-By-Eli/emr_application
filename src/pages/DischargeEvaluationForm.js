@@ -60,6 +60,7 @@ function DischargeEvaluationForm() {
  const [allValues, setAllValues] = useState({
   /* Client and Medical Tab */
   name: '',
+  sex: '',
   dob: '',
   date: '',
   med_num: '',
@@ -232,6 +233,7 @@ function DischargeEvaluationForm() {
   client_education: '',
   course_of_rehab:'',
   justification: '',
+  billing: '',
   units:'',
   signature: '',
   date_of_sig: '',
@@ -357,7 +359,7 @@ function DischargeEvaluationForm() {
       }}>
 
           <Grid container className='TabContainer' spacing={0}> 
-          <Grid item xs={3}></Grid>
+          <Grid item xs={2.5}></Grid>
           <Grid item xs={7}>  
             <TabContainer alignItems='center' display='flex' justifyContent='center'>
               <TabButton
@@ -398,7 +400,7 @@ function DischargeEvaluationForm() {
               </TabButton>
             </TabContainer>
             </Grid>
-            <Grid item xs={2}></Grid>
+            <Grid item xs={2.5}></Grid>
           </Grid>
         
         <Container sx = {{
@@ -421,10 +423,19 @@ function DischargeEvaluationForm() {
               <Grid item xs={12}></Grid>
               <Grid item xs={12}></Grid>
               <Grid item xs={.20}></Grid>
-              <Grid item xs={4}>
+              <Grid item xs={2}>
                 <TextField label="Client Name" 
                 required
                 id='name'
+                fullWidth
+                style={{ padding: 1}}
+                onBlur={changeHandler} />
+              </Grid>
+              <Grid item xs={.20}></Grid>
+              <Grid item xs={1.8}>
+                <TextField label="Sex" 
+                required
+                id='sex'
                 fullWidth
                 style={{ padding: 1}}
                 onBlur={changeHandler} />
@@ -2216,34 +2227,71 @@ function DischargeEvaluationForm() {
 
               </Grid>
               <Grid item xs={2/3}></Grid>
-              
-              
-              <Grid item xs={3/4}></Grid>
-              <Grid item xs={2}>
-                <TextField label="Total Units:"
+
+              <Grid item xs={2/3}></Grid>
+              <Grid item xs={2.5}>
+              <InputLabel variant="standard" >
+                Billing Code:
+             </InputLabel>
+                <NativeSelect
+                  onChange={changeHandler}
+                  inputProps={{
+                    name: 'Billing Code',
+                    id: 'billing',
+                    align: "center"
+                }}
+              >
+                  <option value={"97165"}>97165</option>
+                  <option value={"97166"}>97166</option>
+                  <option value={"97167"}>97167</option>
+                  <option value={"97168"}>97168</option>
+                  <option value={"97110"}>97110</option>
+                  <option value={"07112"}>07112</option>
+                  <option value={"97129"}>97129</option>
+                  <option value={"97150"}>97150</option>
+                  <option value={"97530"}>97530</option>
+                  <option value={"97533"}>97533</option>
+                  <option value={"97535"}>97535</option>
+                  <option value={"97537"}>97537</option>
+                  <option value={"97542"}>97542</option>
+              </NativeSelect>
+              </Grid>
+              <Grid item xs={2.5}>
+              <TextField label="Other Billing Code:"
                   fullWidth
-                  id='units'
+                  id='billing'
+                  type='number'
                   onBlur={changeHandler}
                   ></TextField>
               </Grid>
+              <Grid item xs={2/3}></Grid>
+              <Grid item xs={5}>
+              <TextField label="Total Units:"
+                  fullWidth
+                  id='units'
+                  type='number'
+                  onBlur={changeHandler}
+                  ></TextField>
+              </Grid>
+              <Grid item xs={2/3}></Grid>
 
-              <Grid item xs={3/4}></Grid>
-              <Grid item xs={4}>
-                <TextField label="Therapist Signature:"
+              <Grid item xs={2/3}></Grid>
+              <Grid item xs={5}>
+              <TextField label="Therapist Signature:"
                   fullWidth
                   id='signature'
                   onBlur={changeHandler}
                   ></TextField>
               </Grid>
-              <Grid item xs={3/4}></Grid>
-              <Grid item xs={2.5}>
-                <TextField label="Date:"
+              <Grid item xs={2/3}></Grid>
+              <Grid item xs={5}>
+              <TextField label="Date:"
                   fullWidth
                   id='date_of_sig'
                   onBlur={changeHandler}
                   ></TextField>
-
-                </Grid>
+              </Grid>
+              <Grid item xs={2/3}></Grid>
 
               <Grid item xs={12}></Grid>
               <Grid item xs={12}></Grid>
@@ -2251,7 +2299,6 @@ function DischargeEvaluationForm() {
               <Grid item xs={5.5}></Grid>
               <Grid item xs={1}>
                  <Button
-                  
                     sx={{
                       bgcolor:"#20df7f",
                       ':hover':{
