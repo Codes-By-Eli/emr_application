@@ -1,19 +1,19 @@
 from pdf_interaction import PDF_Interaction
-import pathlib
+
 if __name__ == "__main__":
     pdf_creator = PDF_Interaction()
     info = {
-        "client_name": "John Doe",
+        "name": "John Doe",
         "sex": "Male",
-        "d_o_b": "03/27/1991",
+        "DOB": "03/27/1991",
         "record_number": "03124",
         "diagnosis": "Depression",
         "precautions": "N/A",
         "contraindications": "N/A",
         "date": "03/25/2023",
-        "summary": "The client experienced flashes where they were beside themselves and considered a danger to themselves and others",
+        "summaryOfServices": "The client experienced flashes where they were beside themselves and considered a danger to themselves and others",
         "performance": "The client is has been noticing small happiness and activities that they enjoyed as a child",
-        "recommendations": "We plan to keep introducing fun activities to the client that reminds them of their childhood",
+        "planOrReccomendations": "We plan to keep introducing fun activities to the client that reminds them of their childhood",
         "billing": "978145",
         "units": "2"
     }
@@ -311,6 +311,4 @@ if __name__ == "__main__":
         "date_of_sig": "04/16/2023"
     }
 
-    pdf_creator.create_discharge_pdf(info3)
-    
-    #print(pathlib.Path.home() / "Downloads" / "new_folder" / "eval.pdf")
+    #pdf_creator.create_discharge_pdf(info3)
