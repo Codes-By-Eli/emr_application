@@ -42,7 +42,7 @@ function ProgressNoteForm() {
   const  [date, setDate] = useState ('');
   const  [billingCodes, setBillingCodes] = useState ('');
   const  [open, setOpen] = React.useState(false);
-  //const  [billingCode, setbillingCode] = React.useState('');
+  cosnt  [units,setUnits] = useState('');
 
   const changeName = (event) => {
     setName(event.target.value);
@@ -91,6 +91,10 @@ function ProgressNoteForm() {
  // const ChangeBillingCodes = (event) =>{
  //   setBillingCodes(event.target.value);
  // };
+
+ const units = (event) => {
+  setUnits(event.target.value);
+};
 
   const handleChange = (event) => {
     setBillingCodes(Number(event.target.value) || '');
