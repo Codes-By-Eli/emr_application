@@ -2302,7 +2302,7 @@ function DischargeEvaluationForm() {
                   <option value={"97167"}>97167</option>
                   <option value={"97168"}>97168</option>
                   <option value={"97110"}>97110</option>
-                  <option value={"97112"}>07112</option>
+                  <option value={"97112"}>97112</option>
                   <option value={"97129"}>97129</option>
                   <option value={"97150"}>97150</option>
                   <option value={"97530"}>97530</option>
