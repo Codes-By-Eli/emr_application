@@ -38,11 +38,11 @@ class PDF_Interaction:
             output_text = template.render(info)
 
             pdf_path = "./backend/PDF/wkhtmltopdf/bin/wkhtmltopdf.exe"
-            download_path = pathlib.Path.home() / "Downloads" / f"progress_{info['med_num']}_{info['name'].strip()}.pdf"
+            download_path = pathlib.Path.home() / "Downloads" / f"progress_{info['record_number']}_{info['name'].strip()}.pdf"
 
             config = pdfkit.configuration(wkhtmltopdf=pdf_path)
             pdfkit.from_string(output_text, download_path, configuration=config)
-            print(f"Successfully made made Progress Note PDF:")
+            print(f"Successfully made made Progress Note PDF!")
         except:
             print("Error converting the Progress Note to the pdf!")
 

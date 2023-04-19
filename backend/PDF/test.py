@@ -12,13 +12,14 @@ if __name__ == "__main__":
         "contraindications": "N/A",
         "date": "03/25/2023",
         "summaryOfServices": "The client experienced flashes where they were beside themselves and considered a danger to themselves and others",
-        "performance": "The client is has been noticing small happiness and activities that they enjoyed as a child",
+        "clientPerformance": "The client is has been noticing small happiness and activities that they enjoyed as a child",
         "planOrReccomendations": "We plan to keep introducing fun activities to the client that reminds them of their childhood",
         "billing": "978145",
-        "units": "2"
+        "units": "2",
+        "therapistSignature": "Ramrattan Sawh"
     }
 
-    #pdf_creator.create_progress_pdf(info)
+    pdf_creator.create_progress_pdf(info)
 
     info2 = {
         "name": "John Doe",
