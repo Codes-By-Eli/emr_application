@@ -266,6 +266,11 @@ function DischargeEvaluationForm() {
       setMessage("Please enter all the fields and click \"Submit\" again.");
       return;
     }
+    if(!checkValidRecord())
+    {
+      handleOpen();
+      setMessage("That medical record number is currently in use. Please enter a different number for the medical record number.");
+    }
     var requestOptions = {
       method: "POST",
       headers: {
@@ -296,8 +301,28 @@ function DischargeEvaluationForm() {
 
   useEffect(() => {
     getProfile();
-    console.log(typeof allValues);
   },[])
+
+  async function checkValidRecord()
+  {
+    var requestOptions = {
+      method: "GET",
+      headers: {"Authorization": `Bearer ${sessionStorage.getItem('token')}`}
+    };
+
+    const response = await fetch("http://127.0.0.1:5000/check_valid_medical_number", requestOptions);
+    const data = await response.json();
+    if(data.msg === "Not Valid")
+    {
+      handleOpen();
+      setMessage("That medical record number is currently in use. Please enter a different number for the medical record number.");
+      return false;
+    }
+
+  }
+  useEffect(() => {
+    checkValidRecord();
+  },[allValues.med_num])
 
   return (
     <div id="app" style={({ height: "75vh" }, { display: "flex" })}>

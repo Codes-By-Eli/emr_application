@@ -13,5 +13,11 @@ if __name__ == "__main__":
         database.create_tables()
         print("Database had to be created..")
 
-    response = database.perform_insert("clients",['first_name','last_name','date_of_birth','sex'],['John','Smith', '2022-12-24', 'Male'])
-    print(f"Response: {response['last_id']}")
+    #response = database.perform_insert("clients",['first_name','last_name','date_of_birth','sex'],['John','Smith', '2022-12-24', 'Male'])
+    #print(f"Response: {response['last_id']}")
+    response = database.perform_select("users",["user_id"])
+    key_value = (3,)
+    if key_value in response:
+        print("It is in there")
+    else:
+        print("It is not")

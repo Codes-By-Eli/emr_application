@@ -332,6 +332,26 @@ def submit_discharge():
         "sql_conversion": sql_conversion
         }),200
 
+@app.route("/check_valid_medical_number", methods=['POST'])
+def check_num():
+    data = request.json
+    try:
+        response = database.perform_select("discharge_evaluation",["medical_record_id"])
+        key_value = (data['med_num'],)
+        if key_value in response:
+            message = {
+                "msg": "Not Valid"
+            },200
+        else:
+            message = {
+                "msg": "Valid"
+            },200
+        return message
+    except:
+        return {
+            "msg": "Error"
+        }, 400
+
 #Christian code here pls
 @app.route("/submit_initial", methods=["POST"])
 def submit_initial():
