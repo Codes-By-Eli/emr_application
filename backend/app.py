@@ -38,10 +38,15 @@ def submit_discharge():
     data = request.json
     json_conversion = True
     sql_conversion = True
+    pdf_conversion = True
     try:
         message = json_creator.create_discharge_json(data)
     except:
         json_conversion = False
+    try:
+        pdf_message = pdf_creator.create_discharge_pdf(data)
+    except:
+        pdf_conversion = False
     try:
         table = "clients"
         params = [
@@ -330,6 +335,7 @@ def submit_discharge():
         sql_conversion = False
     return jsonify({
         "json_conversion": json_conversion,
+        "pdf_conversion": pdf_conversion,
         "sql_conversion": sql_conversion
         }),200
 
