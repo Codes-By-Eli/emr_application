@@ -100,15 +100,17 @@ function SignUpForm() {
       return;
     }
 
-      const response = await fetch("http://127.0.0.1:5000/sign_up", requestOptions);
-      const data = await response.json();
-      if(!response.ok)
-      {
-        setMessage(data.msg);
-        handleOpen();
-        return;
-      }
-      window.location.replace("http://127.0.0.1:3000/login_form");
+    const response = await fetch("http://127.0.0.1:5000/sign_up", requestOptions);
+    const data = await response.json();
+    if(!response.ok)
+    {
+      setMessage(data.msg);
+      handleOpen();
+      return;
+    }
+    window.location.replace("http://127.0.0.1:3000/login_form");
+
+    
   }
 
   return ( 
