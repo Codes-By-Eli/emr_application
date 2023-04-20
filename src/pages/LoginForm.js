@@ -24,8 +24,6 @@ function LoginForm() {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
   
-    
-
     const handleClose = () => {
       setOpen(false);
     };
@@ -45,7 +43,6 @@ function LoginForm() {
     //implement functionality of storing token
     function saveToken (userToken){
       sessionStorage.setItem('token', userToken);
-      localStorage.setItem('token', userToken);
       setToken(userToken);
 
     }
@@ -87,14 +84,36 @@ function LoginForm() {
     saveToken(data.access_token);
     }
 
+    async function attemptRetry()
+    {
+      var requestOptions = {
+        method: "GET",
+        headers: {"Authorization": `Bearer ${sessionStorage.getItem('token')}`}
+      };
+  
+      const response = await fetch("http://127.0.0.1:5000/profile", requestOptions);
+      if(!response.ok)
+      {
+        return; 
+      }
+      navigate("/landing_page");
+    }
+
     useEffect(() => {
       if(!token)
       {
         return;
       }
-      //window.location.href = "http://127.0.0.1:3000/";
       navigate("/landing_page");
     },[token])
+
+    useEffect(() => {
+      if(sessionStorage.getItem('token') === null)
+      {
+        return;
+      }
+      attemptRetry();
+    }, [])
 
 
   return (
