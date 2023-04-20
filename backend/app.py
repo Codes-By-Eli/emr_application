@@ -1,6 +1,7 @@
 import os
 
 from SQL.sql_interaction import SQL_Interaction
+from PDF.pdf_interaction import PDF_Interaction
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
 from flask_jwt_extended import create_access_token, set_access_cookies, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
@@ -118,6 +119,75 @@ def my_profile():
     }), 200
     return response_body
 
+#pass JSON object in same format as method for create_initial_pdf in PDF/pdf_interaction.py
+@app.route("/submit_initial", methods=['POST'])
+@jwt_required()
+def submit_init_eval():
+    data = request.json
+
+    try:
+        #make method call to insert into database here
+        
+        
+        pdf_creator.create_initial_pdf(data)
+
+        #make method call to save json data as an object
+
+        response_body = jsonify({
+            "msg": "Successfully saved the Initial Evaluation Form"
+        }), 200
+    except:
+        response_body = jsonify({
+            "msg": "Errors while saving the Initial Evaluation Form"
+        }), 401
+    return response_body
+
+#pass JSON object in same format as method for create_discharge_pdf in PDF/pdf_interaction.py
+@app.route("/submit_discharge", methods=['POST'])
+@jwt_required()
+def submit_disc_eval():
+    data = request.json
+
+    try:
+        #make method call to insert into database here
+        
+        
+        pdf_creator.create_discharge_pdf(data)
+
+        #make method call to save json data as an object
+
+        response_body = jsonify({
+            "msg": "Successfully saved the Discharge Evaluation Form"
+        }), 200
+    except:
+        response_body = jsonify({
+            "msg": "Errors while saving the Discharge Evaluation Form"
+        }), 401
+    return response_body
+
+#pass JSON object in same format as method for create_initial_pdf in PDF/pdf_interaction.py
+@app.route("/submit_progress", methods=['POST'])
+@jwt_required()
+def submit_progress_eval():
+    data = request.json
+
+    try:
+        #make method call to insert into database here
+        
+        
+        pdf_creator.create_progress_pdf(data)
+
+        #make method call to save json data as an object
+
+        response_body = jsonify({
+            "msg": "Successfully saved the Progress Note Form"
+        }), 200
+    except:
+        response_body = jsonify({
+            "msg": "Errors while saving the Progress Note Form"
+        }), 401
+    return response_body
+
 @app.route('/testGET', methods=['GET'])
 def testGet():
     return {
@@ -135,9 +205,11 @@ if __name__ == '__main__':
         database = SQL_Interaction("./backend/SQL/emr_database.db")
         database.create_connection()
         print("Connecting to an existing database..")
+
     else:
         database = SQL_Interaction("./backend/SQL/emr_database.db")
         database.create_connection()
         database.create_tables()
         print("Database had to be created..")
+    pdf_creator = PDF_Interaction()
     app.run()
