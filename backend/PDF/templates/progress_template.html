@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Note</title>
+</head>
+<body>
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+        <tr>
+            <td><b>Client Name:</b> {{name}}</td>
+            <td><b>Sex: </b> {{sex}}</td>
+            <td><b>D.O.B:</b> {{DOB}}</td>
+            <td><b>Health Record #:</b> {{record_number}}</td>
+        </tr>
+        <tr>
+            <td><b>Diagnosis:</b> {{diagnosis}}</td>
+            <td><b>Precautions:</b> {{precautions}}</td>
+            <td><b>Contraindications:</b> {{contraindications}}</td>
+            <td><b>Date:</b> {{date}}</td>
+        </tr>
+    </table>
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+        <tr>
+            <td><b>Summary of Services: </b> {{summaryOfServices}}</td>
+        </tr>
+        <tr>
+            <td><b>Current Client Performance:</b> {{clientPerformance}}</td>
+        </tr>
+        <tr>
+            <td><b>Plan or Recommendations: </b> {{planOrReccomendations}}</td>
+        </tr>
+    </table>
+    <table border="1" style="border-collapse: collapse; width: 100%;">
+        <tr>
+            <td style="width: 50%;"><b>Billing Code: </b>{{billing}}</td>
+            <td><b>Units: </b>{{units}} units</td>
+        </tr>
+        <tr>
+            <td style="width: 50%;"><b>Therapist Signature: </b>{{therapistSignature}}</td>
+            <td><b>Date: </b>{{date}}</td>
+        </tr>
+    </table>
+</body>
+</html>
