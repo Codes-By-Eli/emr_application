@@ -1,9 +1,9 @@
 import os
 
-from JSON.json_interaction import JSON_Interaction
+from .JSON.json_interaction import JSON_Interaction
+#from PDF.pdf_interaction import PDF_Interaction
 
-
-from SQL.sql_interaction import SQL_Interaction
+from .SQL.sql_interaction import SQL_Interaction
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
 from flask_jwt_extended import create_access_token, set_access_cookies, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
@@ -42,180 +42,380 @@ def submit_initial():
     data = request.json
     
         
-
+    try:
     
 
-    table = "Clients"
-    params = [
-        "first_name",
-        "last_name",
-        "date_of_birth",
-        "sex"
+        table = "Clients"
+        params = [
+            "first_name",
+            "last_name",
+            "date_of_birth",
+            "sex"
+            
         
-    
-    ]
+        ]
 
-    values = [
-        data['name'].split()[0], ' '.join(data['name'].split()[1:]),
-        data['dob'],
-        data['sex']
-    ]
-    client_id = database.perform_insert(table, params, values)
+        values = [
+            data['name'].split()[0], ' '.join(data['name'].split()[1:]),
+            data['dob'],
+            data['sex']
+        ]
+        client_id = database.perform_insert(table, params, values)
 
+        table = "vitals"
+        params = [
+            "blood_pressure",
+            "heart_rate",
+            "oxygen",
+            "respiratory_rate",
+            "pain_assessment"
+        ]
+        values = [
+            data['blood_pressure'],
+            data['heart_rate'],
+            data['oxygen'],
+            data['respiratory_rate'],
+            data['pain_assessment']
+        ]
 
-    
-    table = "initial_fim_scores"
-    params = [
-        "eating",
-        "grooming",
-        "bathing",
-        "upper_body_dressing",
-        "lower_body_dressing",
-        "toileting",
-        "toilet_transfer",
-        "shower_transfer",
-        "tub_transfer"
-    ]
-    values = [
-        data['eat_init'],
-        data['groom_init'],
-        data['bath_init'],
-        data['upper_init'],
-        data['lower_init'],
-        data['toilet_init'],
-        data['toilet_transfer_init'],
-        data['shower_transfer_init'],
-        data['tub_transfer_init']
+        vitals = database.perform_insert(table,params,values)
 
-    ]
-    init_fim = database.perform_insert(table, params, values)
-
-    table = 'goal_fim_scores'
-    values = [
-        data['eat_goal'],
-        data['groom_goal'],
-        data['bath_goal'],
-        data['upper_goal'],
-        data['lower_goal'],
-        data['toilet_goal'],
-        data['toilet_transfer_goal'],
-        data['shower_transfer_goal'],
-        data['tub_transfer_goal']
-    ]
-    
-    goal_fim= database.perform_insert(table,params, values)
-
-    table = "fim_evaluation"
-    params [
-        init_fim['last_id'],
-        goal_fim['last_id']
-
-    ]
-    fim_eval = database.perform_insert(table, params, values)
-    
-
-    table = 'right_rom'
-    params = [
-        "shoulder_elevation",
-        "shoulder_flexion",
-        "shoulder_extension",
-        "shoulder_abduction",
-        "horizontal_abduction",
-        "horizontal_adduction",
-        "internal_rotation",
-        "external_rotation",
-        "elbow_flexion",
-        "elbow_extension",
-        "forearm_pronation",
-        "forearm_supination",
-        "wrist_flexion",
-        "wrist_extension"
-    ]
-
-    values = [
-        data['rue_shoulder_ev_rom'],
-        data['rue_shoulder_flex_rom'],
-        data['rue_shoulder_ext_rom'],
-        data['rue_shoulder_abd_rom'],
-        data['rue_hor_abd_rom'],
-        data['rue_hor_add_rom'],
-        data['rue_intern_rot_rom'],
-        data['rue_extern_rot_rom'],
-        data['rue_elbow_flex_rom'],
-        data['rue_elbow_ext_rom'],
-        data['rue_fore_pro_rom'],
-        data['rue_fore_sup_rom'],
-        data['rue_wrist_flex_rom'],
-        data['rue_wrist_ext_rom']
-    ]
-
-    right_rom = database.perform_insert(table,params,values)
-
-    table = "right_mmt"
-    
-    values = [
-
-        data['rue_shoulder_ev_mmt'],
-        data['rue_shoulder_flex_mmt'],
-        data['rue_shoulder_ext_mmt'],
-        data['rue_shoulder_abd_mmt'],
-        data['rue_hor_abd_mmt'],
-        data['rue_hor_add_mmt'],
-        data['rue_intern_rot_mmt'],
-        data['rue_extern_rot_mmt'],
-        data['rue_elbow_flex_mmt'],
-        data['rue_elbow_ext_mmt'],
-        data['rue_fore_pro_mmt'],
-        data['rue_fore_sup_mmt'],
-        data['rue_wrist_flex_mmt'],
-        data['rue_wrist_ext_mmt']
-    ]
         
-    right_mmt = database.perform_insert(table, params,values)
+        table = "initial_fim_scores"
+        params = [
+            "eating",
+            "grooming",
+            "bathing",
+            "upper_body_dressing",
+            "lower_body_dressing",
+            "toileting",
+            "toilet_transfer",
+            "shower_transfer",
+            "tub_transfer"
+        ]
+        values = [
+            data['eat_init'],
+            data['groom_init'],
+            data['bath_init'],
+            data['upper_init'],
+            data['lower_init'],
+            data['toilet_init'],
+            data['toilet_transfer_init'],
+            data['shower_transfer_init'],
+            data['tub_transfer_init']
 
-    table = "left_rom"
+        ]
+        init_fim = database.perform_insert(table, params, values)
 
-    values = [
-        data['lue_shoulder_ev_rom'],
-        data['lue_shoulder_flex_rom'],
-        data['lue_shoulder_ext_rom'],
-        data['lue_shoulder_abd_rom'],
-        data['lue_hor_abd_rom'],
-        data['lue_hor_add_rom'],
-        data['lue_intern_rot_rom'],
-        data['lue_extern_rot_rom'],
-        data['lue_elbow_flex_rom'],
-        data['lue_elbow_ext_rom'],
-        data['lue_fore_pro_rom'],
-        data['lue_fore_sup_rom'],
-        data['lue_wrist_flex_rom'],
-        data['lue_wrist_ext_rom']
-    ]
+        table = 'goal_fim_scores'
+        values = [
+            data['eat_goal'],
+            data['groom_goal'],
+            data['bath_goal'],
+            data['upper_goal'],
+            data['lower_goal'],
+            data['toilet_goal'],
+            data['toilet_transfer_goal'],
+            data['shower_transfer_goal'],
+            data['tub_transfer_goal']
+        ]
+        
+        goal_fim= database.perform_insert(table,params, values)
 
-    left_rom = database.perform_insert(table, params, values)
+        table = "fim_evaluation"
+        params = [
+            "initial_fim_id",
+            "goal_fim_id"
+        ]
+        values = [
+            init_fim['last_id'],
+            goal_fim['last_id']
 
-    table = "left_mmt"
+        ]
+        fim_eval = database.perform_insert(table, params, values)
+        
 
-    values = [
-        data['lue_shoulder_ev_mmt'],
-        data['lue_shoulder_flex_mmt'],
-        data['lue_shoulder_ext_mmt'],
-        data['lue_shoulder_abd_mmt'],
-        data['lue_hor_abd_mmt'],
-        data['lue_hor_add_mmt'],
-        data['lue_intern_rot_mmt'],
-        data['lue_extern_rot_mmt'],
-        data['lue_elbow_flex_mmt'],
-        data['lue_elbow_ext_mmt'],
-        data['lue_fore_pro_mmt'],
-        data['lue_fore_sup_mmt'],
-        data['lue_wrist_flex_mmt'],
-        data['lue_wrist_ext_mmt']
-    ]
+        table = 'right_rom'
+        params = [
+            "shoulder_elevation",
+            "shoulder_flexion",
+            "shoulder_extension",
+            "shoulder_abduction",
+            "horizontal_abduction",
+            "horizontal_adduction",
+            "internal_rotation",
+            "external_rotation",
+            "elbow_flexion",
+            "elbow_extension",
+            "forearm_pronation",
+            "forearm_supination",
+            "wrist_flexion",
+            "wrist_extension"
+        ]
 
-    left_mmt = database.perform_insert(table,params,values)
+        values = [
+            data['rue_shoulder_ev_rom'],
+            data['rue_shoulder_flex_rom'],
+            data['rue_shoulder_ext_rom'],
+            data['rue_shoulder_abd_rom'],
+            data['rue_hor_abd_rom'],
+            data['rue_hor_add_rom'],
+            data['rue_intern_rot_rom'],
+            data['rue_extern_rot_rom'],
+            data['rue_elbow_flex_rom'],
+            data['rue_elbow_ext_rom'],
+            data['rue_fore_pro_rom'],
+            data['rue_fore_sup_rom'],
+            data['rue_wrist_flex_rom'],
+            data['rue_wrist_ext_rom']
+        ]
 
-    table = ''
+        right_rom = database.perform_insert(table,params,values)
+
+        table = "right_mmt"
+        
+        values = [
+
+            data['rue_shoulder_ev_mmt'],
+            data['rue_shoulder_flex_mmt'],
+            data['rue_shoulder_ext_mmt'],
+            data['rue_shoulder_abd_mmt'],
+            data['rue_hor_abd_mmt'],
+            data['rue_hor_add_mmt'],
+            data['rue_intern_rot_mmt'],
+            data['rue_extern_rot_mmt'],
+            data['rue_elbow_flex_mmt'],
+            data['rue_elbow_ext_mmt'],
+            data['rue_fore_pro_mmt'],
+            data['rue_fore_sup_mmt'],
+            data['rue_wrist_flex_mmt'],
+            data['rue_wrist_ext_mmt']
+        ]
+            
+        right_mmt = database.perform_insert(table, params,values)
+
+        table = "left_rom"
+
+        values = [
+            data['lue_shoulder_ev_rom'],
+            data['lue_shoulder_flex_rom'],
+            data['lue_shoulder_ext_rom'],
+            data['lue_shoulder_abd_rom'],
+            data['lue_hor_abd_rom'],
+            data['lue_hor_add_rom'],
+            data['lue_intern_rot_rom'],
+            data['lue_extern_rot_rom'],
+            data['lue_elbow_flex_rom'],
+            data['lue_elbow_ext_rom'],
+            data['lue_fore_pro_rom'],
+            data['lue_fore_sup_rom'],
+            data['lue_wrist_flex_rom'],
+            data['lue_wrist_ext_rom']
+        ]
+
+        left_rom = database.perform_insert(table, params, values)
+
+        table = "left_mmt"
+
+        values = [
+            data['lue_shoulder_ev_mmt'],
+            data['lue_shoulder_flex_mmt'],
+            data['lue_shoulder_ext_mmt'],
+            data['lue_shoulder_abd_mmt'],
+            data['lue_hor_abd_mmt'],
+            data['lue_hor_add_mmt'],
+            data['lue_intern_rot_mmt'],
+            data['lue_extern_rot_mmt'],
+            data['lue_elbow_flex_mmt'],
+            data['lue_elbow_ext_mmt'],
+            data['lue_fore_pro_mmt'],
+            data['lue_fore_sup_mmt'],
+            data['lue_wrist_flex_mmt'],
+            data['lue_wrist_ext_mmt']
+        ]
+
+        left_mmt = database.perform_insert(table,params,values)
+
+        table = 'right_upper_extremities'
+        params = [
+            "right_rom_id",
+            "right_mmt_id",
+            "grip_strength",
+            "lateral_pinch",
+            "tripod_pinch",
+            "tip_pinch",
+            "light_touch",
+            "sharp_dull",
+            "temperature",
+            "proprioception",
+            "stereognosis",
+            "nine_hole_peg_test",
+            "edema",
+            "pain"
+        ]
+
+        values= [
+            right_rom['last_id'],
+            right_mmt['last_id'],
+            data['rue_grip_str'],
+            data['rue_lat_pinch'],
+            data['rue_tri_pinch'],
+            data['rue_tip_pinch'],
+            data['rue_light_touch'],
+            data['rue_sh_du'],
+            data['rue_temp'],
+            data['rue_prop'],
+            data['rue_ster'],
+            data['rue_peg'],
+            data['rue_edema'],
+            data['rue_pain']
+        ]
+
+        right_UE = database.perform_insert(table,params,values)
+
+        table = "left_upper_extremities"
+        params = [
+            "left_rom_id",
+            "left_mmt_id",
+            "grip_strength",
+            "lateral_pinch",
+            "tripod_pinch",
+            "tip_pinch",
+            "light_touch",
+            "sharp_dull",
+            "temperature",
+            "proprioception",
+            "stereognosis",
+            "nine_hole_peg_test",
+            "edema",
+            "pain"
+
+        ]
+        
+        values = [
+            left_rom['last_id'],
+            left_mmt['last_id'],
+            data['lue_grip_str'],
+            data['lue_lat_pinch'],
+            data['lue_tri_pinch'],
+            data['lue_tip_pinch'],
+            data['lue_light_touch'],
+            data['lue_sh_du'],
+            data['lue_temp'],
+            data['lue_prop'],
+            data['lue_ster'],
+            data['lue_peg'],
+            data['lue_edema'],
+            data['lue_pain']
+        ]
+
+        left_UE = database.perform_insert(table,params,values)
+
+        table = 'upper_extremities'
+        params = [
+                "right_ue_id",
+                "left_ue_id",
+                "hand_dominance"
+        ]
+
+        values = [
+            right_UE['last_id'],
+            left_UE['last_id'],
+            data['hand_dom']
+        ]
+
+        ue = database.perform_insert(table,params,values)
+
+        table = ""
+        
+        
+        table = "initial _evaluation"
+
+        params = [
+        
+            #"user_id",
+            "client_id",
+            "fim_id",
+            "ue_id",
+            "vital_id",
+            "billing_code_id",
+            "date_of_evaluation",
+            "diagnosis",
+            "medical_history",
+            "prior_function",
+            "prior_situation",
+            "hearing",
+            "vision",
+            "a_o",
+            "memory_cognition",
+            "mmse_score",
+            "current_transfer",
+            "other_observations",
+            "assessment",
+            "discharge_recommendation",
+            "justification_of_services",
+            "patient_goals",
+            "length_of_stay",
+            "long_term_goal",
+            "short_term_goal",
+            "therapist_signature",
+            "billable_time",
+
+
+        ]
+
+        values = [
+            #user
+            client_id['last_id'],
+            fim_eval['last_id'],
+            ue['last_id'],
+            vitals['last_id'],
+            
+            data['date'],
+            data['diagnosis'],
+            data['med_hx'],
+            data['prior_lev'],
+            data['prior_liv'],
+            data['hearing'],
+            data['visual_perceotion'],
+            data['AO'],
+            data['memory'],
+            data['mmse'],
+            ##ADL goes
+            data['current_transfer'],
+            data['observations'],
+            data['init_assess'],
+            data['dis_rec'],
+            data['justification'],
+            data['patient_goals'],
+            data['est_len'],
+            data['overall_goals'],
+            data['short_term_goals'],
+            data['signature'],
+            data['units']
+
+
+
+
+        ]
+
+        init_eval = database.perform_insert(table,params,values)
+
+    
+        response_body = jsonify({
+            "msg:" "Initial Evaluation Form saved successfully!"
+        }), 200
+    
+    except:
+        response_body = jsonify({
+            "msg": "Errors while saving the Initial Evaluation Form"
+        }), 401
+
+    return response_body
+
+   
+
+
 
 
 
