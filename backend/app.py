@@ -1,9 +1,7 @@
 import os
 
-from .JSON.json_interaction import JSON_Interaction
-#from PDF.pdf_interaction import PDF_Interaction
-
-from .SQL.sql_interaction import SQL_Interaction
+from SQL.sql_interaction import SQL_Interaction
+from PDF.pdf_interaction import PDF_Interaction
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
 from flask_jwt_extended import create_access_token, set_access_cookies, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
@@ -537,4 +535,5 @@ if __name__ == '__main__':
         database.create_connection()
         database.create_tables()
         print("Database had to be created..")
+    pdf_creator = PDF_Interaction()
     app.run()

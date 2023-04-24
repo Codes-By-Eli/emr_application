@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, InputAdornment, Paper, TextField, Typography } from '@mui/material';
+import { Box, Button, Container, Grid, InputAdornment, Paper, TextField, Typography, Stack } from '@mui/material';
 import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
@@ -45,18 +45,30 @@ function HomePage() {
                             />
                             
                         </Grid>
-                        <Grid item xs={2} style={{display: "flex", alignItems:"center"}}>
+                        <Grid item xs={3} style={{display: "flex", alignItems:"center"}}>
+                            <Stack direction="column">
                             <Typography 
                                 style={{
                                     color: "maroon",
-                                    fontSize: "20px",
+                                    fontSize: "14px",
                                     fontWeight: "bold"
                                 }}
                             >
-                                Iona University
+                                New York Presbyterian
                             </Typography>
+                            <Typography 
+                                style={{
+                                    color: "maroon",
+                                    fontSize: "14px",
+                                    fontWeight: "bold"
+                                }}
+                            >
+                                Iona School of Health Sciences
+                            </Typography>
+
+                            </Stack>
                         </Grid>
-                        <Grid item xs={4.5}>
+                        <Grid item xs={3.5}>
                             
                         </Grid>
                         <Grid item xs={2}>
@@ -74,7 +86,8 @@ function HomePage() {
                                         <InputAdornment position="start">
                                             <a 
                                             href={`https://www.google.com/search?q=${search}`} 
-                                            target="_blank">
+                                            target="_blank"
+                                            rel="noreferrer">
                                                 <SearchIcon />
                                             </a>
                                         </InputAdornment>
@@ -92,7 +105,8 @@ function HomePage() {
                                     
                                 }}
                                 component={Link}
-                                to="/sign_up"
+                                to="/login_form" 
+                                /* This is a temporary change for development purposes, this should be login_form */
                             >
                                 <Typography 
                                 align='center'

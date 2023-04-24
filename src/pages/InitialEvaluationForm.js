@@ -1,4 +1,5 @@
 
+
 import  'react-router-dom';
 import Grid from '@mui/material/Grid';
 import React, {useState} from 'react';
@@ -6,24 +7,25 @@ import { Link } from 'react-router-dom';
 import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
 import logo from '../iona.png';
 import Divider from '@mui/material/Divider';
-import { Box, Item, Button, Container, Paper, TextField, Typography, TableHead, TableContainer } from '@mui/material';
-import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
-import styled from 'styled-components';
-import { Table, TableBody, TableCell, TableRow } from '@mui/material';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
-import InputLabel from '@mui/material/InputLabel';
-import { NativeSelect } from '@mui/material';
-import { useEffect } from 'react';
-import './TableStyling.css';
-import {Dialog, 
-DialogTitle, 
-DialogContentText, 
-DialogContent, 
-DialogActions } from '@mui/material';
+import StickyNote2Icon from '@mui/icons-material/StickyNote2';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import NoteAltIcon from '@mui/icons-material/NoteAlt';
+import DescriptionIcon from '@mui/icons-material/Description';
+
+
+
+
+
+
+
+
+
+const TabContent = styled.div`
+  display: ${(props) => (props.active ? 'block' : 'none')};
+`;
+
+
+
 
 
 const TabContainer = styled.div`
