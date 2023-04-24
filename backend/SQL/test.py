@@ -15,9 +15,17 @@ if __name__ == "__main__":
 
     #response = database.perform_insert("clients",['first_name','last_name','date_of_birth','sex'],['John','Smith', '2022-12-24', 'Male'])
     #print(f"Response: {response['last_id']}")
-    response = database.perform_select("users",["user_id"])
+    """ response = database.perform_select("users",["user_id"])
     key_value = (3,)
     if key_value in response:
         print("It is in there")
     else:
-        print("It is not")
+        print("It is not") """
+
+    table = "users"
+    columns = ["user_id"]
+    condition_column = "email_address"
+    select_condition = "ewilliams2@"
+    selection = database.perform_select(table, columns, condition_column)
+    
+    print(f"Result: {selection[0][0]}")

@@ -4,9 +4,10 @@ import Grid from '@mui/material/Grid';
 import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
+import {MenuItem as Option} from "@mui/material";
 import logo from '../iona.png';
 import Divider from '@mui/material/Divider';
-import { Box, Item, Button, Container, Paper, TextField, Typography, TableHead, TableContainer } from '@mui/material';
+import { Box, Item, Button, Container, Paper, TextField, Typography, TableHead, TableContainer, Select } from '@mui/material';
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
@@ -53,6 +54,8 @@ const TabContent = styled.div`
 function DischargeEvaluationForm() {
   const [username, setName] = useState('');
   const [email,setEmail] = useState('');
+  const [init_med_num, setNum] = useState('');
+  const [record_numbers, setRecordNumbers] = useState([]);
 
   const { collapseSidebar } = useProSidebar();
   const [activeTab, setActiveTab] = useState(0);
@@ -239,6 +242,22 @@ function DischargeEvaluationForm() {
   date_of_sig: '',
   });
 
+  const changeNum = e => {
+    setNum(e.target.value);
+  }
+
+  const populateHandler = json => {
+    const keys = Object.keys(json);
+    console.log(keys);
+    for(const key in keys)
+    {
+      console.log(keys[key]);
+      console.log(json[keys[key]]);
+      setAllValues (prevValues => {
+        return { ...prevValues,[keys[key]]: json[keys[key]]};
+      });
+    }
+  }
 
   const changeHandler = e => { 
     const key = e.target.id || e.target.name;
@@ -257,6 +276,41 @@ function DischargeEvaluationForm() {
   const isNotEmpty = Object.values(allValues).every(value => value !== '');
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
+
+  async function getRecordNumbers()
+  {
+    var requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${sessionStorage.getItem('token')}`
+      }
+    };
+
+    const response = await fetch("http://127.0.0.1:5000/get_initial_numbers", requestOptions);
+    const data = await response.json();
+    setRecordNumbers(data.data);
+    console.log(data.data);
+  }
+
+  async function getEvalInformation()
+  {
+    var requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${sessionStorage.getItem('token')}`
+      },
+      body: JSON.stringify({
+        "record": init_med_num
+      })
+    };
+    console.log(init_med_num);
+    const response = await fetch("http://127.0.0.1:5000/get_chosen_eval", requestOptions);
+    const data = await response.json();
+    console.log(data);
+    populateHandler(data.data);
+  }
 
   async function submitDiscEval()
   {
@@ -301,6 +355,7 @@ function DischargeEvaluationForm() {
 
   useEffect(() => {
     getProfile();
+    getRecordNumbers();
   },[])
 
   async function checkValidRecord()
@@ -323,6 +378,11 @@ function DischargeEvaluationForm() {
   useEffect(() => {
     checkValidRecord();
   },[allValues.med_num])
+
+  useEffect(() => {
+    getEvalInformation();
+  },[init_med_num])
+
 
   return (
     <div id="app" style={({ height: "75vh" }, { display: "flex" })}>
@@ -503,12 +563,40 @@ function DischargeEvaluationForm() {
             <Grid container spacing={2}>
               <Grid item xs={12}></Grid>
               <Grid item xs={12}></Grid>
+              <Grid item xs={12}></Grid>
+              <Grid item xs={2}></Grid>
+              <Grid item xs={8}>
+              <FormControl fullWidth>
+                  <InputLabel id="init_med">Initial Evaluation Medical Record #</InputLabel>
+                  <Select
+                    labelId="init_med"
+                    id="init_med_num"
+                    inputProps={{
+                      name: 'Initial Medical Record #',
+                      id: 'init_med_num',
+                      align: "center"
+                  }}
+                    //value={allValues.init_med_num.value}
+                    label="Evaluation Type"
+                    onChange={changeNum}
+                  >
+                    <Option value="">
+                      <em>None</em>
+                    </Option>
+                    {record_numbers?.map((record_number) => {
+                      return <Option value={record_number.id}>{record_number.id} </Option>
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={2}></Grid>
               <Grid item xs={.20}></Grid>
               <Grid item xs={2}>
                 <TextField label="Client Name" 
                 required
                 id='name'
                 fullWidth
+                value={allValues.name || ''}
                 style={{ padding: 1}}
                 onBlur={changeHandler} />
               </Grid>
@@ -518,6 +606,7 @@ function DischargeEvaluationForm() {
                 required
                 id='sex'
                 fullWidth
+                value={allValues.sex || ''}
                 style={{ padding: 1}}
                 onBlur={changeHandler} />
               </Grid>
@@ -526,6 +615,7 @@ function DischargeEvaluationForm() {
                 <TextField label = "Date of Birth:"
                 id='dob'
                 required
+                value={allValues.dob || ''}
                 onBlur={changeHandler} 
                 style={{ padding: 1}}/>
               </Grid>
@@ -537,6 +627,7 @@ function DischargeEvaluationForm() {
               fullWidth
               required
               id='date'
+              value={allValues.date || ''}
               onBlur={changeHandler}
               style={{ padding: 1 }} />
             </Grid>
@@ -558,6 +649,7 @@ function DischargeEvaluationForm() {
                 required
                 multiline
                 id='med_hx'
+                value={allValues.med_hx || ''}
                 onBlur={changeHandler}
                 inputProps={{ style: {height: 100}}}
                 style={{ padding: 1 }} />
@@ -571,6 +663,7 @@ function DischargeEvaluationForm() {
                 multiline
                 required
                 id='diagnosis'
+                value={allValues.diagnosis || ''}
                 onBlur={changeHandler}
                 inputProps={{ style: {height: 100} }}
                 style={{ padding: 1 }} />
@@ -585,6 +678,7 @@ function DischargeEvaluationForm() {
                 multiline
                 required
                 id='prior_lev'
+                value={allValues.prior_lev || ''}
                 onBlur={changeHandler}
                 inputProps={{ style: {height: 100}}}
                 style={{ padding: 1 }} />
@@ -599,6 +693,7 @@ function DischargeEvaluationForm() {
                 onBlur={changeHandler}
                 multiline
                 required
+                value={allValues.prior_liv || ''}
                 inputProps={{ style: {height: 100} }}
                 style={{ padding: 1 }} />
                 </Grid>
@@ -612,6 +707,7 @@ function DischargeEvaluationForm() {
                 onBlur={changeHandler}
                 multiline
                 required
+                value={allValues.hearing || ''}
                 inputProps={{ style: {height: 100}}}
                 style={{ padding: 1 }} />
             
@@ -625,6 +721,7 @@ function DischargeEvaluationForm() {
                 onBlur={changeHandler}
                 multiline
                 required
+                value={allValues.visual_perception || ''}
                 inputProps={{ style: {height: 100} }}
                 style={{ padding: 1 }} />
             </Grid>
@@ -638,10 +735,11 @@ function DischargeEvaluationForm() {
              </InputLabel>
             <NativeSelect
              onChange={changeHandler}
+             value={allValues.AO || ''}
             inputProps={{
               name: 'A & O:',
               id: 'AO',
-             
+              
               align: "center"
           }}
         >
@@ -659,6 +757,7 @@ function DischargeEvaluationForm() {
                 required
                 onBlur={changeHandler}
                 multiline
+                value={allValues.memory || ''}
                 inputProps={{ style: {height: 75} }}
                 style={{ padding: 1 }} />
            </Grid>
@@ -669,6 +768,7 @@ function DischargeEvaluationForm() {
                 id='mmse'
                 required
                 onBlur={changeHandler}
+                value={allValues.mmse || ''}
                 inputProps={{ style: {height: 75} }}
                 style={{ padding: 1 }} />
            </Grid>
@@ -679,6 +779,7 @@ function DischargeEvaluationForm() {
               id='blood_pressure'
               required
               onBlur={changeHandler}
+              value={allValues.blood_pressure || ''}
             ></TextField>
            </Grid>
            <Grid item xs={2/6}></Grid>
@@ -687,6 +788,7 @@ function DischargeEvaluationForm() {
               id='heart_rate'
               required
               onBlur={changeHandler}
+              value={allValues.heart_rate || ''}
             ></TextField>
            </Grid>
            <Grid item xs={2/6}></Grid>
@@ -694,6 +796,7 @@ function DischargeEvaluationForm() {
             <TextField label="Oxygen(SPO2):"
               id='oxygen'
               required
+              value={allValues.oxygen || ''}
               onBlur={changeHandler}
             ></TextField>
            </Grid>
@@ -703,7 +806,7 @@ function DischargeEvaluationForm() {
               id='respiratory_rate'
               required
               onBlur={changeHandler}
-            
+              value={allValues.respiratory_rate || ''}
             ></TextField>
            </Grid>
            <Grid item xs={2/6}></Grid>
@@ -712,7 +815,7 @@ function DischargeEvaluationForm() {
               id='pain_assessment'
               required
               onBlur={changeHandler}
-            
+              value={allValues.pain_assessment || ''}
             ></TextField>
 
            </Grid>
@@ -746,6 +849,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='eat_init'
+                    value={allValues.eat_init || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -758,6 +862,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='eat_goal'
+                    value={allValues.eat_goal || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -786,6 +891,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='groom_init'
+                    value={allValues.groom_init || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -798,6 +904,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='groom_goal'
+                    value={allValues.groom_goal || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -826,6 +933,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='bath_init'
+                    value={allValues.bath_init || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -838,6 +946,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='bath_goal'
+                    value={allValues.bath_goal || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -866,6 +975,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='upper_init'
+                    value={allValues.upper_init || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -878,6 +988,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='upper_goal'
+                    value={allValues.upper_goal || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -906,6 +1017,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='lower_init'
+                    value={allValues.lower_init || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -918,6 +1030,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='lower_goal'
+                    value={allValues.lower_goal || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -946,6 +1059,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='toilet_init'
+                    value={allValues.toilet_init || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -958,6 +1072,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='toilet_goal'
+                    value={allValues.toilet_goal || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -986,6 +1101,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='toilet_transfer_init'
+                    value={allValues.toilet_transfer_init || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -998,6 +1114,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='toilet_transfer_goal'
+                    value={allValues.toilet_transfer_goal || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -1026,6 +1143,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='shower_transfer_init'
+                    value={allValues.shower_transfer_init || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -1038,6 +1156,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='shower_transfer_goal'
+                    value={allValues.shower_transfer_goal || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -1066,6 +1185,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='tub_transfer_init'
+                    value={allValues.tub_transfer_init || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -1078,6 +1198,7 @@ function DischargeEvaluationForm() {
                     },
                    }}
                     id='tub_transfer_goal'
+                    value={allValues.tub_transfer_goal || ''}
                     onBlur={changeHandler}>
                   </TextField>
                 </TableCell>
@@ -1110,6 +1231,7 @@ function DischargeEvaluationForm() {
                   row
                   aria-labelledby="hand_dom"
                   name="hand_dom"
+                  value={allValues.hand_dom || ''}
                   onChange={changeHandler}>
           
                   <FormControlLabel value="Left" control={<Radio />} label="L" />
@@ -1144,6 +1266,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_shoulder_ev_rom'
+                      value={allValues.lue_shoulder_ev_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1155,6 +1278,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_shoulder_ev_mmt'
+                      value={allValues.lue_shoulder_ev_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1167,6 +1291,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_shoulder_ev_rom'
+                      value={allValues.rue_shoulder_ev_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1178,6 +1303,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_shoulder_ev_mmt'
+                      value={allValues.rue_shoulder_ev_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1192,6 +1318,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_shoulder_flex_rom'
+                      value={allValues.lue_shoulder_flex_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1203,6 +1330,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_shoulder_flex_mmt'
+                      value={allValues.lue_shoulder_flex_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1215,6 +1343,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_shoulder_flex_rom'
+                      value={allValues.rue_shoulder_flex_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1226,6 +1355,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_shoulder_flex_mmt'
+                      value={allValues.rue_shoulder_flex_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1240,6 +1370,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_shoulder_ext_rom'
+                      value={allValues.lue_shoulder_ext_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1251,6 +1382,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_shoulder_ext_mmt'
+                      value={allValues.lue_shoulder_ext_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1263,6 +1395,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_shoulder_ext_rom'
+                      value={allValues.rue_shoulder_ext_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1274,6 +1407,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_shoulder_ext_mmt'
+                      value={allValues.rue_shoulder_ext_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1288,6 +1422,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_shoulder_abd_rom'
+                      value={allValues.lue_shoulder_abd_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1299,6 +1434,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_shoulder_abd_mmt'
+                      value={allValues.lue_shoulder_abd_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1311,6 +1447,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_shoulder_abd_rom'
+                      value={allValues.rue_shoulder_abd_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1322,6 +1459,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_shoulder_abd_mmt'
+                      value={allValues.rue_shoulder_abd_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1336,6 +1474,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_hor_abd_rom'
+                      value={allValues.lue_hor_abd_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1347,6 +1486,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_hor_abd_mmt'
+                      value={allValues.lue_hor_abd_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1359,6 +1499,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_hor_abd_rom'
+                      value={allValues.rue_hor_abd_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1370,6 +1511,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_hor_abd_mmt'
+                      value={allValues.rue_hor_add_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1384,6 +1526,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_hor_add_rom'
+                      value={allValues.lue_hor_add_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1395,6 +1538,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_hor_add_mmt'
+                      value={allValues.lue_hor_add_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1407,6 +1551,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_hor_add_rom'
+                      value={allValues.rue_hor_add_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1418,6 +1563,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_hor_add_mmt'
+                      value={allValues.rue_hor_add_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1432,6 +1578,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_intern_rot_rom'
+                      value={allValues.lue_intern_rot_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1443,6 +1590,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_intern_rot_mmt'
+                      value={allValues.lue_intern_rot_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1455,6 +1603,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_intern_rot_rom'
+                      value={allValues.rue_intern_rot_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1466,6 +1615,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_intern_rot_mmt'
+                      value={allValues.rue_intern_rot_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1480,6 +1630,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_extern_rot_rom'
+                      value={allValues.lue_extern_rot_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1491,6 +1642,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_extern_rot_mmt'
+                      value={allValues.lue_extern_rot_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1503,6 +1655,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_extern_rot_rom'
+                      value={allValues.rue_extern_rot_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1514,6 +1667,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_extern_rot_mmt'
+                      value={allValues.rue_extern_rot_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1530,6 +1684,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_elbow_flex_rom'
+                      value={allValues.lue_elbow_flex_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1541,6 +1696,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_elbow_flex_mmt'
+                      value={allValues.lue_elbow_flex_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1553,6 +1709,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_elbow_flex_rom'
+                      value={allValues.rue_elbow_flex_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1564,6 +1721,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_elbow_flex_mmt'
+                      value={allValues.rue_elbow_flex_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1578,6 +1736,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_elbow_ext_rom'
+                      value={allValues.lue_elbow_ext_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1589,6 +1748,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_elbow_ext_mmt'
+                      value={allValues.lue_elbow_ext_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1601,6 +1761,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_elbow_ext_rom'
+                      value={allValues.rue_elbow_ext_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1612,6 +1773,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_elbow_ext_mmt'
+                      value={allValues.rue_elbow_ext_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1627,6 +1789,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_fore_pro_rom'
+                      value={allValues.lue_fore_pro_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1638,6 +1801,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_fore_pro_mmt'
+                      value={allValues.lue_fore_pro_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1650,6 +1814,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_fore_pro_rom'
+                      value={allValues.rue_fore_pro_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1661,6 +1826,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_fore_pro_mmt'
+                      value={allValues.rue_fore_pro_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1677,6 +1843,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_fore_sup_rom'
+                      value={allValues.lue_fore_sup_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1688,6 +1855,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_fore_sup_mmt'
+                      value={allValues.lue_fore_sup_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1700,6 +1868,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_fore_sup_rom'
+                      value={allValues.rue_fore_sup_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1711,6 +1880,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_fore_sup_mmt'
+                      value={allValues.rue_fore_sup_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1725,6 +1895,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_wrist_flex_rom'
+                      value={allValues.lue_wrist_flex_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1736,6 +1907,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_wrist_flex_mmt'
+                      value={allValues.lue_wrist_flex_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1748,6 +1920,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_wrist_flex_rom'
+                      value={allValues.rue_wrist_flex_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1759,6 +1932,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_wrist_flex_mmt'
+                      value={allValues.rue_wrist_flex_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1773,6 +1947,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_wrist_ext_rom'
+                      value={allValues.lue_wrist_ext_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1784,6 +1959,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_wrist_ext_mmt'
+                      value={allValues.lue_wrist_ext_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1796,6 +1972,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_wrist_ext_rom'
+                      value={allValues.rue_wrist_ext_rom || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1807,6 +1984,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_wrist_ext_mmt'
+                      value={allValues.rue_wrist_ext_mmt || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1836,6 +2014,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_grip_str'
+                      value={allValues.lue_grip_str || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1848,6 +2027,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_grip_str'
+                      value={allValues.rue_grip_str || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1863,6 +2043,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_lat_pinch'
+                      value={allValues.lue_lat_pinch || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1875,6 +2056,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_lat_pinch'
+                      value={allValues.rue_lat_pinch || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1890,6 +2072,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_tri_pinch'
+                      value={allValues.lue_tri_pinch || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1902,6 +2085,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_tri_pinch'
+                      value={allValues.rue_tri_pinch || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1917,6 +2101,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_tip_pinch'
+                      value={allValues.lue_tip_pinch || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1929,6 +2114,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_tip_pinch'
+                      value={allValues.rue_tip_pinch || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1944,6 +2130,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_light_touch'
+                      value={allValues.lue_light_touch || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1956,6 +2143,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_light_touch'
+                      value={allValues.rue_light_touch || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1971,6 +2159,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_sh_du'
+                      value={allValues.lue_sh_du || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1983,6 +2172,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_sh_du'
+                      value={allValues.rue_sh_du || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -1998,6 +2188,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_temp'
+                      value={allValues.lue_temp || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -2010,6 +2201,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_temp'
+                      value={allValues.rue_temp || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -2025,6 +2217,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_prop'
+                      value={allValues.lue_prop || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -2037,6 +2230,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_prop'
+                      value={allValues.rue_prop || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -2052,6 +2246,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_ster'
+                      value={allValues.lue_ster || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -2064,6 +2259,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_ster'
+                      value={allValues.rue_ster || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -2079,6 +2275,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_peg'
+                      value={allValues.lue_peg || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -2091,6 +2288,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_peg'
+                      value={allValues.rue_peg || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -2106,6 +2304,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_edema'
+                      value={allValues.lue_edema || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -2118,6 +2317,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_edema'
+                      value={allValues.rue_edema || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -2133,6 +2333,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='lue_pain'
+                      value={allValues.lue_pain || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -2145,6 +2346,7 @@ function DischargeEvaluationForm() {
                       },
                     }}
                       id='rue_pain'
+                      value={allValues.rue_pain || ''}
                       onBlur={changeHandler}>
                     </TextField>
                   </TableCell>
@@ -2177,6 +2379,7 @@ function DischargeEvaluationForm() {
                       id='current_transfer'
                       multiline
                       onBlur={changeHandler}
+                      value={allValues.current_transfer || ''}
                       inputProps={{ style: {height: 100} }}
                       style={{ padding: 1}}>
                     </TextField>
@@ -2193,6 +2396,7 @@ function DischargeEvaluationForm() {
                     id='observations'
                     multiline
                     onBlur={changeHandler}
+                    value={allValues.observations || ''}
                     inputProps={{ style: {height: 150} }}
                     style={{ padding: 1 }} />
                 </Grid>
@@ -2212,13 +2416,7 @@ function DischargeEvaluationForm() {
                 </Grid>
                 <Grid item xs={1}></Grid>
                 <Grid item xs={12}></Grid>
-                
-                
-
             </Grid>
-        
-
-
         </TabContent>
 
       	<TabContent active={activeTab === 4}>
@@ -2233,6 +2431,7 @@ function DischargeEvaluationForm() {
                   id='dis_rec'
                   multiline
                   onBlur={changeHandler}
+                  value={allValues.dis_rec || ''}
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
               
@@ -2244,6 +2443,7 @@ function DischargeEvaluationForm() {
                   id='equip_needs'
                   multiline
                   onBlur={changeHandler}
+                  value={allValues.equip_needs || ''}
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
               </Grid> 
@@ -2254,6 +2454,7 @@ function DischargeEvaluationForm() {
                   id='patient_goals'
                   multiline
                   onBlur={changeHandler}
+                  value={allValues.patient_goals || ''}
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
               </Grid> 
@@ -2302,6 +2503,7 @@ function DischargeEvaluationForm() {
                     id='justification'
                     multiline
                     onBlur={changeHandler}
+                    value={allValues.justification || ''}
                     inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
 

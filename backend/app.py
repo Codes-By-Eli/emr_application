@@ -31,6 +31,253 @@ def refresh_expiring_jwts(response):
     except (RuntimeError, KeyError):
         # Case where there is not a valid JWT. Just return the original response
         return response
+    
+
+@app.route("/get_initial_numbers", methods=['GET'])
+def get_initial():
+    table = "initial_evaluation"
+    columns = ["medical_record_id"]
+    
+
+    selection = database.perform_select(table, columns)
+    result = []
+    for option in selection:
+        result.append({"id": option[0]})
+    response = {
+        "data": result
+    }
+
+    return jsonify(response), 200
+
+@app.route("/get_chosen_eval", methods=['POST'])
+def get_eval():
+    data = request.json
+    table = "initial_evaluation"
+    columns = ["*"]
+    condition_column = "medical_record_id"
+    select_condition = f"\"{data['record']}\""
+    init_eval = database.perform_select(table, columns, condition_column, select_condition)
+
+    table = "clients"
+    columns = ["*"]
+    condition_column = "client_id"
+    select_condition = f"\"{init_eval[0][2]}\""
+    client = database.perform_select(table, columns, condition_column, select_condition)
+
+    table = "fim_evaluation"
+    columns = ["*"]
+    condition_column = "fim_evaluation_id"
+    select_condition = f"\"{init_eval[0][3]}\""
+    fim_eval_id = database.perform_select(table, columns, condition_column, select_condition)
+
+    table = "initial_fim_scores"
+    columns = ["*"]
+    condition_column = "initial_fim_id"
+    select_condition = f"\"{fim_eval_id[0][1]}\""
+    init_fim = database.perform_select(table, columns, condition_column, select_condition)
+
+    table = "goal_fim_scores"
+    columns = ["*"]
+    condition_column = "goal_fim_id"
+    select_condition = f"\"{fim_eval_id[0][2]}\""
+    goal_fim = database.perform_select(table, columns, condition_column, select_condition)
+
+    table = "upper_extremities"
+    columns = ["*"]
+    condition_column = "ue_id"
+    select_condition = f"\"{init_eval[0][4]}\""
+    ue = database.perform_select(table, columns, condition_column, select_condition)
+
+    table = "right_upper_extremities"
+    columns = ["*"]
+    condition_column = "right_ue_id"
+    select_condition = f"\"{ue[0][1]}\""
+    r_ue = database.perform_select(table, columns, condition_column, select_condition)
+
+    table = "right_rom"
+    columns = ["*"]
+    condition_column = "right_rom_id"
+    select_condition = f"\"{r_ue[0][1]}\""
+    r_rom = database.perform_select(table, columns, condition_column, select_condition)
+
+    table = "right_mmt"
+    columns = ["*"]
+    condition_column = "right_mmt_id"
+    select_condition = f"\"{r_ue[0][2]}\""
+    r_mmt = database.perform_select(table, columns, condition_column, select_condition)
+
+    table = "left_upper_extremities"
+    columns = ["*"]
+    condition_column = "left_ue_id"
+    select_condition = f"\"{ue[0][2]}\""
+    l_ue = database.perform_select(table, columns, condition_column, select_condition)
+
+    table = "left_rom"
+    columns = ["*"]
+    condition_column = "left_rom_id"
+    select_condition = f"\"{l_ue[0][1]}\""
+    l_rom = database.perform_select(table, columns, condition_column, select_condition)
+
+    table = "left_mmt"
+    columns = ["*"]
+    condition_column = "left_mmt_id"
+    select_condition = f"\"{l_ue[0][2]}\""
+    l_mmt = database.perform_select(table, columns, condition_column, select_condition)
+    print(f"Left MMT : {l_mmt}")
+    table = "vitals"
+    columns = ["*"]
+    condition_column = "vital_id"
+    select_condition = f"\"{init_eval[0][5]}\""
+    vitals = database.perform_select(table, columns, condition_column, select_condition)
+
+    
+    result = []
+
+    body = {
+        "name": client[0][1] + ' ' + client[0][2],
+        "sex": client[0][4],
+        "dob": client[0][3],
+        "date": init_eval[0][7],
+        "med_num": init_eval[0][0],
+        "med_hx": init_eval[0][9],
+        "diagnosis": init_eval[0][8],
+        "prior_lev": init_eval[0][10],
+        "prior_liv": init_eval[0][11],
+        "hearing": init_eval[0][12],
+        "visual_perception": init_eval[0][13],
+        "AO": init_eval[0][14],
+        "memory": init_eval[0][15],
+        "mmse": init_eval[0][16],
+        "blood_pressure": vitals[0][1],
+        "heart_rate": vitals[0][2],
+        "oxygen": vitals[0][3],
+        "respiratory_rate": vitals[0][4],
+        "pain_assessment": vitals[0][5],
+        "eat_init": init_fim[0][1],
+        "eat_goal": goal_fim[0][1],
+        "groom_init": init_fim[0][2],
+        "groom_goal": goal_fim[0][2],
+        "bath_init": init_fim[0][3],
+        "bath_goal": goal_fim[0][3],
+        "upper_init": init_fim[0][4],
+        "upper_goal": goal_fim[0][4],
+        "lower_init": init_fim[0][5],
+        "lower_goal": goal_fim[0][5],
+        "toilet_init": init_fim[0][6],
+        "toilet_goal": goal_fim[0][6],
+        "toilet_transfer_init": init_fim[0][7],
+        "toilet_transfer_goal": goal_fim[0][7],
+        "shower_transfer_init": init_fim[0][8],
+        "shower_transfer_goal": goal_fim[0][8],
+        "tub_transfer_init": init_fim[0][9],
+        "tub_transfer_goal": goal_fim[0][9],
+        "hand_dom": ue[0][3],
+        "lue_shoulder_ev_rom": l_rom[0][1],
+        "lue_shoulder_ev_mmt": l_mmt[0][1],
+        "rue_shoulder_ev_rom": r_rom[0][1],
+        "rue_shoulder_ev_mmt": r_mmt[0][1],
+        "lue_shoulder_flex_rom": l_rom[0][2],
+        "lue_shoulder_flex_mmt": l_mmt[0][2],
+        "rue_shoulder_flex_rom": r_rom[0][2],
+        "rue_shoulder_flex_mmt": r_mmt[0][2],
+        "lue_shoulder_ext_rom": l_rom[0][3],
+        "lue_shoulder_ext_mmt": l_mmt[0][3],
+        "rue_shoulder_ext_rom": r_rom[0][3],
+        "rue_shoulder_ext_mmt": r_mmt[0][3],
+        "lue_shoulder_abd_rom": l_rom[0][4],
+        "lue_shoulder_abd_mmt": l_mmt[0][4],
+        "rue_shoulder_abd_rom": r_rom[0][4],
+        "rue_shoulder_abd_mmt": r_mmt[0][4],
+        "lue_hor_abd_rom": l_rom[0][5],
+        "lue_hor_abd_mmt": l_mmt[0][5],
+        "rue_hor_abd_rom": r_rom[0][5],
+        "rue_hor_abd_mmt": r_mmt[0][5],
+        "lue_hor_add_rom": l_rom[0][6],
+        "lue_hor_add_mmt": l_mmt[0][6],
+        "rue_hor_add_rom": r_rom[0][6],
+        "rue_hor_add_mmt": l_mmt[0][6],
+        "lue_intern_rot_rom": l_rom[0][7],
+        "lue_intern_rot_mmt": l_mmt[0][7],
+        "rue_intern_rot_rom": r_rom[0][7],
+        "rue_intern_rot_mmt": r_mmt[0][7],
+        "lue_extern_rot_rom": l_rom[0][8],
+        "lue_extern_rot_mmt": l_mmt[0][8],
+        "rue_extern_rot_rom": r_rom[0][8],
+        "rue_extern_rot_mmt": r_mmt[0][8],
+        "lue_elbow_flex_rom": l_rom[0][9],
+        "lue_elbow_flex_mmt": l_mmt[0][9],
+        "rue_elbow_flex_rom": r_rom[0][9],
+        "rue_elbow_flex_mmt": r_mmt[0][9],
+        "lue_elbow_ext_rom": l_rom[0][10],
+        "lue_elbow_ext_mmt": l_mmt[0][10],
+        "rue_elbow_ext_rom": r_rom[0][10],
+        "rue_elbow_ext_mmt": r_mmt[0][10],
+        "lue_fore_pro_rom": l_rom[0][11],
+        "lue_fore_pro_mmt": l_mmt[0][11],
+        "rue_fore_pro_rom": r_rom[0][11],
+        "rue_fore_pro_mmt": r_mmt[0][11],
+        "lue_fore_sup_rom": l_rom[0][12],
+        "lue_fore_sup_mmt": l_mmt[0][12],
+        "rue_fore_sup_rom": r_rom[0][12],
+        "rue_fore_sup_mmt": r_mmt[0][12],
+        "lue_wrist_flex_rom": l_rom[0][13],
+        "lue_wrist_flex_mmt": l_mmt[0][13],
+        "rue_wrist_flex_rom": r_rom[0][13],
+        "rue_wrist_flex_mmt": r_mmt[0][13],
+        "lue_wrist_ext_rom": l_rom[0][14],
+        "lue_wrist_ext_mmt": l_mmt[0][14],
+        "rue_wrist_ext_rom": r_rom[0][14],
+        "rue_wrist_ext_mmt": r_mmt[0][14],
+        "lue_grip_str": l_ue[0][3],
+        "rue_grip_str": r_ue[0][3],
+        "lue_lat_pinch": l_ue[0][4],
+        "rue_lat_pinch": r_ue[0][4],
+        "lue_tri_pinch": l_ue[0][5],
+        "rue_tri_pinch": r_ue[0][5],
+        "lue_tip_pinch": l_ue[0][6],
+        "rue_tip_pinch": r_ue[0][6],
+        "lue_light_touch": l_ue[0][7],
+        "rue_light_touch": r_ue[0][7],
+        "lue_sh_du": l_ue[0][8],
+        "rue_sh_du": r_ue[0][8],
+        "lue_temp": l_ue[0][9],
+        "rue_temp": r_ue[0][9],
+        "lue_prop": l_ue[0][10],
+        "rue_prop": r_ue[0][10],
+        "lue_ster": l_ue[0][11],
+        "rue_ster": r_ue[0][11],
+        "lue_peg": l_ue[0][12],
+        "rue_peg": r_ue[0][12],
+        "lue_edema": l_ue[0][13],
+        "rue_edema": r_ue[0][13],
+        "lue_pain": l_ue[0][14],
+        "rue_pain": r_ue[0][14],
+        "ADL": "",
+        "current_transfer": init_eval[0][17],
+        "observations": init_eval[0][18],
+        "equip_needs": init_eval[0][21],
+        "dis_rec": init_eval[0][20],
+        "patient_goals": init_eval[0][23],
+        "justification": init_eval[0][22],
+        }
+    
+    '''
+    for option in selection:
+        body = {
+            "med_num": option[0],
+            "billing": option[6],
+            "date": option[7],
+            "last": option[3]
+        }
+        result.append(body)
+    '''
+    response = {
+        "data": body
+    }
+
+
+
+    return jsonify(response), 200
 
 @app.route("/submit_discharge", methods=['POST'])
 #@jwt_required()
@@ -48,6 +295,7 @@ def submit_discharge():
     except:
         pdf_conversion = False
     try:
+        '''
         table = "clients"
         params = [
             "first_name",
@@ -278,7 +526,7 @@ def submit_discharge():
             data['rue_temp'],
             data['rue_prop'],
             data['rue_ster'],
-            data['rue_ped'],
+            data['rue_peg'],
             data['rue_edema'],
             data['rue_pain']
         ]
@@ -313,7 +561,7 @@ def submit_discharge():
             data['lue_temp'],
             data['lue_prop'],
             data['lue_ster'],
-            data['lue_ped'],
+            data['lue_peg'],
             data['lue_edema'],
             data['lue_pain']
         ]
@@ -331,6 +579,41 @@ def submit_discharge():
             data['hand_dom']
         ]
         ue_id = database.perform_insert(table, params, values)
+        '''
+
+        table = "discharge_evaluation"
+        params = [
+            "medical_record_id",
+            "user_id",
+            "initial_medical_record_id",
+            "discharge_fim_id",
+            "vital_id",
+            "billing_code_id",
+            "date_of_evaluation",
+            "diagnosis",
+            "medical_history",
+            "prior_function",
+            "prior_situation",
+            "hearing",
+            "vision",
+            "a_o",
+            "memory_cognition",
+            "mmse_score",
+            "discharge_transfer",
+            "other_observations",
+            "discharge_assessment",
+            "discharge_recommendation",
+            "equipment_needs",
+            "patient_goals",
+            "course_of_rehab",
+            "client_education",
+            "discharge_referrals",
+            "therapist_signature",
+            "billable_time"
+        ]
+        values = [
+            
+        ]
     except:
         sql_conversion = False
     return jsonify({
@@ -470,28 +753,6 @@ def submit_init_eval():
         }), 401
     return response_body
 
-#pass JSON object in same format as method for create_discharge_pdf in PDF/pdf_interaction.py
-@app.route("/submit_discharge", methods=['POST'])
-@jwt_required()
-def submit_disc_eval():
-    data = request.json
-
-    try:
-        #make method call to insert into database here
-        
-        
-        pdf_creator.create_discharge_pdf(data)
-
-        #make method call to save json data as an object
-
-        response_body = jsonify({
-            "msg": "Successfully saved the Discharge Evaluation Form"
-        }), 200
-    except:
-        response_body = jsonify({
-            "msg": "Errors while saving the Discharge Evaluation Form"
-        }), 401
-    return response_body
 
 #pass JSON object in same format as method for create_initial_pdf in PDF/pdf_interaction.py
 @app.route("/submit_progress", methods=['POST'])
