@@ -19,7 +19,11 @@ import InputLabel from '@mui/material/InputLabel';
 import { NativeSelect } from '@mui/material';
 import { useEffect } from 'react';
 import './TableStyling.css';
-import Select from '@mui/material/Select';
+import {Dialog, 
+DialogTitle, 
+DialogContentText, 
+DialogContent, 
+DialogActions } from '@mui/material';
 
 
 const TabContainer = styled.div`
@@ -275,8 +279,8 @@ function InitialEvaluationForm() {
 
   async function submitInitEval()
   {
-  
-      
+    if (isNotEmpty)
+    {  
       var requestOptions = {
         method: "POST",
         headers: {
@@ -292,11 +296,17 @@ function InitialEvaluationForm() {
       
     
       const response = await fetch("http://127.0.0.1:5000/submit_initial", requestOptions);
-      const data = await response.json
+      const data = await response.json();
       console.log(data);
 
 
     }
+    else {
+      handleOpen();
+      setMessage("Please enter data in all fields in order to submit.")
+    }
+  
+  }
 
 
   function getEmptyEntries() {
@@ -305,10 +315,68 @@ function InitialEvaluationForm() {
 
   return (
 
+    
+
 
     
 
     <div id="app" style={({ height: "75vh" }, { display: "flex" })}>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{
+          style: {
+            backgroundColor:"#f55d7a",
+            
+          },
+        }}
+      >
+        <DialogTitle id="alert-dialog-title">
+        <Typography 
+            component={"span"}
+            variant='h4'
+            align='center'
+            color='#f5f6f7'
+            >
+            {"There was an error trying to submit the evaluation..."}
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <Typography
+              component={"span"} 
+              align='center'
+              color='#f5f6f7'
+              style={{
+                fontSize: "1.1vw"
+            }}
+            >
+              {message}
+            </Typography>
+            
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+          sx={{
+            bgcolor: "#F8DE7E",
+            ':hover':{
+              bgcolor: "#FADA5E"
+            },
+            color: "black"
+          }}
+          fullWidth
+          variant='contained'
+          size='medium'
+          onClick={handleClose}>
+            Understood!
+          </Button>
+        </DialogActions>
+
+      </Dialog>
+      
       <Sidebar style={{ height: "60vh" }}>
         <Menu>
           <MenuItem
@@ -436,45 +504,49 @@ function InitialEvaluationForm() {
             <Grid container spacing={2}>
               <Grid item xs={12}></Grid>
               <Grid item xs={12}></Grid>
-              <Grid item xs={.20}></Grid>
-              <Grid item xs={2}>
+              <Grid item xs={2/6}></Grid>
+              <Grid item xs={3}>
                 <TextField label="Client Name" 
                 
-                id='first_name'
+                id='name'
                 fullWidth
                 style={{ padding: 1}}
                 onBlur={changeHandler} />
               </Grid>
-              <Grid item xs={.20}></Grid>
-              <Grid item xs={1.5}>
+              <Grid item xs={2/6}></Grid>
+              <Grid item xs={1}>
                 <TextField label='Sex'
                   id='sex'
                   fullWidth
                   style={{ padding: 1}}
                   onBlur={changeHandler}></TextField>
               </Grid>
-              <Grid item xs={.2}></Grid>
+              <Grid item xs={2/6}></Grid>
               <Grid item xs={2}>
                 <TextField label = "Date of Birth:"
                 id='dob'
+                type='date'
+                InputLabelProps={{ shrink: true }}
                 
                 onBlur={changeHandler} 
                 style={{ padding: 1}}/>
               </Grid>
-              <Grid item xs={.20}></Grid>
+              <Grid item xs={2/6}></Grid>
               
               
-            <Grid item xs={1.5}>
+            <Grid item xs={2}>
               <TextField label="Date of Eval:"
               fullWidth
+              type='date'
+              InputLabelProps={{ shrink: true }}
               
               id='date'
               onBlur={changeHandler}
               style={{ padding: 1 }} />
             </Grid>
         	  
-            <Grid item xs={.2}></Grid>
-        	  <Grid item xs={1.8}>
+            <Grid item xs={2/6}></Grid>
+        	  <Grid item xs={2}>
               <TextField label="Med Record #:"
                 id='med_num'
                 
@@ -483,8 +555,12 @@ function InitialEvaluationForm() {
                 style={{ padding: 1 }} />
             
             </Grid>
-            <Grid item xs={.66}></Grid>
-        	  <Grid item xs={5}>
+            <Grid item xs={2/6}></Grid>
+            <Grid item xs={3/6}></Grid>
+            
+            
+        	  <Grid item={.66}></Grid>
+            <Grid item xs={5}>
               <TextField label="Medical HX:" 
                 fullWidth
                 
@@ -496,7 +572,7 @@ function InitialEvaluationForm() {
             
             </Grid>
             
-            <Grid item xs={.66}></Grid>
+            <Grid item xs={2/3}></Grid>
         	  <Grid item xs={5}>
               <TextField label="Diagnosis:" 
                 fullWidth
@@ -507,7 +583,7 @@ function InitialEvaluationForm() {
                 inputProps={{ style: {height: 100} }}
                 style={{ padding: 1 }} />
                 </Grid>
-              <Grid item xs={.66}></Grid>
+              <Grid item xs={2/3}></Grid>
             
             
             
@@ -2128,8 +2204,8 @@ function InitialEvaluationForm() {
               <Grid item xs={2/3}></Grid>
 
               <Grid item xs={12}></Grid>
-              <Grid item xs={2}></Grid>
-              <Grid item xs={8}>
+              <Grid item xs={2/3}></Grid>
+              <Grid item xs={5}>
                   <TextField label="Justification of Skilled OT Services:"
                     fullWidth
                     id='justification'
@@ -2140,8 +2216,56 @@ function InitialEvaluationForm() {
 
 
               </Grid>
-              <Grid item xs={2}></Grid>
+              <Grid item xs={2/3}></Grid>
+              <Grid item xs={1}>
+              <InputLabel variant="standard">
+                    Billing Code:
+               </InputLabel>
+                  
+                  <NativeSelect
+                    onChange={changeHandler}
+                    inputProps={{
+                      name:  'Billing Code',
+                      id: 'billing',
+                     
+                    }}
+                >
+                   
+                     
+                    
+                    <option value={'97165'}>97165</option>
+                    <option value={'97166'}>97166</option>
+                    <option value={'97167'}>97167</option>
+                    <option value={'97168'}>97168</option>
+                    <option value={'97110'}>97110</option>
+                    <option value={'97112'}>97112</option>
+                    <option value={'97129'}>97129</option>
+                    <option value={'97150'}>97150</option>
+                    <option value={'97530'}>97530</option>
+                    <option value={'97533'}>97533</option>
+                    <option value={'97535'}>97535</option>
+                    <option value={'97537'}>97537</option>
+                    <option value={'97542'}>97542</option>
+                  </NativeSelect>
+                
+              </Grid>
+              <Grid item xs={.5}></Grid>
               
+              
+              <Grid item xs={2}>
+                <TextField label='Other Billing Code:'
+                fullWidth
+                id='billing'
+                type='number'
+                onBlur={changeHandler}>
+                </TextField>
+              </Grid>
+              <Grid item xs={2}></Grid>
+
+              
+
+                  
+             
               <Grid item xs={5/12}></Grid>
               <Grid item xs={2}>
                 <TextField label="Estimated Length:"
@@ -2150,36 +2274,7 @@ function InitialEvaluationForm() {
                   onBlur={changeHandler}
                   ></TextField>
               </Grid>
-            {/*  <Grid item xs={2}>
-                <FormControl fullWidth>
-                  <InputLabel>Billing</InputLabel>
-                  <Select
-                    id="billing"
-                  
-      
-                    label="Billing Codes"
-                    onBlur={changeHandler}
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={'97165'}>97165</MenuItem>
-                    <MenuItem value={'97166'}>97166</MenuItem>
-                    <MenuItem value={'97167'}>97167</MenuItem>
-                    <MenuItem value={'97168'}>97168</MenuItem>
-                    <MenuItem value={'97110'}>97110</MenuItem>
-                    <MenuItem value={'97112'}>97112</MenuItem>
-                    <MenuItem value={'97129'}>97129</MenuItem>
-                    <MenuItem value={'97150'}>97150</MenuItem>
-                    <MenuItem value={'97530'}>97530</MenuItem>
-                    <MenuItem value={'97533'}>97533</MenuItem>
-                    <MenuItem value={'97535'}>97535</MenuItem>
-                    <MenuItem value={'97537'}>97537</MenuItem>
-                    <MenuItem value={'97542'}>97542</MenuItem>
-                  </Select>
-                </FormControl>
-                </Grid>
-                  */}
+           
               <Grid item xs={5/12}></Grid>
               <Grid item xs={2}>
                 <TextField label="Total Units:"
@@ -2202,6 +2297,8 @@ function InitialEvaluationForm() {
                 <TextField label="Date:"
                   fullWidth
                   id='date_of_sig'
+                  type='date'
+                  InputLabelProps={{ shrink: true }}
                   onBlur={changeHandler}
                   ></TextField>
 
