@@ -45,7 +45,6 @@ class PDF_Interaction:
             print(f"Successfully made made Progress Note PDF!")
         except:
             print("Error converting the Progress Note to the pdf!")
-            print(f"Download Path: {download_path}")
 
 
     '''
