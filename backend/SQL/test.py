@@ -13,5 +13,34 @@ if __name__ == "__main__":
         database.create_tables()
         print("Database had to be created..")
 
-    response = database.perform_insert("clients",['first_name','last_name','date_of_birth','sex'],['John','Smith', '2022-12-24', 'Male'])
-    print(f"Response: {response['last_id']}")
+    table = "progress_note"
+    params = [
+            "client_id",
+            "user_id",
+            "billing_code_id",
+            "diagnosis",
+            "precautions",
+            "contraindications",
+            "summary_of_service",
+            "current_client_performance",
+            "plan_recommnedations",
+            "billable_time"
+        ]
+    values = [
+            #client_id['last_id'],
+            #user_id,
+            #data['billingCodes'],
+            5,
+            5,
+            5,
+            "jail",
+            "jail",
+            "jail",
+            "jail",
+            "jail",
+            "jail",
+            "jail"
+          
+          
+        ]
+    progress_id = database.perform_insert(table, params, values)

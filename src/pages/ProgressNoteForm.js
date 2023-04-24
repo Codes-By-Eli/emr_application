@@ -42,7 +42,7 @@ function ProgressNoteForm() {
   const  [date, setDate] = useState ('');
   const  [billingCodes, setBillingCodes] = useState ('');
   const  [open, setOpen] = React.useState(false);
-  cosnt  [units,setUnits] = useState('');
+  const  [units,setUnits] = useState('');
 
   const changeName = (event) => {
     setName(event.target.value);
@@ -88,18 +88,17 @@ function ProgressNoteForm() {
     setDate(event.target.value);
   };
 
- // const ChangeBillingCodes = (event) =>{
- //   setBillingCodes(event.target.value);
- // };
+  const changeBillingCodes = (event) =>{
+    setBillingCodes(event.target.value);
+  };
 
- const units = (event) => {
+ const changeUnits = (event) => {
   setUnits(event.target.value);
 };
 
-  const handleChange = (event) => {
+/*   const handleChange = (event) => {
     setBillingCodes(Number(event.target.value) || '');
-    console.log(billingCodes)
-  };
+  }; */
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -113,29 +112,35 @@ function ProgressNoteForm() {
 
 
   //JSON with all of the fields for the proogress note
-
-  var progressFields = {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-        "name": name,
-        "DOB": DOB,
-        "sex": sex,
-        "diagnosis": diagnosis,
-        "precautions": precautions,
-        "contraindications": contraindications,
-        "summaryOfServices": summaryOfServices,
-        "clientPerformance": clientPerformace,
-        "planOrReccomendations": planOrReccomendations,
-        "therapistSignature": therapistSignature,
-        "date": date,
-        "billingCodes": billingCodes,
+  async function submitEval(){
+  
+    var progressFields = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${sessionStorage.getItem('token')}`
       
-    })
+      },
+      body: JSON.stringify({
+          "name": name,
+          "DOB": DOB,
+          "sex": sex,
+          "diagnosis": diagnosis,
+          "precautions": precautions,
+          "contraindications": contraindications,
+          "summaryOfServices": summaryOfServices,
+          "clientPerformance": clientPerformace,
+          "planOrReccomendations": planOrReccomendations,
+          "therapistSignature": therapistSignature,
+          "date": date,
+          "billingCodes": billingCodes,
+          "units": units
+      })
+    }//end progressFields
+    const response = await fetch("http://127.0.0.1:5000/submit_progress",progressFields)
+    const data = await response.json()
+    console.log(data)
   }
-
-
-
 
 
 
@@ -183,11 +188,9 @@ function ProgressNoteForm() {
       <item>Welcome Student</item>
       <item>Student Email</item>
     </Grid>
-          <MenuItem icon={<HomeOutlinedIcon />}>Home</MenuItem>
+          <MenuItem component = {<Link to = "/"/>} icon={<HomeOutlinedIcon />}>Home</MenuItem>
           <Divider></Divider>
-          <MenuItem 
-            //component={<Link to="sign_up"}
-            icon={<NoteAddIcon />}>Initial Evaluation</MenuItem>
+          <MenuItem component = {<Link to = "/initial_evaluation"/>} icon={<NoteAddIcon />}>Initial Evaluation</MenuItem>
           <MenuItem component = {<Link to = "/progress_form" />}icon={<StickyNote2Icon />}>Progress Note</MenuItem>
           <MenuItem icon={<NoteAltIcon/>}>Discharge Evaluation</MenuItem>
           <Divider></Divider>
@@ -200,27 +203,18 @@ function ProgressNoteForm() {
       <Grid container spacing={1}>
 
 
-        <Grid item xs = {8}>
         
-        </Grid>
-        <Grid item xs={4}>
-          <Button 
-            fullWidth 
-            variant="contained" 
-            color="primary"
-            align = "center"
-            size='small'
-            component= {Link}
-            to = "/">
-            Click here to go back to the home page
-          </Button>
-        </Grid>
 
        {/**Orignal spaces from the top */}
         <Grid item xs = {12}>
         </Grid>
         <Grid item xs = {12}>
         </Grid>
+        <Grid item xs = {12}>
+        </Grid>
+        <Grid item xs = {12}>
+        </Grid>
+        
         
         {/** FIRST ROW*/}
         <Grid item xs = {1}>
@@ -234,7 +228,7 @@ function ProgressNoteForm() {
            label="Name"
            id="filled-basic"
            variant="filled"
-           onChange={handleChange}
+           onChange={changeName}
         />
         </Grid>
 
@@ -248,7 +242,7 @@ function ProgressNoteForm() {
          label="DOB"
          id="filled-basic"
          variant="filled"
-         onChange={handleChange}
+         onChange={changeDOB}
         />
         </Grid>
 
@@ -262,7 +256,7 @@ function ProgressNoteForm() {
          label="SEX"
          id="filled-basic"
          variant="filled"
-         onChange={handleChange}
+         onChange={changeSex}
         />
         </Grid>
 
@@ -293,7 +287,7 @@ function ProgressNoteForm() {
          label="Diagnosis"
          id="filled-basic"
          variant="filled"
-         onChange={handleChange}
+         onChange={changeDiagnosis}
         />
         </Grid>
 
@@ -307,7 +301,7 @@ function ProgressNoteForm() {
             label="Precautions"
             id="filled-basic"
             variant="filled" 
-            onChange={handleChange}
+            onChange={changePrecautions}
         />
         </Grid>
 
@@ -321,7 +315,7 @@ function ProgressNoteForm() {
            label="Contraindications"
            id="filled-basic"
            variant="filled"
-           onChange={handleChange}
+           onChange={changeContraindications}
         />
         </Grid>
 
@@ -355,7 +349,7 @@ function ProgressNoteForm() {
            rows={3}
            placeholder="Enter summary"
            variant="filled"
-           onChange={handleChange}
+           onChange={changeSummaryOfServices}
         />
         </Grid>
 
@@ -382,7 +376,7 @@ function ProgressNoteForm() {
            rows={3}
            placeholder="Enter Client Performace"
            variant="filled"
-           onChange={handleChange}
+           onChange={changeClientPerformace}
         />
         </Grid>
 
@@ -408,7 +402,7 @@ function ProgressNoteForm() {
            rows={3}
            placeholder="Enter Recommendations"
            variant="filled"
-           onChange={handleChange}
+           onChange={changePlanOrReccomendations}
         />
         </Grid>
 
@@ -430,7 +424,7 @@ function ProgressNoteForm() {
            label="Therapist Signature"
            id="filled-basic"
            variant="filled"
-           onChange={handleChange}
+           onChange={changeTherapistSignature}
          />
         </Grid>
 
@@ -444,14 +438,45 @@ function ProgressNoteForm() {
          label="Date"
          id="filled-basic"
          variant="filled"
-         onChange={handleChange}
+         onChange={changeDate}
         />
         </Grid>
 
         <Grid item xs = {.5}>
         </Grid>
 
-        <Grid item xs = {3.1}>
+        <Grid item xs = {3.1}
+          >
+          <TextField
+           fullWidth
+         label="Units"
+         id="filled-basic"
+         variant="filled"
+         onChange={changeUnits}
+        />
+        </Grid>
+        
+        <Grid item xs = {.9}>
+        </Grid>
+
+       
+       
+        <Grid item xs = {12}>
+        </Grid>
+        <Grid item xs = {12}>
+        </Grid>
+        <Grid item xs = {12}>
+        </Grid>
+        <Grid item xs = {12}>
+        </Grid>
+        <Grid item xs = {12}>
+        </Grid>
+
+
+        {/* Space to the left of the submit button */}
+        <Grid item xs = {1}>
+        </Grid>
+        <Grid item xs = {4}>
           <Button
            onClick={handleClickOpen}
             variant="contained" 
@@ -473,14 +498,14 @@ function ProgressNoteForm() {
                minWidth: "30px",
                maxWidth: "100%",
                fontSize: "12px",
-               fontWeight: "light"
+              fontWeight: "light"
               }}
               >
                 Billing Codes
           </Typography>
           </Button>
       <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-        <DialogTitle>Select a billing code or type one in</DialogTitle>
+        <DialogTitle>Select a billing code or type one in.</DialogTitle>
         <DialogContent>
           <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
             <FormControl sx={{ m: 1, minWidth: 120 }}>
@@ -488,7 +513,7 @@ function ProgressNoteForm() {
               <Select
                 native
                 value={billingCodes}
-                onChange={handleChange}
+                onChange={changeBillingCodes}
                 input={<OutlinedInput label="billingCodes" id="billingCodes" />}
               >
                 <option aria-label="None" value="" />
@@ -511,10 +536,9 @@ function ProgressNoteForm() {
               <TextField
                fullWidth
                label="Code"
-
                variant="filled"
                value = {billingCodes}
-               onChange={handleChange}
+               onChange = {changeBillingCodes}
               />
             </FormControl>
           </Box>
@@ -526,20 +550,7 @@ function ProgressNoteForm() {
       </Dialog>
         </Grid>
 
-        <Grid item xs = {.9}>
-        </Grid>
-
-       
-       
-        <Grid item xs = {12}>
-        </Grid>
-        <Grid item xs = {12}>
-        </Grid>
-        <Grid item xs = {12}>
-        </Grid>
-
-        <Grid item xs = {9}>
-        
+        <Grid item xs = {4}>
         </Grid>
 
         <Grid item xs = {2}
@@ -550,15 +561,18 @@ function ProgressNoteForm() {
             color="primary"
             align = "center"
             size='small'
-            component= {Link}
-            to = "/">
+            onClick={submitEval}
+            
+            >
            SUBMIT
           </Button>
         </Grid>
 
         <Grid item xs = {1}>
+
         
         </Grid>
+
 
       </Grid>
             

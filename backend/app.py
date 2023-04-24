@@ -2,6 +2,7 @@ import os
 
 from SQL.sql_interaction import SQL_Interaction
 from PDF.pdf_interaction import PDF_Interaction
+from JSON.json_interaction import JSON_Interaction
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
 from flask_jwt_extended import create_access_token, set_access_cookies, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
@@ -147,7 +148,6 @@ def submit_init_eval():
 @jwt_required()
 def submit_disc_eval():
     data = request.json
-
     try:
         #make method call to insert into database here
         
@@ -167,26 +167,89 @@ def submit_disc_eval():
 
 #pass JSON object in same format as method for create_initial_pdf in PDF/pdf_interaction.py
 @app.route("/submit_progress", methods=['POST'])
-@jwt_required()
+#@jwt_required()
 def submit_progress_eval():
     data = request.json
+    #data['record_number'] = "5"
 
-    try:
-        #make method call to insert into database here
+    json_conversion = True
+    sql_conversion = True
+    pdf_conversion = True
+
+    try: 
+        table = "clients"
+        params = [
+            "first_name",
+            "last_name",
+            "date_of_birth",
+            "sex"
+        ]
+        values = [
+            data['name'].split()[0],
+            ' '.join(data['name'].split()[1:]),
+            data['DOB'],
+            data['sex']
+        ]
+        client_id = database.perform_insert(table, params, values)
         
+        table = "users"
+        columns = ["user_id","email_address","first_name", "last_name"]
+        condition_column = "email_address"
+        #select_condition = f"\"{user_email}\""
+        select_condition = f"\"{data['email']}\""
+        selection = database.perform_select(table, columns, condition_column, select_condition)
+        print(user_email)
+        print(selection)
+        user_id = selection[0][0]
         
-        pdf_creator.create_progress_pdf(data)
 
-        #make method call to save json data as an object
+        table = "progress_note"
+        params = [
+            "client_id",
+            "user_id",
+            "billing_code_id",
+            "diagnosis",
+            "precautions",
+            "contraindications",
+            "summary_of_service",
+            "current_client_performance",
+            "plan_recommnedations",
+            "billable_time"
+        ]
+        values = [
+            client_id['last_id'],
+            user_id,
+            data['billingCodes'],
+            data['diagnosis'],
+            data["precautions"],
+            data["contraindications"],
+            data["summaryOfServices"],
+            data["clientPerformance"],
+            data["planOrReccomendations"],
+            data['units']
+        ]
+        progress_id = database.perform_insert(table, params, values)
+        
 
-        response_body = jsonify({
-            "msg": "Successfully saved the Progress Note Form"
-        }), 200
+
     except:
-        response_body = jsonify({
-            "msg": "Errors while saving the Progress Note Form"
-        }), 401
-    return response_body
+        sql_conversion = False
+    
+    try:
+        json_creator.create_progress_json(data)
+    except:
+        json_conversion = False
+    try:
+        pdf_message = pdf_creator.create_progress_pdf(data)
+    except:
+        pdf_conversion = False
+
+    return jsonify({
+        "json_conversion": data['diagnosis'],
+        "pdf_conversion": data["precautions"],
+        "sql_conversion": data["contraindications"]
+    }),200
+
 
 @app.route('/testGET', methods=['GET'])
 def testGet():
@@ -212,4 +275,5 @@ if __name__ == '__main__':
         database.create_tables()
         print("Database had to be created..")
     pdf_creator = PDF_Interaction()
+    json_creator = JSON_Interaction()
     app.run()
