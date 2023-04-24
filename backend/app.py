@@ -130,10 +130,9 @@ def get_eval():
     select_condition = f"\"{init_eval[0][5]}\""
     vitals = database.perform_select(table, columns, condition_column, select_condition)
 
-    
-    result = []
-
     body = {
+        "fim_eval_id": fim_eval_id[0][0],
+        "vital_id": vitals[0][0],
         "name": client[0][1] + ' ' + client[0][2],
         "sex": client[0][4],
         "dob": client[0][3],
@@ -252,13 +251,13 @@ def get_eval():
         "rue_edema": r_ue[0][13],
         "lue_pain": l_ue[0][14],
         "rue_pain": r_ue[0][14],
-        "ADL": "",
+        "ADL": init_eval[0][18],
         "current_transfer": init_eval[0][17],
-        "observations": init_eval[0][18],
-        "equip_needs": init_eval[0][21],
-        "dis_rec": init_eval[0][20],
-        "patient_goals": init_eval[0][23],
-        "justification": init_eval[0][22],
+        "observations": init_eval[0][19],
+        "equip_needs": init_eval[0][22],
+        "dis_rec": init_eval[0][21],
+        "patient_goals": init_eval[0][24],
+        "justification": init_eval[0][23],
         }
     
     '''
@@ -581,6 +580,41 @@ def submit_discharge():
         ue_id = database.perform_insert(table, params, values)
         '''
 
+        table = "discharge_fim_scores"
+        params = [
+            "fim_evaluation",
+            "eating",
+            "grooming",
+            "bathing",
+            "upper_body_dressing",
+            "lower_body_dressing",
+            "toileting",
+            "toilet_transfer",
+            "shower_transfer",
+            "tub_transfer"
+        ]
+        values = [
+            data['fim_id'],
+            data['eat_disc'],
+            data['groom_disc'],
+            data['bath_disc'],
+            data['upper_disc'],
+            data['lower_disc'],
+            data['toilet_disc'],
+            data['toilet_transfer_disc'],
+            data['shower_transfer_disc'],
+            data['tub_transfer_disc']
+        ]
+
+        disc_fim_id = database.perform_insert(table, params, values)
+
+        table = "users"
+        columns = ["user_id","email_address","first_name", "last_name"]
+        condition_column = "email_address"
+        select_condition = f"\"{user_email}\""
+        selection = database.perform_select(table, columns, condition_column, select_condition)
+        user_id = selection[0][0]
+
         table = "discharge_evaluation"
         params = [
             "medical_record_id",
@@ -612,7 +646,32 @@ def submit_discharge():
             "billable_time"
         ]
         values = [
-            
+            data['med_num'],
+            user_id,
+            data['init_med_num'],
+            disc_fim_id['last_id'],
+            data['vital_id'],
+            data['billing'],
+            data['date'],
+            data['diagnosis'],
+            data['med_hx'],
+            data['prior_lev'],
+            data['prior_liv'],
+            data['hearing'],
+            data['AO'],
+            data['memory'],
+            data['mmse'],
+            data['discharge_transfer'],
+            data['observations'],
+            data['disc_assess'],
+            data['dis_rec'],
+            data['equip_needs'],
+            data['patient_goals'],
+            data['course_of_rehab'],
+            data['client_education'],
+            data['discharge_recommendations_referrals'],
+            data['signature'],
+            data['units']
         ]
     except:
         sql_conversion = False

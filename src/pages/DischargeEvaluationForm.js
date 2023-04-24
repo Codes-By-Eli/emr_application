@@ -54,7 +54,7 @@ const TabContent = styled.div`
 function DischargeEvaluationForm() {
   const [username, setName] = useState('');
   const [email,setEmail] = useState('');
-  const [init_med_num, setNum] = useState('');
+  //const [init_med_num, setNum] = useState('');
   const [record_numbers, setRecordNumbers] = useState([]);
 
   const { collapseSidebar } = useProSidebar();
@@ -62,6 +62,9 @@ function DischargeEvaluationForm() {
 
  const [allValues, setAllValues] = useState({
   /* Client and Medical Tab */
+  init_med_num: '',
+  fim_eval_id: '',
+  vital_id: '',
   name: '',
   sex: '',
   dob: '',
@@ -224,7 +227,7 @@ function DischargeEvaluationForm() {
 
   /*Observation Tab */
   ADL: '',
-  current_transfer: '',
+  discharge_transfer: '',
   disc_assess: '',
   observations: '',
   equip_needs:'',
@@ -242,13 +245,9 @@ function DischargeEvaluationForm() {
   date_of_sig: '',
   });
 
-  const changeNum = e => {
-    setNum(e.target.value);
-  }
 
   const populateHandler = json => {
     const keys = Object.keys(json);
-    console.log(keys);
     for(const key in keys)
     {
       console.log(keys[key]);
@@ -261,6 +260,7 @@ function DischargeEvaluationForm() {
 
   const changeHandler = e => { 
     const key = e.target.id || e.target.name;
+    console.log(key)
     setAllValues (prevValues => {
       return { ...prevValues,[key]: e.target.value}
     });
@@ -302,10 +302,10 @@ function DischargeEvaluationForm() {
         "Authorization": `Bearer ${sessionStorage.getItem('token')}`
       },
       body: JSON.stringify({
-        "record": init_med_num
+        "record": allValues.init_med_num
       })
     };
-    console.log(init_med_num);
+    console.log(allValues.init_med_num);
     const response = await fetch("http://127.0.0.1:5000/get_chosen_eval", requestOptions);
     const data = await response.json();
     console.log(data);
@@ -361,7 +361,7 @@ function DischargeEvaluationForm() {
   async function checkValidRecord()
   {
     var requestOptions = {
-      method: "GET",
+      method: "POST",
       headers: {"Authorization": `Bearer ${sessionStorage.getItem('token')}`}
     };
 
@@ -381,7 +381,8 @@ function DischargeEvaluationForm() {
 
   useEffect(() => {
     getEvalInformation();
-  },[init_med_num])
+    console.log(allValues.init_med_num)
+  },[allValues.init_med_num])
 
 
   return (
@@ -572,13 +573,13 @@ function DischargeEvaluationForm() {
                     labelId="init_med"
                     id="init_med_num"
                     inputProps={{
-                      name: 'Initial Medical Record #',
+                      name: 'init_med_num',
                       id: 'init_med_num',
                       align: "center"
                   }}
                     //value={allValues.init_med_num.value}
                     label="Evaluation Type"
-                    onChange={changeNum}
+                    onChange={changeHandler}
                   >
                     <Option value="">
                       <em>None</em>
@@ -2374,12 +2375,11 @@ function DischargeEvaluationForm() {
                 </Grid>
                 <Grid item xs={2/3}></Grid>
                 <Grid item xs={5}>
-                    <TextField label="Current Transfer / Mobility Status:"
+                    <TextField label="Discharge Transfer / Mobility Status:"
                       fullWidth
-                      id='current_transfer'
+                      id='discharge_transfer'
                       multiline
                       onBlur={changeHandler}
-                      value={allValues.current_transfer || ''}
                       inputProps={{ style: {height: 100} }}
                       style={{ padding: 1}}>
                     </TextField>
