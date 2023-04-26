@@ -94,7 +94,20 @@ function LandingPage() {
           <MenuItem component = {<Link to = "/progress_form" />}icon={<StickyNote2Icon />}>Progress Note</MenuItem>
           <MenuItem component = {<Link to = "/discharge_evaluation" />}icon={<NoteAltIcon/>}>Discharge Evaluation</MenuItem>
           <Divider></Divider>
-          <MenuItem component = {<Link to = "/old_form" />}icon={< DescriptionIcon/>}>View Old Forms</MenuItem>
+          {/*<MenuItem component = {<Link to = "/old_form" />}icon={< DescriptionIcon/>}>View Old Forms</MenuItem>
+          <Divider></Divider>*/}
+          <Grid item xs zeroMinWidth>
+            <br />
+            <Typography
+            align='center'
+            >
+              Helpful Tip:
+            </Typography>
+            <Typography
+            align='center'>
+              Check your "Downloads" Folder after completing an Evaluation to see your PDF!
+            </Typography>
+          </Grid>
         </Menu>
       </Sidebar>
       

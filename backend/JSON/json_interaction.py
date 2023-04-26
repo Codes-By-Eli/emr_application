@@ -7,7 +7,7 @@ class JSON_Interaction:
     
     def create_initial_json(self, info):
         try:
-            file_name = pathlib.Path.home() / "Downloads" / f"initial_{info['record_number']}_{info['client_name'].strip()}.json"
+            file_name = pathlib.Path.home() / "Downloads" / f"initial_{info['med_num']}_{info['name'].strip()}.json"
             with open(file_name, "w") as outfile:
                 json.dump(info,outfile,indent=4)
             print("Successfully created the json file of the Initial Evaluation!")

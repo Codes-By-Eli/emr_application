@@ -24,6 +24,7 @@ import FormLabel from '@mui/material/FormLabel';
 import InputLabel from '@mui/material/InputLabel';
 import { NativeSelect, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { useEffect } from 'react';
+import {useNavigate} from 'react-router-dom';
 import './TableStyling.css';
 
 const TabContainer = styled.div`
@@ -52,9 +53,9 @@ const TabContent = styled.div`
 `;
 
 function DischargeEvaluationForm() {
+  const navigate = useNavigate();
   const [username, setName] = useState('');
   const [email,setEmail] = useState('');
-  //const [init_med_num, setNum] = useState('');
   const [record_numbers, setRecordNumbers] = useState([]);
 
   const { collapseSidebar } = useProSidebar();
@@ -250,8 +251,6 @@ function DischargeEvaluationForm() {
     const keys = Object.keys(json);
     for(const key in keys)
     {
-      console.log(keys[key]);
-      console.log(json[keys[key]]);
       setAllValues (prevValues => {
         return { ...prevValues,[keys[key]]: json[keys[key]]};
       });
@@ -260,12 +259,17 @@ function DischargeEvaluationForm() {
 
   const changeHandler = e => { 
     const key = e.target.id || e.target.name;
-    console.log(key)
     setAllValues (prevValues => {
       return { ...prevValues,[key]: e.target.value}
     });
     
   }
+  const [open, setOpen] = useState(false);
+  const [success, setSucess] = useState(false);
+  const[color, setColor] = useState('');
+  const[title, setTitle] = useState('');
+  const [message, setMessage] = useState('');
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -274,8 +278,6 @@ function DischargeEvaluationForm() {
     setOpen(true);
   };
   const isNotEmpty = Object.values(allValues).every(value => value !== '');
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState('');
 
   async function getRecordNumbers()
   {
@@ -290,7 +292,6 @@ function DischargeEvaluationForm() {
     const response = await fetch("http://127.0.0.1:5000/get_initial_numbers", requestOptions);
     const data = await response.json();
     setRecordNumbers(data.data);
-    console.log(data.data);
   }
 
   async function getEvalInformation()
@@ -305,25 +306,35 @@ function DischargeEvaluationForm() {
         "record": allValues.init_med_num
       })
     };
-    console.log(allValues.init_med_num);
     const response = await fetch("http://127.0.0.1:5000/get_chosen_eval", requestOptions);
     const data = await response.json();
-    console.log(data);
+    if(!response.ok)
+    {
+      return;
+    }
     populateHandler(data.data);
   }
 
-  async function submitDiscEval()
+  async function submitDiscEval(event)
   {
+    event.preventDefault();
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
     if(!isNotEmpty)
     {
-      handleOpen();
+      setColor("#f55d7a");
+      setTitle("Not all of the fields were entered for the Discharge Evaluation!");
       setMessage("Please enter all the fields and click \"Submit\" again.");
+      handleOpen();
       return;
     }
     if(!checkValidRecord())
     {
-      handleOpen();
+      setTitle("Error with Medical Record ID.");
+      setColor("#f55d7a");
       setMessage("That medical record number is currently in use. Please enter a different number for the medical record number.");
+      handleOpen();
+      return;
     }
     var requestOptions = {
       method: "POST",
@@ -336,8 +347,20 @@ function DischargeEvaluationForm() {
 
     const response = await fetch("http://127.0.0.1:5000/submit_discharge", requestOptions);
     const data = await response.json();
-    console.log(data);
-
+    if(!response.ok)
+    {
+      setMessage(data.msg);
+      setColor("#f55d7a");
+      setTitle("Error submitting the Discharge Evaluation");
+      handleOpen();
+      return;
+    }
+    else
+    {
+      setSucess(true);
+      //navigate("/landing_page");
+      return;
+    }
   }
 
   async function getProfile()
@@ -356,32 +379,56 @@ function DischargeEvaluationForm() {
   useEffect(() => {
     getProfile();
     getRecordNumbers();
-  },[])
+  },[]);
+
+  useEffect(() => {
+    if(!success)
+    {
+      return;
+    }
+    setMessage("Evaluation saved to the Downloads folder!");
+    setTitle("Successfully submitted the Discharge Evaluation!");
+    setColor("#059611");
+    //handleOpen();
+    navigate("/landing_page")
+  },[success]);
 
   async function checkValidRecord()
   {
     var requestOptions = {
       method: "POST",
-      headers: {"Authorization": `Bearer ${sessionStorage.getItem('token')}`}
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${sessionStorage.getItem('token')}`
+      },
+      body: JSON.stringify({"med_num": allValues.med_num})
     };
-
+    
+    console.log(allValues.med_num);
     const response = await fetch("http://127.0.0.1:5000/check_valid_medical_number", requestOptions);
     const data = await response.json();
+    console.log(data);
     if(data.msg === "Not Valid")
     {
-      handleOpen();
+      setTitle("Error with Medical Record ID.");
+      setColor("#f55d7a");
       setMessage("That medical record number is currently in use. Please enter a different number for the medical record number.");
+      handleOpen();
       return false;
     }
 
   }
   useEffect(() => {
+    console.log(allValues.med_num);
+    if(allValues.med_num == '')
+    {
+      return;
+    }
     checkValidRecord();
   },[allValues.med_num])
 
   useEffect(() => {
     getEvalInformation();
-    console.log(allValues.init_med_num)
   },[allValues.init_med_num])
 
 
@@ -430,7 +477,20 @@ function DischargeEvaluationForm() {
           <MenuItem component = {<Link to = "/progress_form" />}icon={<StickyNote2Icon />}>Progress Note</MenuItem>
           <MenuItem component = {<Link to = "/discharge_evaluation" />}icon={<NoteAltIcon/>}>Discharge Evaluation</MenuItem>
           <Divider></Divider>
-          <MenuItem component = {<Link to = "/old_form" />}icon={< DescriptionIcon/>}>View Old Forms</MenuItem>
+          {/*<MenuItem component = {<Link to = "/old_form" />}icon={< DescriptionIcon/>}>View Old Forms</MenuItem>
+          <Divider></Divider>*/}
+          <Grid item xs zeroMinWidth>
+            <br />
+            <Typography
+            align='center'
+            >
+              Helpful Tip:
+            </Typography>
+            <Typography
+            align='center'>
+              Check your "Downloads" Folder after completing an Evaluation to see your PDF!
+            </Typography>
+          </Grid>
         </Menu>
       </Sidebar>
 
@@ -441,7 +501,7 @@ function DischargeEvaluationForm() {
         aria-describedby="alert-dialog-description"
         PaperProps={{
           style: {
-            backgroundColor:"#f55d7a",
+            backgroundColor: "#f55d7a",
             
           },
         }}
@@ -453,7 +513,7 @@ function DischargeEvaluationForm() {
             align='center'
             color='#f5f6f7'
             >
-            {"Not all of the fields were entered for the Discharge Evaluation!"}
+            {title}
           </Typography>
         </DialogTitle>
         <DialogContent>
@@ -577,7 +637,6 @@ function DischargeEvaluationForm() {
                       id: 'init_med_num',
                       align: "center"
                   }}
-                    //value={allValues.init_med_num.value}
                     label="Evaluation Type"
                     onChange={changeHandler}
                   >
@@ -2588,6 +2647,7 @@ function DischargeEvaluationForm() {
                         bgcolor: "#20af7f"
                       }
                     }}
+                    type='button'
                     fullWidth
                     size='medium'
                     onClick={submitDiscEval}>Submit</Button>
