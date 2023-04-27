@@ -524,6 +524,94 @@ def check_num():
         }, 400
 
 
+#pass JSON object in same format as method for create_initial_pdf in PDF/pdf_interaction.py
+@app.route("/submit_progress", methods=['POST'])
+#@jwt_required()
+def submit_progress_eval():
+    data = request.json
+
+    json_conversion = True
+    sql_conversion = True
+    pdf_conversion = True
+
+    try: 
+        table = "clients"
+        params = [
+            "first_name",
+            "last_name",
+            "date_of_birth",
+            "sex"
+        ]
+        values = [
+            data['name'].split()[0],
+            ' '.join(data['name'].split()[1:]),
+            data['DOB'],
+            data['sex']
+        ]
+        client_id = database.perform_insert(table, params, values)
+        
+        table = "users"
+        columns = ["user_id","email_address","first_name", "last_name"]
+        condition_column = "email_address"
+        select_condition = f"\"{user_email}\""
+        #select_condition = f"\"{data['email']}\""
+        selection = database.perform_select(table, columns, condition_column, select_condition)
+        print(user_email)
+        print(selection)
+        user_id = selection[0][0]
+        
+
+        table = "progress_note"
+        params = [
+            "client_id",
+            "user_id",
+            "billing_code_id",
+            "diagnosis",
+            "precautions",
+            "contraindications",
+            "summary_of_service",
+            "current_client_performance",
+            "plan_recommnedations",
+            "therapist_signature",
+            "date_of_signature",
+            "billable_time"
+        ]
+        values = [
+            client_id['last_id'],
+            user_id,
+            data['billingCodes'],
+            data['diagnosis'],
+            data["precautions"],
+            data["contraindications"],
+            data["summaryOfServices"],
+            data["clientPerformance"],
+            data["planOrReccomendations"],
+            data['therapistSignature'],
+            data['date'],
+            data['units']
+        ]
+        progress_id = database.perform_insert(table, params, values)
+        data['record_number'] = progress_id['last_id']
+        
+
+    except:
+        sql_conversion = False
+    
+    try:
+        json_creator.create_progress_json(data)
+    except:
+        json_conversion = False
+    try:
+        pdf_message = pdf_creator.create_progress_pdf(data)
+    except:
+        pdf_conversion = False
+
+    return jsonify({
+        "json_conversion": json_conversion,
+        "pdf_conversion": pdf_conversion,
+        "sql_conversion": sql_conversion
+    }),200
+
 #maybe try to protect this endpoint?
 @app.route("/sign_up", methods=["POST"])
 def create_account():
@@ -531,6 +619,8 @@ def create_account():
     last = request.json.get("last_name", None)
     email = request.json.get("email", None)
     password = request.json.get("password", None)
+    contraindications = request.json.get("contraindications", None)
+
 
     table = "users"
     params = ["first_name", "last_name", "email_address", "password"]
@@ -604,7 +694,55 @@ def my_profile():
         "last": selection[0][3]
     }), 200
     return response_body
-    
+
+#pass JSON object in same format as method for create_initial_pdf in PDF/pdf_interaction.py
+@app.route("/submit_initial", methods=['POST'])
+@jwt_required()
+def submit_init_eval():
+    data = request.json
+
+    try:
+        #make method call to insert into database here
+        
+        
+        pdf_creator.create_initial_pdf(data)
+
+        #make method call to save json data as an object
+
+        response_body = jsonify({
+            "msg": "Successfully saved the Initial Evaluation Form"
+        }), 200
+    except:
+        response_body = jsonify({
+            "msg": "Errors while saving the Initial Evaluation Form"
+        }), 401
+    return response_body
+
+#pass JSON object in same format as method for create_discharge_pdf in PDF/pdf_interaction.py
+@app.route("/submit_discharge", methods=['POST'])
+@jwt_required()
+def submit_disc_eval():
+    data = request.json
+
+    try:
+        #make method call to insert into database here
+        
+        
+        pdf_creator.create_discharge_pdf(data)
+
+        #make method call to save json data as an object
+
+        response_body = jsonify({
+            "msg": "Successfully saved the Discharge Evaluation Form"
+        }), 200
+    except:
+        response_body = jsonify({
+            "msg": "Errors while saving the Discharge Evaluation Form"
+        }), 401
+    return response_body
+
+#pass JSON object in same format as method for create_initial_pdf in PDF/pdf_interaction.py
+
 
 @app.route('/testGET', methods=['GET'])
 def testGet():
@@ -629,4 +767,6 @@ if __name__ == '__main__':
         database.create_tables()
         print("Database had to be created..")
     pdf_creator = PDF_Interaction()
+
+    json_creator = JSON_Interaction()
     app.run()

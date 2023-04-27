@@ -31,9 +31,7 @@ class JSON_Interaction:
         home_path = os.path.expanduser("~")
         print(home_path)
         try:
-            home_path = os.path.expanduser("~")
-            print(home_path)
-            file_name = pathlib.Path.home() / "Downloads" / f"progress_{info['record_number']}_{info['client_name'].strip()}.json"
+            file_name = pathlib.Path.home() / "Downloads" / f"progress_{info['record_number']}_{info['name'].strip()}.json"
             with open(file_name, "w") as outfile:
                 json.dump(info,outfile,indent=4)
             print("Successfully created the json file of the Progress Note Evaluation!")
