@@ -7,10 +7,30 @@ import { Link } from 'react-router-dom';
 import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
 import logo from '../iona.png';
 import Divider from '@mui/material/Divider';
+import { Box,Button, Container, Paper, TextField, Typography, TableHead, TableContainer } from '@mui/material';
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+import styled from 'styled-components';
+import { Table, TableBody, TableCell, TableRow } from '@mui/material';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import InputLabel from '@mui/material/InputLabel';
+import { NativeSelect } from '@mui/material';
+import { useEffect } from 'react';
+import './TableStyling.css';
+import {Dialog, 
+DialogTitle, 
+DialogContentText, 
+DialogContent, 
+DialogActions } from '@mui/material';
 import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import DescriptionIcon from '@mui/icons-material/Description';
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+
 
 
 
@@ -51,12 +71,9 @@ cursor: pointer;
 width: 150px;
 height: 85px;
 font-family: Lucida Sans;
-font-size: 12px;
+font-size: 11px;
 `;
 
-const TabContent = styled.div`
-  display: ${(props) => (props.active ? 'block' : 'none')};
-`;
 
 
 
@@ -79,60 +96,64 @@ function InitialEvaluationForm() {
  
  const [allValues, setAllValues] = useState({
   /* Client and Medical Tab */
-  name: '',
-  dob: '',
-  sex: '',
-  date: '',
-  med_num: '',
-  med_hx: '',
-  diagnosis: '',
-  prior_lev: '',
-  prior_liv: '',
-  hearing: '',
-  visual_perception: '',
-  AO: '',
-  memory: '',
-  mmse: '',
-  blood_pressure: '',
-  heart_rate: '',
-  oxygen: '',
-  respiratory_rate: '',
-  pain_assessment: '',
+  
+  name : '',
+  dob:'',
+  sex:'',
+  date:'',
+  med_num:'',
+  med_hx:'',
+  diagnosis:'',
+  prior_lev:'',
+  prior_liv:'',
+  hearing:'',
+  visual_perception:'',
+  AO:'',
+  memory:'',
+  mmse:'',
+  
+  blood_pressure : '',
+  heart_rate : '',
+  oxygen : '',
+  respiratory_rate : '',
+  pain_assessment : '',
 
   /* Fim Score Tab */
-  eat_init: '',
-  eat_goal: '',
-  groom_init: '',
-  groom_goal: '',
-  bath_init: '',
-  bath_goal: '',
-  upper_init: '',
-  upper_goal: '',
-  lower_init: '',
-  lower_goal: '',
-  toilet_init: '',
-  toilet_goal: '',
-  toilet_transfer_init: '',
-  toilet_transfer_goal: '',
-  shower_transfer_init: '',
-  shower_transfer_goal: '',
-  tub_transfer_init: '',
-  tub_transfer_goal: '',
+  
+  
+  eat_init:'',
+  eat_goal:'',
+  groom_init:'',
+  groom_goal:'',
+  bath_init:'',
+  bath_goal:'',
+  upper_init:'',
+  upper_goal:'',
+  lower_init:'',
+  lower_goal:'',
+  toilet_init:'',
+  toilet_goal:'',
+  toilet_transfer_init:'',
+  toilet_transfer_goal:'',
+  shower_transfer_init:'',
+  shower_transfer_goal:'',
+  tub_transfer_init:'',
+  tub_transfer_goal:'',
 
   /* Dom Hand / UE Scores */
-  hand_dom: '',
+  hand_dom:'',
   
-  lue_shoulder_ev_rom: '',
-  lue_shoulder_ev_mmt: '',
-  rue_shoulder_ev_rom: '',
-  rue_shoulder_ev_mmt: '',
+  lue_shoulder_ev_rom:'',
+  lue_shoulder_ev_mmt:'',
+  rue_shoulder_ev_rom:'',
+  rue_shoulder_ev_mmt:'',
 
-  lue_shoulder_flex_rom: '',
-  lue_shoulder_flex_mmt: '',
-  rue_shoulder_flex_rom: '',
-  rue_shoulder_flex_mmt: '',
+  lue_shoulder_flex_rom:'',
+  lue_shoulder_flex_mmt:'',
+  rue_shoulder_flex_rom:'',
+  rue_shoulder_flex_mmt:'',
   
-  lue_shoulder_ext_rom: '',
+  lue_shoulder_ext_rom:'',
   lue_shoulder_ext_mmt:'',
   rue_shoulder_ext_rom:'',
   rue_shoulder_ext_mmt:'',
@@ -231,25 +252,25 @@ function InitialEvaluationForm() {
 
 
   /*Observation Tab */
-  ADL: '',
-  current_transfer: '',
-  init_assess: '',
-  observations: '',
+  ADL:'',
+  current_transfer:'',
+  init_assess:'',
+  observations:'',
   equip_needs:'',
   
-  /*Discharge Tab */
-  dis_rec: '',
-  patient_goals: '',
-  short_term_goals: '',
-  overall_goals: '',
-  justification: '',
-  billing: '',
+ /* Discharge Tab */
+  dis_rec:'',
+  patient_goals:'',
+  short_term_goals:'',
+  overall_goals:'',
+  justification:'',
+  billing:'',
   est_len:'',
   units:'',
-  signature: '',
-  date_of_sig: '',
+  signature:'',
+  date_of_sig:'',
 
-
+  
 
 
 
@@ -273,47 +294,130 @@ function InitialEvaluationForm() {
   const handleOpen = () => {
     setOpen(true);
   };
+  
+  const [ProcessOpen,set_Process_Open] = useState(false);
+  const handleProcessOpen = () => {
+    set_Process_Open(true);
+  };
+  const handleProcessClose = () => {
+    set_Process_Open(false);
+  }
+  
+  
+  
+  
   const isNotEmpty = Object.values(allValues).every(value => value !== '');
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
-
-
-
-  async function submitInitEval()
-  {
-    if (isNotEmpty)
-    {  
-      var requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-          
-        
-        },
-          body: JSON.stringify(allValues)
-
-      };
-      
-      
-      
-    
-      const response = await fetch("http://127.0.0.1:5000/submit_initial", requestOptions);
-      const data = await response.json();
-      console.log(data);
-
-
-    }
-    else {
-      handleOpen();
-      setMessage("Please enter data in all fields in order to submit.")
-    }
   
+  const [name, setName] = useState('');
+  const [email,setEmail] = useState('');
+
+  async function getProfile()
+  {
+    var requestOptions = {
+      method: "GET",
+      headers: {"Authorization": `Bearer ${sessionStorage.getItem('token')}`}
+    };
+
+    const response = await fetch("http://127.0.0.1:5000/profile", requestOptions);
+    const data = await response.json();
+    setName(`${data.first} ${data.last}`);
+    setEmail(data.email);
+  }
+
+  useEffect(() => {
+    getProfile();
+   
+  },[])
+  
+ 
+
+  var requestOptions = {
+    method: "POST",
+    headers: {
+      "content-type": "application/json"
+    
+    },
+    body: JSON.stringify({ allValues }),
+  }
+  
+  
+
+
+  async function submitInitEval() {
+    console.log('submitInitEval called');
+    
+    const emptyEntries = getEmptyEntries();
+    if (emptyEntries.length > 0) {
+      setMessage(`Please enter data into ALL fields before submitting.`);
+      handleOpen();
+      return;
+    }
+    
+    if (!checkValidRecord()) {
+      setMessage("That medical record number is currently in use. Please enter a different number for the medical record number.");
+      handleOpen();
+      return;
+    }
+    
+   
+  
+
+  
+    
+    handleProcessOpen();
+  
+    const response = await fetch("http://127.0.0.1:5000/submit_initial", requestOptions);
+    const data = await response.json();
+  
+    if (!response.ok) {
+      
+      handleProcessClose();
+      setMessage(data.msg);
+      handleOpen();
+    } else {
+      
+      handleProcessClose();
+      window.location.replace("http://127.0.0.1:3000/landing_page");
+    }
   }
 
 
   function getEmptyEntries() {
-    return Object.entries(allValues).filter(([key, value]) => value === '');
+    return Object.entries(allValues)
+    .filter(([key, value]) => value === '');
   }
+
+ 
+  async function checkValidRecord()
+  {
+    var requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${sessionStorage.getItem('token')}`
+      },
+      body: JSON.stringify({"med_num": allValues.med_num})
+    };
+
+    console.log(allValues.med_num);
+    const response = await fetch("http://127.0.0.1:5000/check_valid_medical_number", requestOptions);
+    const data = await response.json();
+    console.log(data);
+    if(data.msg === "Not Valid")
+    {
+      //setTitle("Error with Medical Record ID.");
+      //setColor("#f55d7a");
+      setMessage("That medical record number is currently in use. Please enter a different number for the medical record number.");
+      handleOpen();
+      return false;
+    }
+
+  }
+  useEffect(() => {
+    checkValidRecord();
+  },[allValues.med_num])
 
   return (
 
@@ -323,6 +427,8 @@ function InitialEvaluationForm() {
     
 
     <div id="app" style={({ height: "75vh" }, { display: "flex" })}>
+      
+      
       <Dialog
         open={open}
         onClose={handleClose}
@@ -378,8 +484,45 @@ function InitialEvaluationForm() {
         </DialogActions>
 
       </Dialog>
-      
-      <Sidebar style={{ height: "60vh" }}>
+
+
+      {/* Processing Dialogue box*/}
+      <Dialog
+  open={ProcessOpen}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
+  PaperProps={{
+    style: {
+      backgroundColor: "#E6F1FF",
+    },
+  }}
+>
+  <DialogTitle id="alert-dialog-title">
+    <Typography
+      component={"span"}
+      variant="h4"
+      align="center"
+      color="#1D1D1F"
+    >
+      {"Please wait while the Initial Evaluation is being processed..."}
+    </Typography>
+  </DialogTitle>
+  <DialogContent>
+    <DialogContentText id="alert-dialog-description">
+      <Typography
+        component={"span"}
+        align="center"
+        color="#1D1D1F"
+        style={{
+          fontSize: "1.1vw",
+        }}
+      >
+        {"When redirected, check your 'Downloads' Folder for the PDF!"}
+      </Typography>
+    </DialogContentText>
+  </DialogContent>
+</Dialog>
+<Sidebar style={{ height: "100vh" }}>
         <Menu>
           <MenuItem
             icon={<MenuOutlinedIcon />}
@@ -402,22 +545,38 @@ function InitialEvaluationForm() {
         <strong>Iona University </strong>
       </div>
     </div>
-    <Grid item xs >
-     
+    <Grid item xs zeroMinWidth>
+      <Typography
+      align='center'
+      >
+        {name}
+      </Typography>
+      <Typography
+      align='center'>
+        {email}
+      </Typography>
     </Grid>
-      <MenuItem component={<Link to="/" />}>Home</MenuItem>
+  
+          <MenuItem component = {<Link to = "/" />} icon={<HomeOutlinedIcon />}>Home</MenuItem>
           <Divider></Divider>
-          <MenuItem component={<Link to="/initial_evaluation" />}>Initial Evaluation</MenuItem>
-          <MenuItem component={<Link to="/progress_form" />}>Progress Note</MenuItem>
-          <MenuItem component={<Link to="/discharge_form"/>}>Discharge Evaluation</MenuItem>
+          <MenuItem 
+            component = {<Link to = "/initial_evaluation" />}
+            icon={<NoteAddIcon />}>Initial Evaluation</MenuItem>
+          <MenuItem component = {<Link to = "/progress_form" />}icon={<StickyNote2Icon />}>Progress Note</MenuItem>
+          <MenuItem component = {<Link to = "/discharge_evaluation" />}icon={<NoteAltIcon/>}>Discharge Evaluation</MenuItem>
           <Divider></Divider>
-          <MenuItem component={<Link to="/old_form"/>}>View Old Forms</MenuItem>
+          <MenuItem component = {<Link to = "/old_form" />}icon={< DescriptionIcon/>}>View Old Forms</MenuItem>
         </Menu>
       </Sidebar>
       
+    
+    
+    
+  
+      
     <Box sx={{
           width: '200vh',
-          height: '120vh',
+          height: '130vh',
           background: 'linear-gradient(to right bottom, #d8deee, #324e84)',
           display: "flex",
           flexDirection: "column",
@@ -426,8 +585,8 @@ function InitialEvaluationForm() {
       }}>
 
           <Grid container className='TabContainer' spacing={0}> 
-          <Grid item xs={3}></Grid>
-          <Grid item xs={6}>  
+          <Grid item xs={4}></Grid>
+          <Grid item xs={4}>  
             <TabContainer alignItems='center' display='flex' justifyContent='center'>
               <TabButton
               active={activeTab === 0}
@@ -467,7 +626,7 @@ function InitialEvaluationForm() {
               </TabButton>
             </TabContainer>
             </Grid>
-            <Grid item xs={3}></Grid>
+            <Grid item xs={4}></Grid>
           </Grid>
         
         
@@ -2229,6 +2388,7 @@ function InitialEvaluationForm() {
                     inputProps={{
                       name:  'Billing Code',
                       id: 'billing',
+                      
                      
                     }}
                 >
@@ -2324,9 +2484,7 @@ function InitialEvaluationForm() {
                     onClick={submitInitEval}>Submit</Button>
 
              </Grid>
-             <Grid item xs={1}>
-             <button onClick={() => console.log(getEmptyEntries())}>Check for empty values</button>
-             </Grid>
+             
                  
 
           </Grid>

@@ -1,11 +1,12 @@
 import os
-
+from JSON.json_interaction import JSON_Interaction
 from SQL.sql_interaction import SQL_Interaction
 from PDF.pdf_interaction import PDF_Interaction
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
 from flask_jwt_extended import create_access_token, set_access_cookies, get_jwt, get_jwt_identity, unset_jwt_cookies, jwt_required, JWTManager
 from flask_cors import CORS
+import json
 
 app = Flask(__name__)
 
@@ -33,47 +34,112 @@ def refresh_expiring_jwts(response):
 
 
 #Christian code here pls
+
 @app.route("/submit_initial", methods=["POST"])
-@jwt_required
 def submit_initial():
-    #replace pass with the code you would like to use
     data = request.json
+    #print(data)
+    insert_message = True
     
+    try: 
+
+        pdf_creator = PDF_Interaction()
+        result = pdf_creator.create_initial_pdf(data)
+        if not result["success"]:
+           return jsonify({"error": "PDF creation unsuccessful"}), 400
+
+        insert_message = insert_initial(data)
+        if insert_message != True:
+            return jsonify({"error": "Database insertion was not successful"}), 400
         
-    try:
+        
+        json_creator = JSON_Interaction()
+        result = json_creator.create_initial_json(data)
+        if result[1] == 200:
+            return jsonify({"message": "Initial Evaluation was processed successfully!"}), 200
+        else:
+            return jsonify({"error": "JSON creation unsuccessful"}), 400
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+   
+
+
+    
+    
     
 
-        table = "Clients"
+
+    """
+
+
+    response_body = jsonify({
+        "msg:" "Initial Evaluation Form saved successfully!"
+    }), 200
+
+    except:
+    response_body = jsonify({
+        "msg": "Errors while saving the Initial Evaluation Form"
+    }), 401
+
+    return response_body
+
+   
+"""
+
+
+
+
+    
+    
+
+    
+    
+    
+    
+    
+def insert_initial(data):
+
+    insertion = True
+
+    try: 
+        
+        table = "clients"
         params = [
             "first_name",
             "last_name",
             "date_of_birth",
             "sex"
-            
-        
         ]
 
         values = [
-            data['name'].split()[0], ' '.join(data['name'].split()[1:]),
-            data['dob'],
-            data['sex']
+            data['allValues']['name'].split()[0],
+            ' '.join(data['allValues']['name'].split()[1:]),
+            data['allValues']['dob'],
+            data['allValues']['sex']
         ]
-        client_id = database.perform_insert(table, params, values)
-
+        
+        client_id = database.perform_insert(table,params,values)
+        
+        
+        
         table = "vitals"
         params = [
-            "blood_pressure",
-            "heart_rate",
-            "oxygen",
-            "respiratory_rate",
-            "pain_assessment"
-        ]
+                "blood_pressure",
+                "heart_rate",
+                "oxygen",
+                "respiratory_rate",
+                "pain_assessment"
+            ]
         values = [
-            data['blood_pressure'],
-            data['heart_rate'],
-            data['oxygen'],
-            data['respiratory_rate'],
-            data['pain_assessment']
+            data['allValues']['blood_pressure'],
+            data['allValues']['heart_rate'],
+            data['allValues']['oxygen'],
+            data['allValues']['respiratory_rate'],
+            data['allValues']['pain_assessment']
         ]
 
         vitals = database.perform_insert(table,params,values)
@@ -92,30 +158,30 @@ def submit_initial():
             "tub_transfer"
         ]
         values = [
-            data['eat_init'],
-            data['groom_init'],
-            data['bath_init'],
-            data['upper_init'],
-            data['lower_init'],
-            data['toilet_init'],
-            data['toilet_transfer_init'],
-            data['shower_transfer_init'],
-            data['tub_transfer_init']
+            data['allValues']['eat_init'],
+            data['allValues']['groom_init'],
+            data['allValues']['bath_init'],
+            data['allValues']['upper_init'],
+            data['allValues']['lower_init'],
+            data['allValues']['toilet_init'],
+            data['allValues']['toilet_transfer_init'],
+            data['allValues']['shower_transfer_init'],
+            data['allValues']['tub_transfer_init']
 
         ]
         init_fim = database.perform_insert(table, params, values)
 
         table = 'goal_fim_scores'
         values = [
-            data['eat_goal'],
-            data['groom_goal'],
-            data['bath_goal'],
-            data['upper_goal'],
-            data['lower_goal'],
-            data['toilet_goal'],
-            data['toilet_transfer_goal'],
-            data['shower_transfer_goal'],
-            data['tub_transfer_goal']
+            data['allValues']['eat_goal'],
+            data['allValues']['groom_goal'],
+            data['allValues']['bath_goal'],
+            data['allValues']['upper_goal'],
+            data['allValues']['lower_goal'],
+            data['allValues']['toilet_goal'],
+            data['allValues']['toilet_transfer_goal'],
+            data['allValues']['shower_transfer_goal'],
+            data['allValues']['tub_transfer_goal']
         ]
         
         goal_fim= database.perform_insert(table,params, values)
@@ -152,20 +218,20 @@ def submit_initial():
         ]
 
         values = [
-            data['rue_shoulder_ev_rom'],
-            data['rue_shoulder_flex_rom'],
-            data['rue_shoulder_ext_rom'],
-            data['rue_shoulder_abd_rom'],
-            data['rue_hor_abd_rom'],
-            data['rue_hor_add_rom'],
-            data['rue_intern_rot_rom'],
-            data['rue_extern_rot_rom'],
-            data['rue_elbow_flex_rom'],
-            data['rue_elbow_ext_rom'],
-            data['rue_fore_pro_rom'],
-            data['rue_fore_sup_rom'],
-            data['rue_wrist_flex_rom'],
-            data['rue_wrist_ext_rom']
+            data['allValues']['rue_shoulder_ev_rom'],
+            data['allValues']['rue_shoulder_flex_rom'],
+            data['allValues']['rue_shoulder_ext_rom'],
+            data['allValues']['rue_shoulder_abd_rom'],
+            data['allValues']['rue_hor_abd_rom'],
+            data['allValues']['rue_hor_add_rom'],
+            data['allValues']['rue_intern_rot_rom'],
+            data['allValues']['rue_extern_rot_rom'],
+            data['allValues']['rue_elbow_flex_rom'],
+            data['allValues']['rue_elbow_ext_rom'],
+            data['allValues']['rue_fore_pro_rom'],
+            data['allValues']['rue_fore_sup_rom'],
+            data['allValues']['rue_wrist_flex_rom'],
+            data['allValues']['rue_wrist_ext_rom']
         ]
 
         right_rom = database.perform_insert(table,params,values)
@@ -174,20 +240,20 @@ def submit_initial():
         
         values = [
 
-            data['rue_shoulder_ev_mmt'],
-            data['rue_shoulder_flex_mmt'],
-            data['rue_shoulder_ext_mmt'],
-            data['rue_shoulder_abd_mmt'],
-            data['rue_hor_abd_mmt'],
-            data['rue_hor_add_mmt'],
-            data['rue_intern_rot_mmt'],
-            data['rue_extern_rot_mmt'],
-            data['rue_elbow_flex_mmt'],
-            data['rue_elbow_ext_mmt'],
-            data['rue_fore_pro_mmt'],
-            data['rue_fore_sup_mmt'],
-            data['rue_wrist_flex_mmt'],
-            data['rue_wrist_ext_mmt']
+            data['allValues']['rue_shoulder_ev_mmt'],
+            data['allValues']['rue_shoulder_flex_mmt'],
+            data['allValues']['rue_shoulder_ext_mmt'],
+            data['allValues']['rue_shoulder_abd_mmt'],
+            data['allValues']['rue_hor_abd_mmt'],
+            data['allValues']['rue_hor_add_mmt'],
+            data['allValues']['rue_intern_rot_mmt'],
+            data['allValues']['rue_extern_rot_mmt'],
+            data['allValues']['rue_elbow_flex_mmt'],
+            data['allValues']['rue_elbow_ext_mmt'],
+            data['allValues']['rue_fore_pro_mmt'],
+            data['allValues']['rue_fore_sup_mmt'],
+            data['allValues']['rue_wrist_flex_mmt'],
+            data['allValues']['rue_wrist_ext_mmt']
         ]
             
         right_mmt = database.perform_insert(table, params,values)
@@ -195,20 +261,20 @@ def submit_initial():
         table = "left_rom"
 
         values = [
-            data['lue_shoulder_ev_rom'],
-            data['lue_shoulder_flex_rom'],
-            data['lue_shoulder_ext_rom'],
-            data['lue_shoulder_abd_rom'],
-            data['lue_hor_abd_rom'],
-            data['lue_hor_add_rom'],
-            data['lue_intern_rot_rom'],
-            data['lue_extern_rot_rom'],
-            data['lue_elbow_flex_rom'],
-            data['lue_elbow_ext_rom'],
-            data['lue_fore_pro_rom'],
-            data['lue_fore_sup_rom'],
-            data['lue_wrist_flex_rom'],
-            data['lue_wrist_ext_rom']
+            data['allValues']['lue_shoulder_ev_rom'],
+            data['allValues']['lue_shoulder_flex_rom'],
+            data['allValues']['lue_shoulder_ext_rom'],
+            data['allValues']['lue_shoulder_abd_rom'],
+            data['allValues']['lue_hor_abd_rom'],
+            data['allValues']['lue_hor_add_rom'],
+            data['allValues']['lue_intern_rot_rom'],
+            data['allValues']['lue_extern_rot_rom'],
+            data['allValues']['lue_elbow_flex_rom'],
+            data['allValues']['lue_elbow_ext_rom'],
+            data['allValues']['lue_fore_pro_rom'],
+            data['allValues']['lue_fore_sup_rom'],
+            data['allValues']['lue_wrist_flex_rom'],
+            data['allValues']['lue_wrist_ext_rom']
         ]
 
         left_rom = database.perform_insert(table, params, values)
@@ -216,20 +282,20 @@ def submit_initial():
         table = "left_mmt"
 
         values = [
-            data['lue_shoulder_ev_mmt'],
-            data['lue_shoulder_flex_mmt'],
-            data['lue_shoulder_ext_mmt'],
-            data['lue_shoulder_abd_mmt'],
-            data['lue_hor_abd_mmt'],
-            data['lue_hor_add_mmt'],
-            data['lue_intern_rot_mmt'],
-            data['lue_extern_rot_mmt'],
-            data['lue_elbow_flex_mmt'],
-            data['lue_elbow_ext_mmt'],
-            data['lue_fore_pro_mmt'],
-            data['lue_fore_sup_mmt'],
-            data['lue_wrist_flex_mmt'],
-            data['lue_wrist_ext_mmt']
+            data['allValues']['lue_shoulder_ev_mmt'],
+            data['allValues']['lue_shoulder_flex_mmt'],
+            data['allValues']['lue_shoulder_ext_mmt'],
+            data['allValues']['lue_shoulder_abd_mmt'],
+            data['allValues']['lue_hor_abd_mmt'],
+            data['allValues']['lue_hor_add_mmt'],
+            data['allValues']['lue_intern_rot_mmt'],
+            data['allValues']['lue_extern_rot_mmt'],
+            data['allValues']['lue_elbow_flex_mmt'],
+            data['allValues']['lue_elbow_ext_mmt'],
+            data['allValues']['lue_fore_pro_mmt'],
+            data['allValues']['lue_fore_sup_mmt'],
+            data['allValues']['lue_wrist_flex_mmt'],
+            data['allValues']['lue_wrist_ext_mmt']
         ]
 
         left_mmt = database.perform_insert(table,params,values)
@@ -255,18 +321,18 @@ def submit_initial():
         values= [
             right_rom['last_id'],
             right_mmt['last_id'],
-            data['rue_grip_str'],
-            data['rue_lat_pinch'],
-            data['rue_tri_pinch'],
-            data['rue_tip_pinch'],
-            data['rue_light_touch'],
-            data['rue_sh_du'],
-            data['rue_temp'],
-            data['rue_prop'],
-            data['rue_ster'],
-            data['rue_peg'],
-            data['rue_edema'],
-            data['rue_pain']
+            data['allValues']['rue_grip_str'],
+            data['allValues']['rue_lat_pinch'],
+            data['allValues']['rue_tri_pinch'],
+            data['allValues']['rue_tip_pinch'],
+            data['allValues']['rue_light_touch'],
+            data['allValues']['rue_sh_du'],
+            data['allValues']['rue_temp'],
+            data['allValues']['rue_prop'],
+            data['allValues']['rue_ster'],
+            data['allValues']['rue_peg'],
+            data['allValues']['rue_edema'],
+            data['allValues']['rue_pain']
         ]
 
         right_UE = database.perform_insert(table,params,values)
@@ -293,18 +359,18 @@ def submit_initial():
         values = [
             left_rom['last_id'],
             left_mmt['last_id'],
-            data['lue_grip_str'],
-            data['lue_lat_pinch'],
-            data['lue_tri_pinch'],
-            data['lue_tip_pinch'],
-            data['lue_light_touch'],
-            data['lue_sh_du'],
-            data['lue_temp'],
-            data['lue_prop'],
-            data['lue_ster'],
-            data['lue_peg'],
-            data['lue_edema'],
-            data['lue_pain']
+            data['allValues']['lue_grip_str'],
+            data['allValues']['lue_lat_pinch'],
+            data['allValues']['lue_tri_pinch'],
+            data['allValues']['lue_tip_pinch'],
+            data['allValues']['lue_light_touch'],
+            data['allValues']['lue_sh_du'],
+            data['allValues']['lue_temp'],
+            data['allValues']['lue_prop'],
+            data['allValues']['lue_ster'],
+            data['allValues']['lue_peg'],
+            data['allValues']['lue_edema'],
+            data['allValues']['lue_pain']
         ]
 
         left_UE = database.perform_insert(table,params,values)
@@ -319,19 +385,33 @@ def submit_initial():
         values = [
             right_UE['last_id'],
             left_UE['last_id'],
-            data['hand_dom']
+            data['allValues']['hand_dom']
         ]
 
         ue = database.perform_insert(table,params,values)
-
-        table = ""
+        
+        table1 = "users"
+        col = ["user_id","email_address","first_name","last_name"]
+        cond_col = "email_address"
+        select_cond = f"\"{user_email}\""
+        select = database.perform_select(table1,col,cond_col,select_cond)
+        user_id = select[0][0]
+        
+             
         
         
-        table = "initial _evaluation"
+        
+        print("No issues w userid")
+        
+        
+        
+        table = "initial_evaluation"
 
         params = [
         
-            #"user_id",
+            
+            "medical_record_id",
+            "user_id",
             "client_id",
             "fim_id",
             "ue_id",
@@ -348,88 +428,100 @@ def submit_initial():
             "memory_cognition",
             "mmse_score",
             "current_transfer",
+            "adl",
             "other_observations",
             "assessment",
             "discharge_recommendation",
+            "equipment_needs",
             "justification_of_services",
             "patient_goals",
             "length_of_stay",
             "long_term_goal",
             "short_term_goal",
             "therapist_signature",
-            "billable_time",
+            "date_of_signature",
+            "billable_time"
+            
 
 
         ]
 
+        
         values = [
-            #user
+           
+            data['allValues']['med_num'],
+            user_id,
             client_id['last_id'],
             fim_eval['last_id'],
             ue['last_id'],
             vitals['last_id'],
-            
-            data['date'],
-            data['diagnosis'],
-            data['med_hx'],
-            data['prior_lev'],
-            data['prior_liv'],
-            data['hearing'],
-            data['visual_perceotion'],
-            data['AO'],
-            data['memory'],
-            data['mmse'],
-            ##ADL goes
-            data['current_transfer'],
-            data['observations'],
-            data['init_assess'],
-            data['dis_rec'],
-            data['justification'],
-            data['patient_goals'],
-            data['est_len'],
-            data['overall_goals'],
-            data['short_term_goals'],
-            data['signature'],
-            data['units']
+            data['allValues']['billing'],
+            data['allValues']['date'],
+            data['allValues']['diagnosis'],
+            data['allValues']['med_hx'],
+            data['allValues']['prior_lev'],
+            data['allValues']['prior_liv'],
+            data['allValues']['hearing'],
+            data['allValues']['visual_perception'],
+            data['allValues']['AO'],
+            data['allValues']['memory'],
+            data['allValues']['mmse'],
+            data['allValues']['current_transfer'],
+            data['allValues']['ADL'],
+            data['allValues']['observations'],
+            data['allValues']['init_assess'],
+            data['allValues']['dis_rec'],
+            data['allValues']['equip_needs'],
+            data['allValues']['justification'],
+            data['allValues']['patient_goals'],
+            data['allValues']['est_len'],
+            data['allValues']['overall_goals'],
+            data['allValues']['short_term_goals'],
+            data['allValues']['signature'],
+            data['allValues']['date_of_sig'],
+            data['allValues']['units']
 
 
 
 
         ]
 
+        
+
+        print("bout to insert")
+        
         init_eval = database.perform_insert(table,params,values)
-
-    
-        response_body = jsonify({
-            "msg:" "Initial Evaluation Form saved successfully!"
-        }), 200
-    
+        
+        
+        
+        return insertion
     except:
-        response_body = jsonify({
-            "msg": "Errors while saving the Initial Evaluation Form"
-        }), 401
-
-    return response_body
-
-   
+        insertion = False
+        print("insertion not okay")
+        return insertion
 
 
 
 
-
-    
-    
-
-    
-    
-    
-    
-    
-  
-    
-
-
-
+@app.route("/check_valid_medical_number", methods=['POST'])
+def check_num():
+    data = request.json
+    try:
+        response = database.perform_select("initial_evaluation",["medical_record_id"])
+        key_value = (int(data['med_num']),)
+        if key_value in response:
+            message = {
+                "msg": "Not Valid"
+            },200
+        else:
+            message = {
+                "msg": "Valid"
+            },200
+        return message
+    except:
+        return {
+            "msg": "Error"
+        }, 400
 
 
 #maybe try to protect this endpoint?
@@ -512,6 +604,7 @@ def my_profile():
         "last": selection[0][3]
     }), 200
     return response_body
+    
 
 @app.route('/testGET', methods=['GET'])
 def testGet():

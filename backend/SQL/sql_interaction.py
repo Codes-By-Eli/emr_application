@@ -12,7 +12,6 @@ class SQL_Interaction:
         
         try:
             self.conn = sqlite3.connect(self.db_file, check_same_thread=False)
-            self.conn = sqlite3.connect(self.db_file, check_same_thread=False)
             print(sqlite3.version)
         except Error as e:
             print(e)
@@ -39,25 +38,12 @@ class SQL_Interaction:
                 pain_assessment TEXT NOT NULL
             )''')
 
-            #Vitals Table
-            cursor.execute('''
-            CREATE TABLE vitals(
-                vital_id INTEGER PRIMARY KEY,
-                blood_pressure INTEGER NOT NULL,
-                heart_rate INTEGER NOT NULL,
-                oxygen INTEGER NOT NULL,
-                respiratory_rate INTEGER NOT NULL,
-                pain_assessment TEXT NOT NULL
-            )''')
-
             #Billing Codes Table
             cursor.execute('''
             CREATE TABLE billing_codes(
                 billing_code_id INTEGER PRIMARY KEY,
                 description_of_service TEXT
-                description_of_service TEXT
             )''')
-
 
 
             #Users Table
@@ -304,6 +290,8 @@ class SQL_Interaction:
                 long_term_goal TEXT NOT NULL,
                 short_term_goal TEXT NOT NULL,
                 therapist_signature TEXT NOT NULL,
+                date_of_signature TEXT NOT NULL,
+                billable_time INTEGER NOT NULL, 
                 FOREIGN KEY (user_id) REFERENCES users (user_id),
                 FOREIGN KEY (client_id) REFERENCES clients (client_id),
                 FOREIGN KEY (fim_id) REFERENCES fim_evaluation (fim_evaluation_id),
@@ -399,7 +387,13 @@ class SQL_Interaction:
         insert_values: list
     '''
     def perform_insert(self, table, insert_parameters, insert_values):
+        
+       
+        
+        
         try:
+            
+          
             if(len(insert_parameters) != len(insert_values)):
                 print(f"Parameters and Values do not equal!\nParameters: {len(insert_parameters)} Values: {len(insert_values)}")
             else:
