@@ -1,12 +1,6 @@
 import React, { useState } from 'react'
 import { Box, Button, Container, Grid, InputAdornment, Paper, TextField, Typography } from '@mui/material';
-//import { Link } from 'react-router-dom';//import React from 'react'
 import  'react-router-dom';
-//import Grid from '@mui/material/Grid';
-//import React, {useState} from 'react';
-
-
-
 import { Link } from 'react-router-dom';
 import { ProSidebar, Menu, MenuItem, SubMenu, SidebarHeader, SidebarContent, SidebarFooter, Sidebar, useProSidebar } from "react-pro-sidebar";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
@@ -96,10 +90,6 @@ function ProgressNoteForm() {
   setUnits(event.target.value);
 };
 
-/*   const handleChange = (event) => {
-    setBillingCodes(Number(event.target.value) || '');
-  }; */
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -134,9 +124,20 @@ function ProgressNoteForm() {
           "therapistSignature": therapistSignature,
           "date": date,
           "billingCodes": billingCodes,
-          "units": units
+          "units": units,
       })
+
+      
+
     }//end progressFields
+
+    const hasEmptyValue = Object.values(JSON.parse(progressFields.body)).some(value => !value);
+    if(hasEmptyValue) {
+      alert("One of the fields are empty. Please check them all!");
+      return;
+  }
+
+    
     const response = await fetch("http://127.0.0.1:5000/submit_progress",progressFields)
     const data = await response.json()
     console.log(data)
