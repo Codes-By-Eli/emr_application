@@ -508,7 +508,7 @@ def check_num():
     data = request.json
     try:
         response = database.perform_select("initial_evaluation",["medical_record_id"])
-        key_value = (int(data['med_num']),)
+        key_value = (data['med_num']),
         if key_value in response:
             message = {
                 "msg": "Not Valid"
