@@ -31,7 +31,7 @@ class SQL_Interaction:
             cursor.execute('''
             CREATE TABLE vitals(
                 vital_id INTEGER PRIMARY KEY,
-                blood_pressure INTEGER NOT NULL,
+                blood_pressure TEXT NOT NULL,
                 heart_rate INTEGER NOT NULL,
                 oxygen INTEGER NOT NULL,
                 respiratory_rate INTEGER NOT NULL,
@@ -261,7 +261,7 @@ class SQL_Interaction:
             #Initial Evaluation Table
             cursor.execute('''
             CREATE TABLE initial_evaluation(
-                medical_record_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                medical_record_id TEXT PRIMARY KEY,
                 user_id INTEGER NOT NULL,
                 client_id INTEGER NOT NULL,
                 fim_id INTEGER NOT NULL,
@@ -387,7 +387,13 @@ class SQL_Interaction:
         insert_values: list
     '''
     def perform_insert(self, table, insert_parameters, insert_values):
+        
+       
+        
+        
         try:
+            
+          
             if(len(insert_parameters) != len(insert_values)):
                 print(f"Parameters and Values do not equal!\nParameters: {len(insert_parameters)} Values: {len(insert_values)}")
             else:
