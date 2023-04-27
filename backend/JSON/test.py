@@ -1,4 +1,6 @@
 from json_interaction import JSON_Interaction
+import os
+
 
 if __name__ == "__main__":
     json_creator = JSON_Interaction()
@@ -18,7 +20,7 @@ if __name__ == "__main__":
         "units": "2"
     }
 
-    #json_creator.create_progress_json(info)
+    json_creator.create_progress_json(info)
 
     info2 = {
         "client_name": "John Doe",
@@ -163,7 +165,7 @@ if __name__ == "__main__":
         "units": "2"
     }
 
-    #json_creator.create_initial_json(info2)
+    json_creator.create_initial_json(info2)
 
     info3 = {
         "client_name": "John Doe",

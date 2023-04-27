@@ -196,22 +196,27 @@ class PDF_Interaction:
     '''
     def create_initial_pdf(self, info):
         try:
-            directory = "./backend/PDF/templates"
-            template_loader = jinja2.FileSystemLoader(searchpath = directory)
-            template_env = jinja2.Environment(loader=template_loader)
+            med_num = info['allValues']['med_num']
+            name = info['allValues']['name'].strip()
+        except KeyError as e:
+            return {"success": False, "message": f"Missing key: {e}"}
+        
+        directory = "./backend/PDF/templates"
+        template_loader = jinja2.FileSystemLoader(searchpath = directory)
+        template_env = jinja2.Environment(loader=template_loader)
 
-            html_template = "initial_template.html"    
-            template = template_env.get_template(html_template)
-            output_text = template.render(info)
+        html_template = "initial_template.html"    
+        template = template_env.get_template(html_template)
+        output_text = template.render(info['allValues'])
 
-            pdf_path = "./backend/PDF/wkhtmltopdf/bin/wkhtmltopdf.exe"
-            download_path = pathlib.Path.home() / "Downloads" / f"initial_{info['record_number']}_{info['client_name'].strip()}.pdf"
+        pdf_path = "./backend/PDF/wkhtmltopdf/bin/wkhtmltopdf.exe"
+        download_path = pathlib.Path.home() / "Downloads" / f"initial_{med_num}_{name}.pdf"
 
-            config = pdfkit.configuration(wkhtmltopdf=pdf_path)
-            pdfkit.from_string(output_text, download_path, configuration=config)
-        except:
-            print("Error converting the Initial Evaluation to the pdf!")
+        config = pdfkit.configuration(wkhtmltopdf=pdf_path)
+        pdfkit.from_string(output_text, download_path, configuration=config)
 
+        return {"success": True, "message": "Initial Evaluation PDF file created successfully"}
+        
     
 
     '''
