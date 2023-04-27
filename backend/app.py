@@ -742,27 +742,7 @@ def submit_disc_eval():
     return response_body
 
 #pass JSON object in same format as method for create_initial_pdf in PDF/pdf_interaction.py
-@app.route("/submit_progress", methods=['POST'])
-@jwt_required()
-def submit_progress_eval():
-    data = request.json
 
-    try:
-        #make method call to insert into database here
-        
-        
-        pdf_creator.create_progress_pdf(data)
-
-        #make method call to save json data as an object
-
-        response_body = jsonify({
-            "msg": "Successfully saved the Progress Note Form"
-        }), 200
-    except:
-        response_body = jsonify({
-            "msg": "Errors while saving the Progress Note Form"
-        }), 401
-    return response_body
 
 @app.route('/testGET', methods=['GET'])
 def testGet():
