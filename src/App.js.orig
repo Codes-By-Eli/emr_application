@@ -32,8 +32,12 @@ class App extends Component {
             <Route path="progress_form" element={<ProgressNoteForm />} />
             <Route path="sign_up" element={<SignUpForm />} />
             <Route path="old_form" element={<ViewOldForm />} />
+<<<<<<< HEAD
+            <Route path="discharge_form" element={<DischargeForm />} />
+=======
             <Route path="discharge_evaluation" element={<DischargeEvaluationForm />} />
             
+>>>>>>> main
             
             
           </Routes>
