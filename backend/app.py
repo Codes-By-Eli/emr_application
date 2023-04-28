@@ -693,12 +693,13 @@ def submit_discharge():
        }, 200
     return response
 
-@app.route("/check_valid_medical_number", methods=['POST'])
-def check_num():
+
+@app.route("/check_valid_discharge_number", methods=['POST'])
+def check_disc():
     data = request.json
     try:
         response = database.perform_select("discharge_evaluation",["medical_record_id"])
-        key_value = (int(data['med_num']),)
+        key_value = (data['med_num'],)
         if key_value in response:
             message = {
                 "msg": "Not Valid"
@@ -743,16 +744,6 @@ def submit_initial():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
-
-   
-
-
-    
-    
-    
-
-
     """
 
 
@@ -769,18 +760,6 @@ def submit_initial():
 
    
 """
-
-
-
-
-    
-    
-
-    
-    
-    
-    
-    
 def insert_initial(data):
 
     insertion = True
@@ -1375,31 +1354,6 @@ def my_profile():
     }), 200
     return response_body
 
-#pass JSON object in same format as method for create_initial_pdf in PDF/pdf_interaction.py
-@app.route("/submit_initial", methods=['POST'])
-@jwt_required()
-def submit_init_eval():
-    data = request.json
-
-    try:
-        #make method call to insert into database here
-        
-        
-        pdf_creator.create_initial_pdf(data)
-
-        #make method call to save json data as an object
-
-        response_body = jsonify({
-            "msg": "Successfully saved the Initial Evaluation Form"
-        }), 200
-    except:
-        response_body = jsonify({
-            "msg": "Errors while saving the Initial Evaluation Form"
-        }), 401
-    return response_body
-
-
-#pass JSON object in same format as method for create_initial_pdf in PDF/pdf_interaction.py
 
 
 @app.route('/testGET', methods=['GET'])

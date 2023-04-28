@@ -405,7 +405,7 @@ function DischargeEvaluationForm() {
     };
     
     console.log(allValues.med_num);
-    const response = await fetch("http://127.0.0.1:5000/check_valid_medical_number", requestOptions);
+    const response = await fetch("http://127.0.0.1:5000/check_valid_discharge_number", requestOptions);
     const data = await response.json();
     console.log(data);
     if(data.msg === "Not Valid")
@@ -2426,6 +2426,7 @@ function DischargeEvaluationForm() {
                       fullWidth
                       id='ADL'
                       multiline
+                      value={allValues.ADL || ''}
                       onBlur={changeHandler}
                       inputProps={{ style: {height: 100} }}
                       style={{ padding: 1}}>
@@ -2603,7 +2604,7 @@ function DischargeEvaluationForm() {
                   fullWidth
                   id='billing'
                   type='number'
-                  onBlur={changeHandler}
+                  onChange={changeHandler}
                   ></TextField>
               </Grid>
               <Grid item xs={2/3}></Grid>
