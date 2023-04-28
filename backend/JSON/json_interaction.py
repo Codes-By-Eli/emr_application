@@ -40,9 +40,10 @@ class JSON_Interaction:
 
     def create_discharge_json(self, info):
         try:
-            file_name = pathlib.Path.home() / "Downloads" / f"discharge_{info['record_number']}_{info['client_name'].strip()}.json"
+            file_name = pathlib.Path.home() / "Downloads" / f"discharge_{info['med_num']}_{info['name'].strip()}.json"
             with open(file_name, "w") as outfile:
                 json.dump(info,outfile,indent=4)
-            print("Successfully created the json file of the Discharge Evaluation!")
+            message = "Successfully created the json file of the Discharge Evaluation!"
         except:
-            print("Error creating the json file of the Discharge Evaluation!")
+            message = "Error creating the json file of the Discharge Evaluation!"
+        return message

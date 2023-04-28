@@ -11,12 +11,14 @@ import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import DescriptionIcon from '@mui/icons-material/Description';
+import {Dialog, 
+  DialogTitle, 
+  DialogContentText, 
+  DialogContent, 
+  DialogActions } from '@mui/material';
+import { useEffect } from 'react';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 
@@ -37,6 +39,10 @@ function ProgressNoteForm() {
   const  [billingCodes, setBillingCodes] = useState ('');
   const  [open, setOpen] = React.useState(false);
   const  [units,setUnits] = useState('');
+  const [dialogOpen, setDialogOpen] = useState('');
+  const[color, setColor] = useState('');
+  const[title, setTitle] = useState('');
+  const [message, setMessage] = useState('');
 
   const changeName = (event) => {
     setName(event.target.value);
@@ -94,10 +100,18 @@ function ProgressNoteForm() {
     setOpen(true);
   };
 
-  const handleClose = (event, reason) => {
+  const handleClickClose = (event, reason) => {
     if (reason !== 'backdropClick') {
       setOpen(false);
     }
+  };
+
+  const handleClose = () => {
+    setDialogOpen(false);
+  };
+
+  const handleOpen = () => {
+    setDialogOpen(true);
   };
 
 
@@ -133,9 +147,12 @@ function ProgressNoteForm() {
 
     const hasEmptyValue = Object.values(JSON.parse(progressFields.body)).some(value => !value);
     if(hasEmptyValue) {
-      alert("One of the fields are empty. Please check them all!");
+      setColor("#f55d7a");
+      setTitle("Not all of the fields were entered for the Progress Note!");
+      setMessage("Please enter all the fields and click \"Submit\" again.");
+      handleOpen();
       return;
-  }
+    }
 
     
     const response = await fetch("http://127.0.0.1:5000/submit_progress",progressFields)
@@ -143,7 +160,26 @@ function ProgressNoteForm() {
     console.log(data)
   }
 
+  const [username, setUserName] = useState('');
+  const [email,setEmail] = useState('');
 
+  async function getProfile()
+  {
+    var requestOptions = {
+      method: "GET",
+      headers: {"Authorization": `Bearer ${sessionStorage.getItem('token')}`}
+    };
+
+    const response = await fetch("http://127.0.0.1:5000/profile", requestOptions);
+    const data = await response.json();
+    setUserName(`${data.first} ${data.last}`);
+    setEmail(data.email);
+  }
+
+  useEffect(() => {
+    getProfile();
+   
+  },[])
 
   // Starts front end code for the sidebar and filds
   const { collapseSidebar } = useProSidebar();
@@ -162,7 +198,7 @@ function ProgressNoteForm() {
       
     
     <div id="app" style={({ height: "75vh" }, { display: "flex" })}>
-      <Sidebar style={{ height: "100vh" }}>
+    <Sidebar style={{ height: "100vh" }}>
         <Menu>
           <MenuItem
             icon={<MenuOutlinedIcon />}
@@ -185,19 +221,97 @@ function ProgressNoteForm() {
         <strong>Iona University </strong>
       </div>
     </div>
-    <Grid item xs zeroMinwidth>
-      <item>Welcome Student</item>
-      <item>Student Email</item>
+    <Grid item xs zeroMinWidth>
+      <Typography
+      align='center'
+      >
+        {username}
+      </Typography>
+      <Typography
+      align='center'>
+        {email}
+      </Typography>
     </Grid>
-          <MenuItem component = {<Link to = "/"/>} icon={<HomeOutlinedIcon />}>Home</MenuItem>
+  
+          <MenuItem component = {<Link to = "/" />} icon={<HomeOutlinedIcon />}>Home</MenuItem>
           <Divider></Divider>
-          <MenuItem component = {<Link to = "/initial_evaluation"/>} icon={<NoteAddIcon />}>Initial Evaluation</MenuItem>
+          <MenuItem 
+            component = {<Link to = "/initial_evaluation" />}
+            icon={<NoteAddIcon />}>Initial Evaluation</MenuItem>
           <MenuItem component = {<Link to = "/progress_form" />}icon={<StickyNote2Icon />}>Progress Note</MenuItem>
-          <MenuItem icon={<NoteAltIcon/>}>Discharge Evaluation</MenuItem>
+          <MenuItem component = {<Link to = "/discharge_evaluation" />}icon={<NoteAltIcon/>}>Discharge Evaluation</MenuItem>
           <Divider></Divider>
-          <MenuItem icon={< DescriptionIcon/>}>View Old Forms</MenuItem>
+          {/*<MenuItem component = {<Link to = "/old_form" />}icon={< DescriptionIcon/>}>View Old Forms</MenuItem>
+          <Divider></Divider>*/}
+          <Grid item xs zeroMinWidth>
+            <br />
+            <Typography
+            align='center'
+            >
+              Helpful Tip:
+            </Typography>
+            <Typography
+            align='center'>
+              Check your "Downloads" Folder after completing an Evaluation to see your PDF!
+            </Typography>
+          </Grid>
         </Menu>
       </Sidebar>
+      <Dialog
+        open={dialogOpen}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{
+          style: {
+            backgroundColor: "#f55d7a",
+            
+          },
+        }}
+      >
+        <DialogTitle id="alert-dialog-title">
+        <Typography 
+            component={"span"}
+            variant='h4'
+            align='center'
+            color='#f5f6f7'
+            >
+            {title}
+          </Typography>
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <Typography
+              component={"span"} 
+              align='center'
+              color='#f5f6f7'
+              style={{
+                fontSize: "1.1vw"
+            }}
+            >
+              {message}
+            </Typography>
+            
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+          sx={{
+            bgcolor: "#F8DE7E",
+            ':hover':{
+              bgcolor: "#FADA5E"
+            },
+            color: "black"
+          }}
+          fullWidth
+          variant='contained'
+          size='medium'
+          onClick={handleClose}>
+            Understood!
+          </Button>
+        </DialogActions>
+
+      </Dialog>
       <main>
       <Box
     bgcolor= "">
@@ -545,8 +659,8 @@ function ProgressNoteForm() {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Ok</Button>
+          <Button onClick={handleClickClose}>Cancel</Button>
+          <Button onClick={handleClickClose}>Ok</Button>
         </DialogActions>
       </Dialog>
         </Grid>

@@ -341,6 +341,7 @@ function SignUpForm() {
                 }
               }}
               fullWidth
+              type='button'
               variant='contained'
               size='medium'
               onClick={submitAccount}>

@@ -32,32 +32,15 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 
 
-
-
-
-
-
-
-
-
 const TabContent = styled.div`
   display: ${(props) => (props.active ? 'block' : 'none')};
 `;
-
-
-
-
 
 const TabContainer = styled.div`
   display: flex;
   align-items: center;
   justifyContent: center;
-  margin-top: 20px;
-  
-
-  
-
-  
+  margin-top: 20px;  
 `;
 
 const TabButton = styled.button`
@@ -68,32 +51,17 @@ background-color: ${(props) => (props.active ? '#B3F2FF' : '#fff')};
 padding: 20px;
 border-radius: 10px;
 cursor: pointer;
-width: 150px;
+width: 100%;
 height: 85px;
 font-family: Lucida Sans;
 font-size: 11px;
 `;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 function InitialEvaluationForm() {
   const { collapseSidebar } = useProSidebar();
   const [activeTab, setActiveTab] = useState(0);
 
-
- 
- 
  const [allValues, setAllValues] = useState({
   /* Client and Medical Tab */
   
@@ -303,9 +271,6 @@ function InitialEvaluationForm() {
     set_Process_Open(false);
   }
   
-  
-  
-  
   const isNotEmpty = Object.values(allValues).every(value => value !== '');
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
@@ -360,12 +325,6 @@ function InitialEvaluationForm() {
       handleOpen();
       return;
     }
-    
-   
-  
-
-  
-    
     handleProcessOpen();
   
     const response = await fetch("http://127.0.0.1:5000/submit_initial", requestOptions);
@@ -420,15 +379,7 @@ function InitialEvaluationForm() {
   },[allValues.med_num])
 
   return (
-
-    
-
-
-    
-
     <div id="app" style={({ height: "75vh" }, { display: "flex" })}>
-      
-      
       <Dialog
         open={open}
         onClose={handleClose}
@@ -488,15 +439,15 @@ function InitialEvaluationForm() {
 
       {/* Processing Dialogue box*/}
       <Dialog
-  open={ProcessOpen}
-  aria-labelledby="alert-dialog-title"
-  aria-describedby="alert-dialog-description"
-  PaperProps={{
-    style: {
-      backgroundColor: "#E6F1FF",
-    },
-  }}
->
+        open={ProcessOpen}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{
+          style: {
+            backgroundColor: "#E6F1FF",
+          },
+        }}
+      >
   <DialogTitle id="alert-dialog-title">
     <Typography
       component={"span"}
@@ -565,7 +516,20 @@ function InitialEvaluationForm() {
           <MenuItem component = {<Link to = "/progress_form" />}icon={<StickyNote2Icon />}>Progress Note</MenuItem>
           <MenuItem component = {<Link to = "/discharge_evaluation" />}icon={<NoteAltIcon/>}>Discharge Evaluation</MenuItem>
           <Divider></Divider>
-          <MenuItem component = {<Link to = "/old_form" />}icon={< DescriptionIcon/>}>View Old Forms</MenuItem>
+          {/*<MenuItem component = {<Link to = "/old_form" />}icon={< DescriptionIcon/>}>View Old Forms</MenuItem>
+          <Divider></Divider>*/}
+          <Grid item xs zeroMinWidth>
+            <br />
+            <Typography
+            align='center'
+            >
+              Helpful Tip:
+            </Typography>
+            <Typography
+            align='center'>
+              Check your "Downloads" Folder after completing an Evaluation to see your PDF!
+            </Typography>
+          </Grid>
         </Menu>
       </Sidebar>
       
@@ -585,8 +549,8 @@ function InitialEvaluationForm() {
       }}>
 
           <Grid container className='TabContainer' spacing={0}> 
-          <Grid item xs={4}></Grid>
-          <Grid item xs={4}>  
+          <Grid item xs={2.5}></Grid>
+          <Grid item xs={7}>  
             <TabContainer alignItems='center' display='flex' justifyContent='center'>
               <TabButton
               active={activeTab === 0}
@@ -626,40 +590,21 @@ function InitialEvaluationForm() {
               </TabButton>
             </TabContainer>
             </Grid>
-            <Grid item xs={4}></Grid>
+            <Grid item xs={2.5}></Grid>
           </Grid>
-        
-        
-        
-        
-        
-        
         
         <Container sx = {{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          height: "95vh",
+          height: "115vh",
           width: "110vh",
           padding: 0
-          
-          
           
         }}>
                 <Paper elevation={15}>
                  <Grid container spacing={2}>
                   </Grid>
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         <div>
       	  <TabContent active={activeTab ===0}>
             <Grid container spacing={2}>
@@ -688,7 +633,7 @@ function InitialEvaluationForm() {
                 id='dob'
                 type='date'
                 InputLabelProps={{ shrink: true }}
-                
+                fullWidth
                 onBlur={changeHandler} 
                 style={{ padding: 1}}/>
               </Grid>
@@ -892,8 +837,6 @@ function InitialEvaluationForm() {
 
            <Grid item xs={12}></Grid>   
            <Grid item xs={12}></Grid>      
-
-          
             
             </Grid>
           </TabContent>
@@ -2419,7 +2362,7 @@ function InitialEvaluationForm() {
                 fullWidth
                 id='billing'
                 type='number'
-                onBlur={changeHandler}>
+                onChange={changeHandler}>
                 </TextField>
               </Grid>
               <Grid item xs={2}></Grid>

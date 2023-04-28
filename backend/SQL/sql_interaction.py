@@ -303,7 +303,7 @@ class SQL_Interaction:
             #Discharge Evaluation Table
             cursor.execute('''
             CREATE TABLE discharge_evaluation(
-                medical_record_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                medical_record_id TEXT PRIMARY KEY,
                 user_id INTEGER NOT NULL,
                 initial_medical_record_id INTEGER NOT NULL,
                 discharge_fim_id INTEGER NOT NULL,
