@@ -31,11 +31,11 @@ class SQL_Interaction:
             cursor.execute('''
             CREATE TABLE vitals(
                 vital_id INTEGER PRIMARY KEY,
-                blood_pressure TEXT NOT NULL,
-                heart_rate INTEGER NOT NULL,
-                oxygen INTEGER NOT NULL,
-                respiratory_rate INTEGER NOT NULL,
-                pain_assessment TEXT NOT NULL
+                blood_pressure TEXT,
+                heart_rate INTEGER,
+                oxygen INTEGER,
+                respiratory_rate INTEGER,
+                pain_assessment TEXT
             )''')
 
             #Billing Codes Table
@@ -60,48 +60,48 @@ class SQL_Interaction:
             cursor.execute('''
             CREATE TABLE clients(
                 client_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                first_name TEXT NOT NULL,
-                last_name TEXT NOT NULL,
-                date_of_birth DATE NOT NULL,
-                sex TEXT NOT NULL 
+                first_name TEXT,
+                last_name TEXT,
+                date_of_birth TEXT,
+                sex TEXT 
             )''')
 
             #Initial FIM Scores Table
             cursor.execute('''
             CREATE TABLE initial_fim_scores(
                 initial_fim_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                eating INTEGER NOT NULL,
-                grooming INTEGER NOT NULL,
-                bathing INTEGER NOT NULL,
-                upper_body_dressing INTEGER NOT NULL,
-                lower_body_dressing INTEGER NOT NULL,
-                toileting INTEGER NOT NULL,
-                toilet_transfer INTEGER NOT NULL,
-                shower_transfer INTEGER NOT NULL,
-                tub_transfer INTEGER NOT NULL
+                eating INTEGER,
+                grooming INTEGER,
+                bathing INTEGER,
+                upper_body_dressing INTEGER,
+                lower_body_dressing INTEGER,
+                toileting INTEGER,
+                toilet_transfer INTEGER,
+                shower_transfer INTEGER,
+                tub_transfer INTEGER
             )''')
 
             #Goal FIM Scores Table
             cursor.execute('''
             CREATE TABLE goal_fim_scores(
                 goal_fim_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                eating INTEGER NOT NULL,
-                grooming INTEGER NOT NULL,
-                bathing INTEGER NOT NULL,
-                upper_body_dressing INTEGER NOT NULL,
-                lower_body_dressing INTEGER NOT NULL,
-                toileting INTEGER NOT NULL,
-                toilet_transfer INTEGER NOT NULL,
-                shower_transfer INTEGER NOT NULL,
-                tub_transfer INTEGER NOT NULL
+                eating INTEGER,
+                grooming INTEGER,
+                bathing INTEGER,
+                upper_body_dressing INTEGER,
+                lower_body_dressing INTEGER,
+                toileting INTEGER,
+                toilet_transfer INTEGER,
+                shower_transfer INTEGER,
+                tub_transfer INTEGER
             )''')
 
             #FIM Evaluation Table
             cursor.execute('''
             CREATE TABLE fim_evaluation(
                 fim_evaluation_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                initial_fim_id INTEGER NOT NULL,
-                goal_fim_id INTEGER NOT NULL,
+                initial_fim_id INTEGER,
+                goal_fim_id INTEGER,
                 FOREIGN KEY (initial_fim_id) REFERENCES initial_fim_scores (initial_fim_id),
                 FOREIGN KEY (goal_fim_id) REFERENCES goal_fim_scores (goal_fim_id)
             )''')
@@ -111,76 +111,76 @@ class SQL_Interaction:
             cursor.execute('''
             CREATE TABLE discharge_fim_scores(
                 discharge_fim_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                fim_evaluation_id INTEGER NOT NULL,
-                eating INTEGER NOT NULL,
-                grooming INTEGER NOT NULL,
-                bathing INTEGER NOT NULL,
-                upper_body_dressing INTEGER NOT NULL,
-                lower_body_dressing INTEGER NOT NULL,
-                toileting INTEGER NOT NULL,
-                toilet_transfer INTEGER NOT NULL,
-                shower_transfer INTEGER NOT NULL,
-                tub_transfer INTEGER NOT NULL,
+                fim_evaluation_id INTEGER,
+                eating INTEGER,
+                grooming INTEGER,
+                bathing INTEGER,
+                upper_body_dressing INTEGER,
+                lower_body_dressing INTEGER,
+                toileting INTEGER,
+                toilet_transfer INTEGER,
+                shower_transfer INTEGER,
+                tub_transfer INTEGER,
                 FOREIGN KEY (fim_evaluation_id) REFERENCES fim_evaluation (fim_evaluation_id)
             )''')
             #Right ROM Table
             cursor.execute('''
             CREATE TABLE right_rom(
                 right_rom_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                shoulder_elevation INTEGER NOT NULL,
-                shoulder_flexion INTEGER NOT NULL,
-                shoulder_extension INTEGER NOT NULL,
-                shoulder_abduction INTEGER NOT NULL,
-                horizontal_abduction INTEGER NOT NULL,
-                horizontal_adduction INTEGER NOT NULL,
-                internal_rotation INTEGER NOT NULL,
-                external_rotation INTEGER NOT NULL,
-                elbow_flexion INTEGER NOT NULL,
-                elbow_extension INTEGER NOT NULL,
-                forearm_pronation INTEGER NOT NULL,
-                forearm_supination INTEGER NOT NULL,
-                wrist_flexion INTEGER NOT NULL,
-                wrist_extension INTEGER NOT NULL
+                shoulder_elevation INTEGER,
+                shoulder_flexion INTEGER,
+                shoulder_extension INTEGER,
+                shoulder_abduction INTEGER,
+                horizontal_abduction INTEGER,
+                horizontal_adduction INTEGER,
+                internal_rotation INTEGER,
+                external_rotation INTEGER,
+                elbow_flexion INTEGER,
+                elbow_extension INTEGER,
+                forearm_pronation INTEGER,
+                forearm_supination INTEGER,
+                wrist_flexion INTEGER,
+                wrist_extension INTEGER
             )''')
 
             #Right MMT Table
             cursor.execute('''
             CREATE TABLE right_mmt(
                 right_mmt_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                shoulder_elevation INTEGER NOT NULL,
-                shoulder_flexion INTEGER NOT NULL,
-                shoulder_extension INTEGER NOT NULL,
-                shoulder_abduction INTEGER NOT NULL,
-                horizontal_abduction INTEGER NOT NULL,
-                horizontal_adduction INTEGER NOT NULL,
-                internal_rotation INTEGER NOT NULL,
-                external_rotation INTEGER NOT NULL,
-                elbow_flexion INTEGER NOT NULL,
-                elbow_extension INTEGER NOT NULL,
-                forearm_pronation INTEGER NOT NULL,
-                forearm_supination INTEGER NOT NULL,
-                wrist_flexion INTEGER NOT NULL,
-                wrist_extension INTEGER NOT NULL
+                shoulder_elevation INTEGER,
+                shoulder_flexion INTEGER,
+                shoulder_extension INTEGER,
+                shoulder_abduction INTEGER,
+                horizontal_abduction INTEGER,
+                horizontal_adduction INTEGER,
+                internal_rotation INTEGER,
+                external_rotation INTEGER,
+                elbow_flexion INTEGER,
+                elbow_extension INTEGER,
+                forearm_pronation INTEGER,
+                forearm_supination INTEGER,
+                wrist_flexion INTEGER,
+                wrist_extension INTEGER
             )''')
 
             #Right Upper Extremities Table
             cursor.execute('''
             CREATE TABLE right_upper_extremities(
                 right_ue_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                right_rom_id INTEGER NOT NULL,
-                right_mmt_id INTEGER NOT NULL,
-                grip_strength INTEGER NOT NULL,
-                lateral_pinch INTEGER NOT NULL,
-                tripod_pinch INTEGER NOT NULL,
-                tip_pinch INTEGER NOT NULL,
-                light_touch INTEGER NOT NULL,
-                sharp_dull INTEGER NOT NULL,
-                temperature INTEGER NOT NULL,
-                proprioception INTEGER NOT NULL,
-                stereognosis INTEGER NOT NULL,
-                nine_hole_peg_test INTEGER NOT NULL,
-                edema INTEGER NOT NULL,
-                pain INTEGER NOT NULL,
+                right_rom_id INTEGER,
+                right_mmt_id INTEGER,
+                grip_strength INTEGER,
+                lateral_pinch INTEGER,
+                tripod_pinch INTEGER,
+                tip_pinch INTEGER,
+                light_touch INTEGER,
+                sharp_dull INTEGER,
+                temperature INTEGER,
+                proprioception INTEGER,
+                stereognosis INTEGER,
+                nine_hole_peg_test INTEGER,
+                edema INTEGER,
+                pain INTEGER,
                 FOREIGN KEY (right_rom_id) REFERENCES right_rom (right_rom_id),
                 FOREIGN KEY (right_mmt_id) REFERENCES right_mmt (right_mmt_id)
             )''')
@@ -189,60 +189,60 @@ class SQL_Interaction:
             cursor.execute('''
             CREATE TABLE left_rom(
                 left_rom_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                shoulder_elevation INTEGER NOT NULL,
-                shoulder_flexion INTEGER NOT NULL,
-                shoulder_extension INTEGER NOT NULL,
-                shoulder_abduction INTEGER NOT NULL,
-                horizontal_abduction INTEGER NOT NULL,
-                horizontal_adduction INTEGER NOT NULL,
-                internal_rotation INTEGER NOT NULL,
-                external_rotation INTEGER NOT NULL,
-                elbow_flexion INTEGER NOT NULL,
-                elbow_extension INTEGER NOT NULL,
-                forearm_pronation INTEGER NOT NULL,
-                forearm_supination INTEGER NOT NULL,
-                wrist_flexion INTEGER NOT NULL,
-                wrist_extension INTEGER NOT NULL
+                shoulder_elevation INTEGER,
+                shoulder_flexion INTEGER,
+                shoulder_extension INTEGER,
+                shoulder_abduction INTEGER,
+                horizontal_abduction INTEGER,
+                horizontal_adduction INTEGER,
+                internal_rotation INTEGER,
+                external_rotation INTEGER,
+                elbow_flexion INTEGER,
+                elbow_extension INTEGER,
+                forearm_pronation INTEGER,
+                forearm_supination INTEGER,
+                wrist_flexion INTEGER,
+                wrist_extension INTEGER
             )''')
 
             #Left MMT Table
             cursor.execute('''
             CREATE TABLE left_mmt(
                 left_mmt_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                shoulder_elevation INTEGER NOT NULL,
-                shoulder_flexion INTEGER NOT NULL,
-                shoulder_extension INTEGER NOT NULL,
-                shoulder_abduction INTEGER NOT NULL,
-                horizontal_abduction INTEGER NOT NULL,
-                horizontal_adduction INTEGER NOT NULL,
-                internal_rotation INTEGER NOT NULL,
-                external_rotation INTEGER NOT NULL,
-                elbow_flexion INTEGER NOT NULL,
-                elbow_extension INTEGER NOT NULL,
-                forearm_pronation INTEGER NOT NULL,
-                forearm_supination INTEGER NOT NULL,
-                wrist_flexion INTEGER NOT NULL,
-                wrist_extension INTEGER NOT NULL
+                shoulder_elevation INTEGER,
+                shoulder_flexion INTEGER,
+                shoulder_extension INTEGER,
+                shoulder_abduction INTEGER,
+                horizontal_abduction INTEGER,
+                horizontal_adduction INTEGER,
+                internal_rotation INTEGER,
+                external_rotation INTEGER,
+                elbow_flexion INTEGER,
+                elbow_extension INTEGER,
+                forearm_pronation INTEGER,
+                forearm_supination INTEGER,
+                wrist_flexion INTEGER,
+                wrist_extension INTEGER
             )''')
 
             #Left Upper Extremities Table
             cursor.execute('''
             CREATE TABLE left_upper_extremities(
                 left_ue_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                left_rom_id INTEGER NOT NULL,
-                left_mmt_id INTEGER NOT NULL,
-                grip_strength INTEGER NOT NULL,
-                lateral_pinch INTEGER NOT NULL,
-                tripod_pinch INTEGER NOT NULL,
-                tip_pinch INTEGER NOT NULL,
-                light_touch INTEGER NOT NULL,
-                sharp_dull INTEGER NOT NULL,
-                temperature INTEGER NOT NULL,
-                proprioception INTEGER NOT NULL,
-                stereognosis INTEGER NOT NULL,
-                nine_hole_peg_test INTEGER NOT NULL,
-                edema INTEGER NOT NULL,
-                pain INTEGER NOT NULL,
+                left_rom_id INTEGER,
+                left_mmt_id INTEGER,
+                grip_strength INTEGER,
+                lateral_pinch INTEGER,
+                tripod_pinch INTEGER,
+                tip_pinch INTEGER,
+                light_touch INTEGER,
+                sharp_dull INTEGER,
+                temperature INTEGER,
+                proprioception INTEGER,
+                stereognosis INTEGER,
+                nine_hole_peg_test INTEGER,
+                edema INTEGER,
+                pain INTEGER,
                 FOREIGN KEY (left_rom_id) REFERENCES left_rom (left_rom_id),
                 FOREIGN KEY (left_mmt_id) REFERENCES left_mmt (left_mmt_id)
             )''')
@@ -251,9 +251,9 @@ class SQL_Interaction:
             cursor.execute('''
             CREATE TABLE upper_extremities(
                 ue_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                right_ue_id INTEGER NOT NULL,
-                left_ue_id INTEGER NOT NULL,
-                hand_dominance TEXT NOT NULL,
+                right_ue_id INTEGER,
+                left_ue_id INTEGER,
+                hand_dominance TEXT,
                 FOREIGN KEY (right_ue_id) REFERENCES right_upper_extremities (right_ue_id),
                 FOREIGN KEY (left_ue_id) REFERENCES left_upper_extremities (left_ue_id)
             )''')
@@ -262,36 +262,36 @@ class SQL_Interaction:
             cursor.execute('''
             CREATE TABLE initial_evaluation(
                 medical_record_id TEXT PRIMARY KEY,
-                user_id INTEGER NOT NULL,
-                client_id INTEGER NOT NULL,
-                fim_id INTEGER NOT NULL,
-                ue_id INTEGER NOT NULL,
-                vital_id INTEGER NOT NULL,
-                billing_code_id INTEGER NOT NULL,
-                date_of_evaluation DATE NOT NULL,
-                diagnosis TEXT NOT NULL,
-                medical_history TEXT NOT NULL,
-                prior_function TEXT NOT NULL,
-                prior_situation TEXT NOT NULL,
-                hearing TEXT NOT NULL, 
-                vision TEXT NOT NULL,
-                a_o TEXT NOT NULL,
-                memory_cognition TEXT NOT NULL,
-                mmse_score TEXT NOT NULL,
-                current_transfer TEXT NOT NULL,
-                adl TEXT NOT NULL,
-                other_observations TEXT NOT NULL,
-                assessment TEXT NOT NULL,
-                discharge_recommendation TEXT NOT NULL,
-                equipment_needs TEXT NOT NULL,
-                justification_of_services TEXT NOT NULL,
-                patient_goals TEXT NOT NULL,
-                length_of_stay TEXT NOT NULL,
-                long_term_goal TEXT NOT NULL,
-                short_term_goal TEXT NOT NULL,
-                therapist_signature TEXT NOT NULL,
-                date_of_signature TEXT NOT NULL,
-                billable_time INTEGER NOT NULL, 
+                user_id INTEGER,
+                client_id INTEGER,
+                fim_id INTEGER,
+                ue_id INTEGER,
+                vital_id INTEGER,
+                billing_code_id INTEGER,
+                date_of_evaluation TEXT,
+                diagnosis TEXT,
+                medical_history TEXT,
+                prior_function TEXT,
+                prior_situation TEXT,
+                hearing TEXT, 
+                vision TEXT,
+                a_o TEXT,
+                memory_cognition TEXT,
+                mmse_score TEXT,
+                current_transfer TEXT,
+                adl TEXT,
+                other_observations TEXT,
+                assessment TEXT,
+                discharge_recommendation TEXT,
+                equipment_needs TEXT,
+                justification_of_services TEXT,
+                patient_goals TEXT,
+                length_of_stay TEXT,
+                long_term_goal TEXT,
+                short_term_goal TEXT,
+                therapist_signature TEXT,
+                date_of_signature TEXT,
+                billable_time INTEGER, 
                 FOREIGN KEY (user_id) REFERENCES users (user_id),
                 FOREIGN KEY (client_id) REFERENCES clients (client_id),
                 FOREIGN KEY (fim_id) REFERENCES fim_evaluation (fim_evaluation_id),
@@ -303,34 +303,34 @@ class SQL_Interaction:
             #Discharge Evaluation Table
             cursor.execute('''
             CREATE TABLE discharge_evaluation(
-                medical_record_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                initial_medical_record_id INTEGER NOT NULL,
-                discharge_fim_id INTEGER NOT NULL,
-                vital_id INTEGER NOT NULL,
-                billing_code_id INTEGER NOT NULL,
-                date_of_evaluation DATE NOT NULL,
-                diagnosis TEXT NOT NULL,
-                medical_history TEXT NOT NULL,
-                prior_function TEXT NOT NULL,
-                prior_situation TEXT NOT NULL,
-                hearing TEXT NOT NULL, 
-                vision TEXT NOT NULL,
-                a_o TEXT NOT NULL,
-                memory_cognition TEXT NOT NULL,
-                mmse_score TEXT NOT NULL,
-                discharge_transfer TEXT NOT NULL,
-                other_observations TEXT NOT NULL,
-                discharge_assessment TEXT NOT NULL,
-                discharge_recommendation TEXT NOT NULL,
-                equipment_needs TEXT NOT NULL,
-                patient_goals TEXT NOT NULL,
-                course_of_rehab TEXT NOT NULL,
-                client_education TEXT NOT NULL,
-                discharge_referrals TEXT NOT NULL,
-                therapist_signature TEXT NOT NULL,
-                date_of_signature TEXT NOT NULL,
-                billable_time INTEGER NOT NULL,
+                medical_record_id TEXT PRIMARY KEY,
+                user_id INTEGER,
+                initial_medical_record_id INTEGER,
+                discharge_fim_id INTEGER,
+                vital_id INTEGER,
+                billing_code_id INTEGER,
+                date_of_evaluation TEXT,
+                diagnosis TEXT,
+                medical_history TEXT,
+                prior_function TEXT,
+                prior_situation TEXT,
+                hearing TEXT, 
+                vision TEXT,
+                a_o TEXT,
+                memory_cognition TEXT,
+                mmse_score TEXT,
+                discharge_transfer TEXT,
+                other_observations TEXT,
+                discharge_assessment TEXT,
+                discharge_recommendation TEXT,
+                equipment_needs TEXT,
+                patient_goals TEXT,
+                course_of_rehab TEXT,
+                client_education TEXT,
+                discharge_referrals TEXT,
+                therapist_signature TEXT,
+                date_of_signature TEXT,
+                billable_time INTEGER,
                 FOREIGN KEY (user_id) REFERENCES users (user_id),
                 FOREIGN KEY (initial_medical_record_id) REFERENCES initial_evaluation (medical_record_id),
                 FOREIGN KEY (discharge_fim_id) REFERENCES discharge_fim_scores (discharge_fim_id),
@@ -340,19 +340,19 @@ class SQL_Interaction:
 
             cursor.execute('''
             CREATE TABLE progress_note(
-                progress_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                client_id INTEGER NOT NULL,
-                user_id INTEGER NOT NULL,
-                billing_code_id INTEGER NOT NULL,
-                diagnosis TEXT NOT NULL,
-                precautions TEXT NOT NULL,
-                contraindications TEXT NOT NULL,
-                summary_of_service TEXT NOT NULL,
-                current_client_performance TEXT NOT NULL,
-                plan_recommnedations TEXT NOT NULL,
-                therapist_signature TEXT NOT NULL,
-                date_of_signature TEXT NOT NULL,
-                billable_time INTEGER NOT NULL,
+                progress_id TEXT PRIMARY KEY,
+                client_id INTEGER,
+                user_id INTEGER,
+                billing_code_id INTEGER,
+                diagnosis TEXT,
+                precautions TEXT,
+                contraindications TEXT,
+                summary_of_service TEXT,
+                current_client_performance TEXT,
+                plan_recommnedations TEXT,
+                therapist_signature TEXT,
+                date_of_signature TEXT,
+                billable_time INTEGER,
                 FOREIGN KEY (client_id) REFERENCES clients (client_id),
                 FOREIGN KEY (user_id) REFERENCES users (user_id),
                 FOREIGN KEY (billing_code_id) REFERENCES billing_codes (billing_code_id)
@@ -387,10 +387,6 @@ class SQL_Interaction:
         insert_values: list
     '''
     def perform_insert(self, table, insert_parameters, insert_values):
-        
-       
-        
-        
         try:
             
           
@@ -421,7 +417,7 @@ class SQL_Interaction:
         except Error as e:
             print(e)
             response = {
-                "msg": "error"
+                "msg": e
             }
             return response
 
@@ -452,21 +448,26 @@ class SQL_Interaction:
     '''
     def perform_update(self, table, columns, values, key_column, key_value):
         try:
-            if(columns != values):
+            if(len(columns) != len(values)):
                 print("Error. Unequal amount of columns and values")
+                print(f"Columns: {columns} Length: {len(columns)}")
+                print(f"Values: {values} Length: {len(values)}")
             else:
                 cursor = self.conn.cursor()
                 
                 query = f"UPDATE {table} SET"
                 for i in range(len(columns)):
-                    if(i == len(columns) - 1):
+                    if(i != len(columns) - 1):
                         query += f" {columns[i]} = ?,"
                     else:
                         query += f" {columns[i]} = ?"
                 query += f" WHERE {key_column} = ?"
-                
+                #print(f"Query: {query}")
                 values.append(key_value)
                 values = tuple(values)
+                print(f"Query: {query}")
                 cursor.execute(query, values)
+                print("successful query")
+                self.conn.commit()
         except Error as e:
             print(e)

@@ -1,6 +1,7 @@
 import jinja2
 import pdfkit
 import pathlib
+import os
 
 class PDF_Interaction:
     def __init__(self):
@@ -28,24 +29,31 @@ class PDF_Interaction:
 
     '''
     def create_progress_pdf(self, info):
+        message = None
         try:
-            directory = "./backend/PDF/templates"
+            message = "in progress"
+            #directory = "./backend/PDF/templates"
+            directory = "./resources/backend/PDF/templates"
             template_loader = jinja2.FileSystemLoader(searchpath = directory)
             template_env = jinja2.Environment(loader=template_loader)
-
+            message = "directory check"
             html_template = "progress_template.html"    
             template = template_env.get_template(html_template)
+            message = "template check"
             output_text = template.render(info)
 
-            pdf_path = "./backend/PDF/wkhtmltopdf/bin/wkhtmltopdf.exe"
+            pdf_path = "./resources/backend/PDF/wkhtmltopdf/bin/wkhtmltopdf.exe"
             download_path = pathlib.Path.home() / "Downloads" / f"progress_{info['record_number']}_{info['name'].strip()}.pdf"
-
             config = pdfkit.configuration(wkhtmltopdf=pdf_path)
             pdfkit.from_string(output_text, download_path, configuration=config)
             print(f"Successfully made made Progress Note PDF!")
         except:
             print("Error converting the Progress Note to the pdf!")
-
+            response = {
+                "cwd": f"{os.getcwd()}\\resources\\backend\\PDF\\templates",
+                "check": message
+            }
+            return response
 
     '''
     arguments:
@@ -201,17 +209,17 @@ class PDF_Interaction:
         except KeyError as e:
             return {"success": False, "message": f"Missing key: {e}"}
         
-        directory = "./backend/PDF/templates"
+        directory = "./resources/backend/PDF/templates"
         template_loader = jinja2.FileSystemLoader(searchpath = directory)
         template_env = jinja2.Environment(loader=template_loader)
-
+        print("directory check")
         html_template = "initial_template.html"    
         template = template_env.get_template(html_template)
         output_text = template.render(info['allValues'])
-
-        pdf_path = "./backend/PDF/wkhtmltopdf/bin/wkhtmltopdf.exe"
+        print("template check")
+        pdf_path = "./resources/backend/PDF/wkhtmltopdf/bin/wkhtmltopdf.exe"
         download_path = pathlib.Path.home() / "Downloads" / f"initial_{med_num}_{name}.pdf"
-
+        
         config = pdfkit.configuration(wkhtmltopdf=pdf_path)
         pdfkit.from_string(output_text, download_path, configuration=config)
 
@@ -370,7 +378,7 @@ class PDF_Interaction:
 
     def create_discharge_pdf(self, info):
         try:
-            directory = "./backend/PDF/templates"
+            directory = "./resources/backend/PDF/templates"
             template_loader = jinja2.FileSystemLoader(searchpath = directory)
             template_env = jinja2.Environment(loader=template_loader)
 
@@ -378,7 +386,7 @@ class PDF_Interaction:
             template = template_env.get_template(html_template)
             output_text = template.render(info)
 
-            pdf_path = "./backend/PDF/wkhtmltopdf/bin/wkhtmltopdf.exe"
+            pdf_path = "./resources/backend/PDF/wkhtmltopdf/bin/wkhtmltopdf.exe"
             download_path = pathlib.Path.home() / "Downloads" / f"discharge_{info['med_num']}_{info['name'].strip()}.pdf"
 
             config = pdfkit.configuration(wkhtmltopdf=pdf_path)

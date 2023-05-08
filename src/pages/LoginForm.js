@@ -3,14 +3,14 @@ import { Box,
   Button, 
   Grid, 
   Typography, 
-  TextField, 
-  Link, 
+  TextField,  
   Dialog, 
   DialogTitle, 
   DialogContentText, 
   DialogContent, 
   DialogActions } from '@mui/material';
 
+import { Link } from 'react-router-dom';
 
 import {useNavigate} from 'react-router-dom';
 
@@ -46,7 +46,7 @@ function LoginForm() {
       setToken(userToken);
 
     }
-
+    
     //implement functionality of hitting login API endpoint endpoint:/token
     async function attemptLogin() {
       if(!email.trim())
@@ -70,8 +70,6 @@ function LoginForm() {
           "password": password
         })
       };
-
-
     const response = await fetch("http://127.0.0.1:5000/token", requestOptions);
     const data = await response.json();
     if(!response.ok)
@@ -269,8 +267,8 @@ function LoginForm() {
 
           <Grid item xs={4}>
             <Link 
-            href="/sign_up"
-            underline="hover"
+            to="/sign_up"
+            //underline="hover"
             >
               <Typography
               align='center'

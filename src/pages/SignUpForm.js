@@ -108,7 +108,7 @@ function SignUpForm() {
       handleOpen();
       return;
     }
-    window.location.replace("http://127.0.0.1:3000/login_form");
+    navigate("/login_form");
 
     
   }
@@ -310,7 +310,7 @@ function SignUpForm() {
 
           <Grid item xs={4}>
             <Link 
-            href="/login_form"
+            href="./#/login_form"
             underline="hover"
             >
               <Typography
@@ -341,6 +341,7 @@ function SignUpForm() {
                 }
               }}
               fullWidth
+              type='button'
               variant='contained'
               size='medium'
               onClick={submitAccount}>

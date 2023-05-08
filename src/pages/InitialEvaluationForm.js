@@ -5,9 +5,10 @@ import Grid from '@mui/material/Grid';
 import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, MenuItem, Sidebar, useProSidebar } from "react-pro-sidebar";
+import {MenuItem as Option} from "@mui/material";
 import logo from '../iona.png';
 import Divider from '@mui/material/Divider';
-import { Box,Button, Container, Paper, TextField, Typography, TableHead, TableContainer } from '@mui/material';
+import { Box,Button, Container, Paper, TextField, Typography, TableHead, TableContainer, Select } from '@mui/material';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import styled from 'styled-components';
 import { Table, TableBody, TableCell, TableRow } from '@mui/material';
@@ -30,34 +31,18 @@ import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import DescriptionIcon from '@mui/icons-material/Description';
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-
-
-
-
-
-
-
-
+import {useNavigate} from 'react-router-dom';
 
 
 const TabContent = styled.div`
   display: ${(props) => (props.active ? 'block' : 'none')};
 `;
 
-
-
-
-
 const TabContainer = styled.div`
   display: flex;
   align-items: center;
   justifyContent: center;
-  margin-top: 20px;
-  
-
-  
-
-  
+  margin-top: 20px;  
 `;
 
 const TabButton = styled.button`
@@ -68,35 +53,22 @@ background-color: ${(props) => (props.active ? '#B3F2FF' : '#fff')};
 padding: 20px;
 border-radius: 10px;
 cursor: pointer;
-width: 150px;
+width: 100%;
 height: 85px;
 font-family: Lucida Sans;
 font-size: 11px;
 `;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 function InitialEvaluationForm() {
+  const navigate = useNavigate();
   const { collapseSidebar } = useProSidebar();
   const [activeTab, setActiveTab] = useState(0);
+  const [record_numbers, setRecordNumbers] = useState([]);
 
-
- 
- 
  const [allValues, setAllValues] = useState({
   /* Client and Medical Tab */
-  
+  choice: '',
   name : '',
   dob:'',
   sex:'',
@@ -280,6 +252,10 @@ function InitialEvaluationForm() {
     console.log(allValues.AO);
   }, [allValues.AO]);
 
+  useEffect(() => {
+    getEvalInformation();
+  },[allValues.choice])
+
   const changeHandler = e => { 
     const key = e.target.id || e.target.name;
     setAllValues (prevValues => {
@@ -287,6 +263,17 @@ function InitialEvaluationForm() {
     });
     
   }
+
+  const populateHandler = json => {
+    const keys = Object.keys(json);
+    for(const key in keys)
+    {
+      setAllValues (prevValues => {
+        return { ...prevValues,[keys[key]]: json[keys[key]]};
+      });
+    }
+  };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -303,15 +290,48 @@ function InitialEvaluationForm() {
     set_Process_Open(false);
   }
   
-  
-  
-  
   const isNotEmpty = Object.values(allValues).every(value => value !== '');
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   
   const [name, setName] = useState('');
   const [email,setEmail] = useState('');
+
+  async function getRecordNumbers()
+  {
+    var requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${sessionStorage.getItem('token')}`
+      }
+    };
+
+    const response = await fetch("http://127.0.0.1:5000/get_initial_numbers", requestOptions);
+    const data = await response.json();
+    setRecordNumbers(data.data);
+  }
+
+  async function getEvalInformation()
+  {
+    var requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${sessionStorage.getItem('token')}`
+      },
+      body: JSON.stringify({
+        "record": allValues.choice
+      })
+    };
+    const response = await fetch("http://127.0.0.1:5000/get_chosen_eval", requestOptions);
+    const data = await response.json();
+    if(!response.ok)
+    {
+      return;
+    }
+    populateHandler(data.data);
+  }
 
   async function getProfile()
   {
@@ -328,7 +348,7 @@ function InitialEvaluationForm() {
 
   useEffect(() => {
     getProfile();
-   
+    getRecordNumbers();
   },[])
   
  
@@ -342,30 +362,28 @@ function InitialEvaluationForm() {
     body: JSON.stringify({ allValues }),
   }
   
-  
-
 
   async function submitInitEval() {
     console.log('submitInitEval called');
-    
+    /*
     const emptyEntries = getEmptyEntries();
     if (emptyEntries.length > 0) {
       setMessage(`Please enter data into ALL fields before submitting.`);
       handleOpen();
       return;
     }
-    
     if (!checkValidRecord()) {
       setMessage("That medical record number is currently in use. Please enter a different number for the medical record number.");
       handleOpen();
       return;
     }
-    
-   
-  
-
-  
-    
+    */
+    if(allValues.med_num == '')
+    {
+      setMessage("Please enter a value for the medical number.");
+      handleOpen();
+      return;
+    }
     handleProcessOpen();
   
     const response = await fetch("http://127.0.0.1:5000/submit_initial", requestOptions);
@@ -374,12 +392,12 @@ function InitialEvaluationForm() {
     if (!response.ok) {
       
       handleProcessClose();
-      setMessage(data.msg);
+      setMessage(data.error);
       handleOpen();
     } else {
       
       handleProcessClose();
-      window.location.replace("http://127.0.0.1:3000/landing_page");
+      navigate("/landing_page");
     }
   }
 
@@ -415,20 +433,9 @@ function InitialEvaluationForm() {
     }
 
   }
-  useEffect(() => {
-    checkValidRecord();
-  },[allValues.med_num])
 
   return (
-
-    
-
-
-    
-
     <div id="app" style={({ height: "75vh" }, { display: "flex" })}>
-      
-      
       <Dialog
         open={open}
         onClose={handleClose}
@@ -488,15 +495,15 @@ function InitialEvaluationForm() {
 
       {/* Processing Dialogue box*/}
       <Dialog
-  open={ProcessOpen}
-  aria-labelledby="alert-dialog-title"
-  aria-describedby="alert-dialog-description"
-  PaperProps={{
-    style: {
-      backgroundColor: "#E6F1FF",
-    },
-  }}
->
+        open={ProcessOpen}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        PaperProps={{
+          style: {
+            backgroundColor: "#E6F1FF",
+          },
+        }}
+      >
   <DialogTitle id="alert-dialog-title">
     <Typography
       component={"span"}
@@ -565,7 +572,20 @@ function InitialEvaluationForm() {
           <MenuItem component = {<Link to = "/progress_form" />}icon={<StickyNote2Icon />}>Progress Note</MenuItem>
           <MenuItem component = {<Link to = "/discharge_evaluation" />}icon={<NoteAltIcon/>}>Discharge Evaluation</MenuItem>
           <Divider></Divider>
-          <MenuItem component = {<Link to = "/old_form" />}icon={< DescriptionIcon/>}>View Old Forms</MenuItem>
+          {/*<MenuItem component = {<Link to = "/old_form" />}icon={< DescriptionIcon/>}>View Old Forms</MenuItem>
+          <Divider></Divider>*/}
+          <Grid item xs zeroMinWidth>
+            <br />
+            <Typography
+            align='center'
+            >
+              Helpful Tip:
+            </Typography>
+            <Typography
+            align='center'>
+              Check your "Downloads" Folder after completing an Evaluation to see your PDF!
+            </Typography>
+          </Grid>
         </Menu>
       </Sidebar>
       
@@ -585,8 +605,8 @@ function InitialEvaluationForm() {
       }}>
 
           <Grid container className='TabContainer' spacing={0}> 
-          <Grid item xs={4}></Grid>
-          <Grid item xs={4}>  
+          <Grid item xs={2.5}></Grid>
+          <Grid item xs={7}>  
             <TabContainer alignItems='center' display='flex' justifyContent='center'>
               <TabButton
               active={activeTab === 0}
@@ -626,61 +646,69 @@ function InitialEvaluationForm() {
               </TabButton>
             </TabContainer>
             </Grid>
-            <Grid item xs={4}></Grid>
+            <Grid item xs={2.5}></Grid>
           </Grid>
-        
-        
-        
-        
-        
-        
         
         <Container sx = {{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          height: "95vh",
+          height: "115vh",
           width: "110vh",
           padding: 0
-          
-          
           
         }}>
                 <Paper elevation={15}>
                  <Grid container spacing={2}>
                   </Grid>
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         <div>
       	  <TabContent active={activeTab ===0}>
             <Grid container spacing={2}>
               <Grid item xs={12}></Grid>
               <Grid item xs={12}></Grid>
+              <Grid item xs={2}></Grid>
+              <Grid item xs={8}>
+              <FormControl fullWidth>
+                  <InputLabel id="init_med">Edit Previous Initial Evaluation</InputLabel>
+                  <Select
+                    labelId="init_med"
+                    id="choice"
+                    inputProps={{
+                      name: 'choice',
+                      id: 'choice',
+                      align: "center"
+                  }}
+                    label="Evaluation Type"
+                    onChange={changeHandler}
+                  >
+                    <Option value="">
+                      <em>None</em>
+                    </Option>
+                    {record_numbers?.map((record_number) => {
+                      return <Option value={record_number.id}>{record_number.id} </Option>
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={2}></Grid>
               <Grid item xs={2/6}></Grid>
               <Grid item xs={3}>
                 <TextField label="Client Name" 
                 
                 id='name'
                 fullWidth
+                value={allValues.name || ''}
                 style={{ padding: 1}}
-                onBlur={changeHandler} />
+                onChange={changeHandler} />
               </Grid>
               <Grid item xs={2/6}></Grid>
               <Grid item xs={1}>
                 <TextField label='Sex'
                   id='sex'
                   fullWidth
+                  value={allValues.sex || ''}
                   style={{ padding: 1}}
-                  onBlur={changeHandler}></TextField>
+                  onChange={changeHandler}></TextField>
               </Grid>
               <Grid item xs={2/6}></Grid>
               <Grid item xs={2}>
@@ -688,8 +716,9 @@ function InitialEvaluationForm() {
                 id='dob'
                 type='date'
                 InputLabelProps={{ shrink: true }}
-                
-                onBlur={changeHandler} 
+                fullWidth
+                value={allValues.dob || ''}
+                onChange={changeHandler} 
                 style={{ padding: 1}}/>
               </Grid>
               <Grid item xs={2/6}></Grid>
@@ -700,9 +729,9 @@ function InitialEvaluationForm() {
               fullWidth
               type='date'
               InputLabelProps={{ shrink: true }}
-              
+              value={allValues.date || ''}
               id='date'
-              onBlur={changeHandler}
+              onChange={changeHandler}
               style={{ padding: 1 }} />
             </Grid>
         	  
@@ -711,8 +740,9 @@ function InitialEvaluationForm() {
               <TextField label="Med Record #:"
                 id='med_num'
                 
-                onBlur={changeHandler} 
+                onChange={changeHandler} 
                 fullWidth
+                value={allValues.med_num || ''}
                 style={{ padding: 1 }} />
             
             </Grid>
@@ -727,7 +757,8 @@ function InitialEvaluationForm() {
                 
                 multiline
                 id='med_hx'
-                onBlur={changeHandler}
+                value={allValues.med_hx || ''}
+                onChange={changeHandler}
                 inputProps={{ style: {height: 100}}}
                 style={{ padding: 1 }} />
             
@@ -738,9 +769,9 @@ function InitialEvaluationForm() {
               <TextField label="Diagnosis:" 
                 fullWidth
                 multiline
-                
+                value={allValues.diagnosis || ''}
                 id='diagnosis'
-                onBlur={changeHandler}
+                onChange={changeHandler}
                 inputProps={{ style: {height: 100} }}
                 style={{ padding: 1 }} />
                 </Grid>
@@ -755,9 +786,9 @@ function InitialEvaluationForm() {
               <TextField label="Prior Level of Function:" 
                 fullWidth
                 multiline
-                
+                value={allValues.prior_lev || ''}
                 id='prior_lev'
-                onBlur={changeHandler}
+                onChange={changeHandler}
                 inputProps={{ style: {height: 100}}}
                 style={{ padding: 1 }} />
             
@@ -768,9 +799,9 @@ function InitialEvaluationForm() {
               <TextField label="Prior Living Situation:" 
                 fullWidth
                 id='prior_liv'
-                onBlur={changeHandler}
+                onChange={changeHandler}
                 multiline
-                
+                value={allValues.prior_liv || ''}
                 inputProps={{ style: {height: 100} }}
                 style={{ padding: 1 }} />
                 </Grid>
@@ -781,9 +812,9 @@ function InitialEvaluationForm() {
               <TextField label="Hearing:" 
                 fullWidth
                 id='hearing'
-                onBlur={changeHandler}
+                onChange={changeHandler}
                 multiline
-                
+                value={allValues.hearing || ''}
                 inputProps={{ style: {height: 100}}}
                 style={{ padding: 1 }} />
             
@@ -794,9 +825,9 @@ function InitialEvaluationForm() {
               <TextField label="Vision/Visual Perception" 
                 fullWidth
                 id='visual_perception'
-                onBlur={changeHandler}
+                onChange={changeHandler}
                 multiline
-                
+                values={allValues.visual_perception || ''}
                 inputProps={{ style: {height: 100} }}
                 style={{ padding: 1 }} />
             </Grid>
@@ -810,6 +841,7 @@ function InitialEvaluationForm() {
              </InputLabel>
             <NativeSelect
              onChange={changeHandler}
+             value={allValues.AO || ''}
             inputProps={{
               name: 'A & O:',
               id: 'AO',
@@ -828,8 +860,8 @@ function InitialEvaluationForm() {
               <TextField label="Memory/Mental/Cognition:" 
                 fullWidth
                 id='memory'
-                
-                onBlur={changeHandler}
+                value={allValues.memory || ''}
+                onChange={changeHandler}
                 multiline
                 inputProps={{ style: {height: 75} }}
                 style={{ padding: 1 }} />
@@ -839,8 +871,8 @@ function InitialEvaluationForm() {
               <TextField label="MMSE Score:" 
                 fullWidth
                 id='mmse'
-                
-                onBlur={changeHandler}
+                value={allValues.mmse || ''}
+                onChange={changeHandler}
                 inputProps={{ style: {height: 75} }}
                 style={{ padding: 1 }} />
            </Grid>
@@ -849,32 +881,32 @@ function InitialEvaluationForm() {
            <Grid item xs={2}>
             <TextField label="Blood Pressure:"
               id='blood_pressure'
-              
-              onBlur={changeHandler}
+              value={allValues.blood_pressure || ''}
+              onChange={changeHandler}
             ></TextField>
            </Grid>
            <Grid item xs={2/6}></Grid>
            <Grid item xs={2}>
             <TextField label="Heart Rate:"
               id='heart_rate'
-              
-              onBlur={changeHandler}
+              value={allValues.heart_rate || ''}
+              onChange={changeHandler}
             ></TextField>
            </Grid>
            <Grid item xs={2/6}></Grid>
            <Grid item xs={2}>
             <TextField label="Oxygen(SPO2):"
               id='oxygen'
-              
-              onBlur={changeHandler}
+              value={allValues.oxygen || ''}
+              onChange={changeHandler}
             ></TextField>
            </Grid>
            <Grid item xs={2/6}></Grid>
            <Grid item xs={2}>
             <TextField label="Respiratory Rate(RR):"
               id='respiratory_rate'
-              
-              onBlur={changeHandler}
+              value={allValues.respiratory_rate || ''}
+              onChange={changeHandler}
             
             ></TextField>
            </Grid>
@@ -882,8 +914,8 @@ function InitialEvaluationForm() {
            <Grid item xs={2}>
             <TextField label="Pain Assessment:"
               id='pain_assessment'
-              
-              onBlur={changeHandler}
+              value={allValues.pain_assessment || ''}
+              onChange={changeHandler}
             
             ></TextField>
 
@@ -892,8 +924,6 @@ function InitialEvaluationForm() {
 
            <Grid item xs={12}></Grid>   
            <Grid item xs={12}></Grid>      
-
-          
             
             </Grid>
           </TabContent>
@@ -920,7 +950,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='eat_init'
-                    onBlur={changeHandler}>
+                    value={allValues.eat_init || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
                 
@@ -932,7 +963,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='eat_goal'
-                    onBlur={changeHandler}>
+                    value={allValues.eat_goal || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
               </TableRow>
@@ -948,7 +980,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='groom_init'
-                    onBlur={changeHandler}>
+                    value={allValues.groom_init || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
                 
@@ -960,7 +993,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='groom_goal'
-                    onBlur={changeHandler}>
+                    value={allValues.groom_goal || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
               </TableRow>
@@ -976,7 +1010,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='bath_init'
-                    onBlur={changeHandler}>
+                    value={allValues.bath_init || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
                 
@@ -988,7 +1023,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='bath_goal'
-                    onBlur={changeHandler}>
+                    value={allValues.bath_goal || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
               </TableRow>
@@ -1004,7 +1040,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='upper_init'
-                    onBlur={changeHandler}>
+                    value={allValues.upper_init || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
                 
@@ -1016,7 +1053,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='upper_goal'
-                    onBlur={changeHandler}>
+                    value={allValues.upper_goal || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
               </TableRow>
@@ -1032,7 +1070,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='lower_init'
-                    onBlur={changeHandler}>
+                    value={allValues.lower_init || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
                 
@@ -1044,7 +1083,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='lower_goal'
-                    onBlur={changeHandler}>
+                    value={allValues.lower_goal || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
               </TableRow>
@@ -1060,7 +1100,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='toilet_init'
-                    onBlur={changeHandler}>
+                    value={allValues.toilet_init || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
                 
@@ -1072,7 +1113,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='toilet_goal'
-                    onBlur={changeHandler}>
+                    value={allValues.toilet_goal || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
               </TableRow>
@@ -1088,7 +1130,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='toilet_transfer_init'
-                    onBlur={changeHandler}>
+                    value={allValues.toilet_transfer_init || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
                 
@@ -1100,7 +1143,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='toilet_transfer_goal'
-                    onBlur={changeHandler}>
+                    value={allValues.toilet_transfer_goal || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
               </TableRow>
@@ -1116,7 +1160,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='shower_transfer_init'
-                    onBlur={changeHandler}>
+                    value={allValues.shower_transfer_init || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
                 
@@ -1128,7 +1173,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='shower_transfer_goal'
-                    onBlur={changeHandler}>
+                    value={allValues.shower_transfer_goal || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
               </TableRow>
@@ -1144,7 +1190,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='tub_transfer_init'
-                    onBlur={changeHandler}>
+                    value={allValues.tub_transfer_init || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
                 
@@ -1156,7 +1203,8 @@ function InitialEvaluationForm() {
                     },
                    }}
                     id='tub_transfer_goal'
-                    onBlur={changeHandler}>
+                    value={allValues.tub_transfer_goal || ''}
+                    onChange={changeHandler}>
                   </TextField>
                 </TableCell>
               </TableRow>
@@ -1184,10 +1232,8 @@ function InitialEvaluationForm() {
                 <RadioGroup
                   row
                   aria-labelledby="hand_dom"
-                  
                   name="hand_dom"
-                  
-                  
+                  value={allValues.hand_dom || ''}
                   onChange={changeHandler}>
           
                   <FormControlLabel value="Left" control={<Radio />} label="L" />
@@ -1195,8 +1241,6 @@ function InitialEvaluationForm() {
               </RadioGroup>
               </FormControl>
             </Grid>
-          
-          
           <TableContainer sx={{ maxHeight: "75vh"}}>
             <Table stickyHeader aria-label="sticky table" >
               <TableHead>
@@ -1219,46 +1263,50 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_shoulder_ev_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_shoulder_ev_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_shoulder_ev_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_shoulder_ev_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Shoulder Elevation</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_shoulder_ev_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_shoulder_ev_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_shoulder_ev_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_shoulder_ev_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -1267,46 +1315,50 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_shoulder_flex_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_shoulder_flex_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_shoulder_flex_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_shoulder_flex_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Shoulder Flexion</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_shoulder_flex_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_shoulder_flex_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_shoulder_flex_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_shoulder_flex_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -1315,46 +1367,50 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_shoulder_ext_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_shoulder_ext_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_shoulder_ext_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_shoulder_ext_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Shoulder Extension</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_shoulder_ext_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_shoulder_ext_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_shoulder_ext_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_shoulder_ext_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -1363,46 +1419,50 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_shoulder_abd_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_shoulder_abd_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_shoulder_abd_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_shoulder_abd_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Shoulder Abduction</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_shoulder_abd_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_shoulder_abd_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_shoulder_abd_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_shoulder_abd_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -1411,46 +1471,50 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_hor_abd_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_hor_abd_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_hor_abd_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_hor_abd_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Horizontal Abduction</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_hor_abd_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_hor_abd_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_hor_abd_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_hor_add_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -1459,46 +1523,50 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_hor_add_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_hor_add_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_hor_add_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_hor_add_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Horizontal Adduction</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_hor_add_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_hor_add_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_hor_add_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_hor_add_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -1507,46 +1575,50 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_intern_rot_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_intern_rot_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_intern_rot_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_intern_rot_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Internal Rotation</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_intern_rot_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_intern_rot_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_intern_rot_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_intern_rot_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>    
@@ -1555,46 +1627,50 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_extern_rot_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_extern_rot_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_extern_rot_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_extern_rot_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>External Rotation</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_extern_rot_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_extern_rot_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_extern_rot_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_extern_rot_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -1605,46 +1681,50 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_elbow_flex_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_elbow_flex_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_elbow_flex_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_elbow_flex_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Elbow Flexion</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_elbow_flex_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_elbow_flex_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_elbow_flex_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_elbow_flex_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -1653,95 +1733,50 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_elbow_ext_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_elbow_ext_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_elbow_ext_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_elbow_ext_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Elbow Extension</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_elbow_ext_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_elbow_ext_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_elbow_ext_mmt'
-                      onBlur={changeHandler}>
-                    </TextField>
-                  </TableCell>
-                </TableRow>     
-                    {/*Forearm Supination Row*/}
-                
-                    <TableRow>  
-                  <TableCell align='center'> 
-                    <TextField  
-                      InputProps={{ inputProps: {
-                      type: 'number', min: 1,
-                      style: { textAlign: 'center' },
-                      },
-                    }}
-                      id='lue_fore_sup_rom'
-                      onBlur={changeHandler}>
-                    </TextField>
-                  </TableCell>
-                  <TableCell align='center'> 
-                    <TextField  
-                      InputProps={{ inputProps: {
-                      type: 'number', min: 1,
-                      style: { textAlign: 'center' },
-                      },
-                    }}
-                      id='lue_fore_sup_mmt'
-                      onBlur={changeHandler}>
-                    </TextField>
-                  </TableCell>
-                  <TableCell align='center'>Forearm Supination</TableCell>
-                  <TableCell align='center'> 
-                    <TextField  
-                      InputProps={{ inputProps: {
-                      type: 'number', min: 1,
-                      style: { textAlign: 'center' },
-                      },
-                    }}
-                      id='rue_fore_sup_rom'
-                      onBlur={changeHandler}>
-                    </TextField>
-                  </TableCell>
-                  <TableCell align='center'> 
-                    <TextField  
-                      InputProps={{ inputProps: {
-                      type: 'number', min: 1,
-                      style: { textAlign: 'center' },
-                      },
-                    }}
-                      id='rue_fore_sup_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_elbow_ext_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -1751,46 +1786,104 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_fore_pro_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_fore_pro_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_fore_pro_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_fore_pro_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Forearm Pronation</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_fore_pro_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_fore_pro_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_fore_pro_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_fore_pro_mmt || ''}
+                      onChange={changeHandler}>
+                    </TextField>
+                  </TableCell>
+                </TableRow>
+
+                    {/*Forearm Supination Row*/}
+                
+                    <TableRow>  
+                  <TableCell align='center'> 
+                    <TextField  
+                      InputProps={{ inputProps: {
+                      type: 'number',
+                      style: { textAlign: 'center' },
+                      },
+                    }}
+                      id='lue_fore_sup_rom'
+                      value={allValues.lue_fore_sup_rom || ''}
+                      onChange={changeHandler}>
+                    </TextField>
+                  </TableCell>
+                  <TableCell align='center'> 
+                    <TextField  
+                      InputProps={{ inputProps: {
+                      type: 'number',
+                      style: { textAlign: 'center' },
+                      },
+                    }}
+                      id='lue_fore_sup_mmt'
+                      value={allValues.lue_fore_sup_mmt || ''}
+                      onChange={changeHandler}>
+                    </TextField>
+                  </TableCell>
+                  <TableCell align='center'>Forearm Supination</TableCell>
+                  <TableCell align='center'> 
+                    <TextField  
+                      InputProps={{ inputProps: {
+                      type: 'number',
+                      style: { textAlign: 'center' },
+                      },
+                    }}
+                      id='rue_fore_sup_rom'
+                      value={allValues.rue_fore_sup_rom || ''}
+                      onChange={changeHandler}>
+                    </TextField>
+                  </TableCell>
+                  <TableCell align='center'> 
+                    <TextField  
+                      InputProps={{ inputProps: {
+                      type: 'number',
+                      style: { textAlign: 'center' },
+                      },
+                    }}
+                      id='rue_fore_sup_mmt'
+                      value={allValues.rue_fore_sup_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -1799,46 +1892,50 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_wrist_flex_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_wrist_flex_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_wrist_flex_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_wrist_flex_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Wrist Flexion</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_wrist_flex_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_wrist_flex_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_wrist_flex_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_wrist_flex_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -1847,46 +1944,50 @@ function InitialEvaluationForm() {
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_wrist_ext_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_wrist_ext_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_wrist_ext_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_wrist_ext_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Wrist Extension</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_wrist_ext_rom'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_wrist_ext_rom || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_wrist_ext_mmt'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_wrist_ext_mmt || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -1910,24 +2011,26 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_grip_str'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_grip_str || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Grip Strength</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_grip_str'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_grip_str || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -1937,24 +2040,26 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_lat_pinch'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_lat_pinch || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Lateral Pinch</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_lat_pinch'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_lat_pinch || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -1964,24 +2069,26 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_tri_pinch'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_tri_pinch || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Tripod Pinch</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_tri_pinch'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_tri_pinch || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -1991,24 +2098,26 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_tip_pinch'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_tip_pinch || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Tip Pinch</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_tip_pinch'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_tip_pinch || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -2018,24 +2127,26 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_light_touch'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_light_touch || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Light Touch</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_light_touch'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_light_touch || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -2045,24 +2156,26 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_sh_du'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_sh_du || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Sharp / Dull</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_sh_du'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_sh_du || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -2072,24 +2185,26 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_temp'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_temp || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Temperature</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_temp'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_temp || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -2099,24 +2214,26 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_prop'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_prop || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Proprioception</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_prop'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_prop || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -2126,24 +2243,26 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_ster'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_ster || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Stereognosis</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_ster'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_ster || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -2153,24 +2272,26 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_peg'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_peg || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>9-Hole Peg Test</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_peg'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_peg || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -2180,24 +2301,26 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_edema'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_edema || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Edema</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_edema'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_edema || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -2207,24 +2330,26 @@ function InitialEvaluationForm() {
                     <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='lue_pain'
-                      onBlur={changeHandler}>
+                      value={allValues.lue_pain || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                   <TableCell align='center'>Pain</TableCell>
                   <TableCell align='center'> 
                     <TextField  
                       InputProps={{ inputProps: {
-                      type: 'number', min: 1,
+                      type: 'number',
                       style: { textAlign: 'center' },
                       },
                     }}
                       id='rue_pain'
-                      onBlur={changeHandler}>
+                      value={allValues.rue_pain || ''}
+                      onChange={changeHandler}>
                     </TextField>
                   </TableCell>
                 </TableRow>
@@ -2244,7 +2369,8 @@ function InitialEvaluationForm() {
                       fullWidth
                       id='ADL'
                       multiline
-                      onBlur={changeHandler}
+                      value={allValues.ADL || ''}
+                      onChange={changeHandler}
                       inputProps={{ style: {height: 100} }}
                       style={{ padding: 1}}>
                     </TextField>
@@ -2255,8 +2381,9 @@ function InitialEvaluationForm() {
                     <TextField label="Current Transfer / Mobility Status:"
                       fullWidth
                       id='current_transfer'
+                      value={allValues.current_transfer || ''}
                       multiline
-                      onBlur={changeHandler}
+                      onChange={changeHandler}
                       inputProps={{ style: {height: 100} }}
                       style={{ padding: 1}}>
                     </TextField>
@@ -2272,7 +2399,7 @@ function InitialEvaluationForm() {
                     fullWidth
                     id='observations'
                     multiline
-                    onBlur={changeHandler}
+                    onChange={changeHandler}
                     inputProps={{ style: {height: 150} }}
                     style={{ padding: 1 }} />
                 </Grid>
@@ -2286,7 +2413,8 @@ function InitialEvaluationForm() {
                     fullWidth
                     id='init_assess'
                     multiline
-                    onBlur={changeHandler}
+                    value={allValues.init_assess || ''}
+                    onChange={changeHandler}
                     inputProps={{ style: {height: 150} }}
                     style={{ padding: 1 }} />
                 </Grid>
@@ -2311,8 +2439,9 @@ function InitialEvaluationForm() {
               <TextField label="Discharge Recommendation:" 
                   fullWidth
                   id='dis_rec'
+                  value={allValues.dis_rec || ''}
                   multiline
-                  onBlur={changeHandler}
+                  onChange={changeHandler}
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
               
@@ -2322,8 +2451,9 @@ function InitialEvaluationForm() {
                 <TextField label="Equipment Needs:" 
                   fullWidth
                   id='equip_needs'
+                  value={allValues.equip_needs || ''}
                   multiline
-                  onBlur={changeHandler}
+                  onChange={changeHandler}
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
               </Grid> 
@@ -2333,7 +2463,8 @@ function InitialEvaluationForm() {
                   fullWidth
                   id='patient_goals'
                   multiline
-                  onBlur={changeHandler}
+                  onChange={changeHandler}
+                  value={allValues.patient_goals || ''}
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
               </Grid> 
@@ -2345,8 +2476,9 @@ function InitialEvaluationForm() {
                 <TextField label="Short Term Goals / Estimated TimeFrame:"
                   fullWidth
                   id='short_term_goals'
+                  value = {allValues.short_term_goals || ''}
                   multiline
-                  onBlur={changeHandler}
+                  onChange={changeHandler}
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
                   
@@ -2356,8 +2488,9 @@ function InitialEvaluationForm() {
                 <TextField label="Overall Long Term Goal:"
                   fullWidth
                   id='overall_goals'
+                  value={allValues.overall_goals || ''}
                   multiline
-                  onBlur={changeHandler}
+                  onChange={changeHandler}
                   inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
                   
@@ -2371,7 +2504,8 @@ function InitialEvaluationForm() {
                     fullWidth
                     id='justification'
                     multiline
-                    onBlur={changeHandler}
+                    onChange={changeHandler}
+                    value={allValues.justification || ''}
                     inputProps={{ style: {height: 100} }}
                   style={{ padding: 1 }} />
 
@@ -2385,6 +2519,7 @@ function InitialEvaluationForm() {
                   
                   <NativeSelect
                     onChange={changeHandler}
+                    value={allValues.billing || ''}
                     inputProps={{
                       name:  'Billing Code',
                       id: 'billing',
@@ -2418,8 +2553,9 @@ function InitialEvaluationForm() {
                 <TextField label='Other Billing Code:'
                 fullWidth
                 id='billing'
+                value={allValues.billing || ''}
                 type='number'
-                onBlur={changeHandler}>
+                onChange={changeHandler}>
                 </TextField>
               </Grid>
               <Grid item xs={2}></Grid>
@@ -2433,7 +2569,8 @@ function InitialEvaluationForm() {
                 <TextField label="Estimated Length:"
                   fullWidth
                   id='est_len'
-                  onBlur={changeHandler}
+                  value={allValues.est_len || ''}
+                  onChange={changeHandler}
                   ></TextField>
               </Grid>
            
@@ -2442,7 +2579,8 @@ function InitialEvaluationForm() {
                 <TextField label="Total Units:"
                   fullWidth
                   id='units'
-                  onBlur={changeHandler}
+                  value={allValues.units || ''}
+                  onChange={changeHandler}
                   ></TextField>
               </Grid>
 
@@ -2451,7 +2589,8 @@ function InitialEvaluationForm() {
                 <TextField label="Therapist Signature:"
                   fullWidth
                   id='signature'
-                  onBlur={changeHandler}
+                  value={allValues.signature || ''}
+                  onChange={changeHandler}
                   ></TextField>
               </Grid>
               <Grid item xs={5/12}></Grid>
@@ -2460,8 +2599,9 @@ function InitialEvaluationForm() {
                   fullWidth
                   id='date_of_sig'
                   type='date'
+                  value={allValues.date_of_sig || ''}
                   InputLabelProps={{ shrink: true }}
-                  onBlur={changeHandler}
+                  onChange={changeHandler}
                   ></TextField>
 
                 </Grid>
